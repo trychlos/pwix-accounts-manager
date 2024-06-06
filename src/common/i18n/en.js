@@ -1,9 +1,9 @@
 /*
- * /imports/i18n/en.js
+ * pwix:accounts-manager/src/common/i18n/en.js
  */
 
-AccountsList.i18n = {
-    ...AccountsList.i18n,
+AccountsManager.i18n = {
+    ...AccountsManager.i18n,
     ...{
         en: {
             header: {

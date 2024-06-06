@@ -2,7 +2,7 @@
  * pwix:accounts-manager/src/common/js/constants.js
  */
 
-AccountsList.C = {
+AccountsManager.C = {
     // verbosity levels
     Verbose: {
         NONE: 0,

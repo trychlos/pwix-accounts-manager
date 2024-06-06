@@ -4,10 +4,10 @@
 
 import _ from 'lodash';
 
-AccountsList._conf = {};
+AccountsManager._conf = {};
 
-AccountsList._defaults = {
-    verbosity: AccountsList.C.Verbose.CONFIGURE
+AccountsManager._defaults = {
+    verbosity: AccountsManager.C.Verbose.CONFIGURE
 };
 
 /**
@@ -16,17 +16,17 @@ AccountsList._defaults = {
  * @param {Object} o configuration options
  * @returns {Object} the package configuration
  */
-AccountsList.configure = function( o ){
+AccountsManager.configure = function( o ){
     if( o && _.isObject( o )){
-        _.merge( AccountsList._conf, AccountsList._defaults, o );
+        _.merge( AccountsManager._conf, AccountsManager._defaults, o );
         // be verbose if asked for
-        if( AccountsList._conf.verbosity & AccountsList.C.Verbose.CONFIGURE ){
+        if( AccountsManager._conf.verbosity & AccountsManager.C.Verbose.CONFIGURE ){
             //console.log( 'pwix:accounts-manager configure() with', o, 'building', AccountsList._conf );
             console.log( 'pwix:accounts-manager configure() with', o );
         }
     }
     // also acts as a getter
-    return AccountsList._conf;
+    return AccountsManager._conf;
 }
 
-_.merge( AccountsList._conf, AccountsList._defaults );
+_.merge( AccountsManager._conf, AccountsManager._defaults );
