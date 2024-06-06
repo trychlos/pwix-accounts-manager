@@ -1,5 +1,5 @@
 /*
- * pwix:accounts-list/src/common/js/global.js
+ * pwix:accounts-manager/src/common/js/global.js
  */
 
 AccountsList = {

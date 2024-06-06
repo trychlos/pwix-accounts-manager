@@ -1,5 +1,5 @@
 /*
- * pwix:accounts-list/src/common/js/constants.js
+ * pwix:accounts-manager/src/common/js/constants.js
  */
 
 AccountsList.C = {
@@ -12,4 +12,4 @@ AccountsList.C = {
 
 // non exported variables
 
-I18N = 'pwix:accounts-list:i18n:namespace';
+I18N = 'pwix:accounts-manager:i18n:namespace';

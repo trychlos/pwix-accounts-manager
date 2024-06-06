@@ -1,4 +1,4 @@
-# pwix:accounts-list - TODO
+# pwix:accounts-manager - TODO
 
 ## Summary
 

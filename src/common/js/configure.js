@@ -1,5 +1,5 @@
 /*
- * pwix:accounts-list/src/common/js/configure.js
+ * pwix:accounts-manager/src/common/js/configure.js
  */
 
 import _ from 'lodash';
@@ -21,8 +21,8 @@ AccountsList.configure = function( o ){
         _.merge( AccountsList._conf, AccountsList._defaults, o );
         // be verbose if asked for
         if( AccountsList._conf.verbosity & AccountsList.C.Verbose.CONFIGURE ){
-            //console.log( 'pwix:accounts-list configure() with', o, 'building', AccountsList._conf );
-            console.log( 'pwix:accounts-list configure() with', o );
+            //console.log( 'pwix:accounts-manager configure() with', o, 'building', AccountsList._conf );
+            console.log( 'pwix:accounts-manager configure() with', o );
         }
     }
     // also acts as a getter
