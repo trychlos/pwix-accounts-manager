@@ -16,11 +16,23 @@ None at the moment.
 
 ## Provides
 
-### `AccountsList`
+### `AccountsManager`
+
+The globally exported object of this package.
 
 ### Blaze components
 
-### `Accounts`
+#### `AccountsList`
+
+The component list the defined accounts.
+
+It can be called with following data context:
+
+- `canDelete`: whether the `Delete` button is to be enabled (only considered if displayed)
+
+- `canEdit`: whether the `Edit` button is to be enabled (only considered if displayed)
+
+- `canInfo`: whether the `Info` button is to be enabled (only considered if displayed)
 
 ## NPM peer dependencies
 

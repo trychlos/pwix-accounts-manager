@@ -30,7 +30,7 @@
  *      emails: [ { address: 'aaaa@aaa.aa', verified: false } ],
  *    }
  * 
- * We define here the desiredvi schema.
+ * We define here the desired schema.
  */
 
 import SimpleSchema from 'meteor/aldeed:simple-schema';
@@ -38,6 +38,9 @@ import SimpleSchema from 'meteor/aldeed:simple-schema';
 // define the schema without taking care of added behaviours
 // Meteor base Accounts already (and only) defines emails, username, profile and services
 AccountsManager.schema = new SimpleSchema({
+    lastConnection: {
+        type: Date
+    },
     loginAllowed: {
         type: Boolean,
         defaultValue: true

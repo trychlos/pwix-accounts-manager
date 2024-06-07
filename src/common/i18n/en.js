@@ -7,10 +7,12 @@ AccountsManager.i18n = {
     ...{
         en: {
             header: {
+                admin_notes_th: 'Admin Notes',
                 api_allowed_th: 'Is API access allowed',
                 emails_th: 'Email addresses',
                 last_connection_th: 'Last connection',
                 login_allowed_th: 'Is login allowed',
+                user_notes_th: 'User Notes',
                 username_th: 'Username'
             },
             /*

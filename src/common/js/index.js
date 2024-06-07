@@ -7,4 +7,4 @@ import './constants.js';
 //
 import './configure.js';
 import './i18n.js';
-import './tabular.js';
+import './tabular-ext.js';
