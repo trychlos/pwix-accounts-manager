@@ -38,6 +38,40 @@ import SimpleSchema from 'meteor/aldeed:simple-schema';
 // define the schema without taking care of added behaviours
 // Meteor base Accounts already (and only) defines emails, username, profile and services
 AccountsManager.schema = new SimpleSchema({
+    _id: {
+        type: String
+    },
+    emails: {
+        type: Array,
+        optional: true
+    },
+    'emails.$': {
+        type: Object
+    },
+    'emails.$.address': {
+        type: String,
+        regEx: SimpleSchema.RegEx.Email,
+    },
+    'emails.$.verified': {
+        type: Boolean
+    },
+    username: {
+        type: String,
+        optional: true
+    },
+    createdAt: {
+        type: Date,
+    },
+    profile: {
+        type: Object,
+        optional: true,
+        blackbox: true
+    },
+    services: {
+        type: Object,
+        optional: true,
+        blackbox: true
+    },
     lastConnection: {
         type: Date
     },
@@ -58,6 +92,7 @@ AccountsManager.schema = new SimpleSchema({
 });
 
 // add behaviours to our collection
+Meteor.users.attachSchema( AccountsManager.schema );
 Meteor.users.attachBehaviour( 'timestampable' );
 
 /*

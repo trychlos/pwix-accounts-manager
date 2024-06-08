@@ -32,5 +32,7 @@ function configure( api ){
     api.use( 'pwix:collection-timestampable@2.0.0' );
     api.use( 'pwix:i18n@1.5.7' );
     api.use( 'pwix:tabular-ext@0.9.0-rc' );
+    api.use( 'pwix:ui-utils@1.0.0-rc' );
+    api.addFiles( 'src/client/components/AccountPanel/AccountPanel.js', 'client' );
     api.addFiles( 'src/client/components/AccountsList/AccountsList.js', 'client' );
 }

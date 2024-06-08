@@ -5,12 +5,25 @@
 import { pwixI18n } from 'meteor/pwix:i18n';
 import { TabularExt } from 'meteor/pwix:tabular-ext';
 
+if( Meteor.isClient ){
+    import '../../client/components/email_address/email_address.js';
+    import '../../client/components/email_more/email_more.js';
+    import '../../client/components/email_verified/email_verified.js';
+}
+
 let columns = [];
 
 // the default columns created by Meteor base Accounts
 columns.push(
     { data: 'emails',
-      title: pwixI18n.label( I18N, 'header.emails_th' )
+      title: pwixI18n.label( I18N, 'header.email_address_th' ),
+      tmpl: Meteor.isClient && Template.email_address
+    },
+    { title: pwixI18n.label( I18N, 'header.email_verified_th' ),
+      sortable: true,
+      tmpl: Meteor.isClient && Template.email_verified
+    },
+    { tmpl: Meteor.isClient && Template.email_more
     },
     { data: 'username',
       title: pwixI18n.label( I18N, 'header.username_th' )
@@ -48,32 +61,3 @@ AccountsManager.tabular = new TabularExt({
     collection: Meteor.users,
     columns: columns
 });
-
-        /*
-new Tabular.Table({
-    name: 'Users',
-    collection: Meteor.users,
-    columns: [
-        { data: "emails", title: pwixI18n.label( I18N, 'header.emails_th' )},
-        { data: "username", title: pwixI18n.label( I18N, 'header.username_th' )},
-        { data: "loginAllowed", title: pwixI18n.label( I18N, 'header.login_allowed_th' )},
-        { data: "lastConnection", title: pwixI18n.label( I18N, 'header.last_connection_th' )},
-        { data: "apiAllowed", title: pwixI18n.label( I18N, 'header.api_allowed_th' )},
-        { data: "notes", title: "Notes"},
-        { data: "loginAllowed",
-          title: "Login allowed",
-          render: function (val, type, doc) {
-            if (val instanceof Date) {
-            return moment(val).calendar();
-            } else {
-            return "Never";
-            }
-        }
-        },
-        {data: "summary", title: "Summary"},
-        {
-        tmpl: Meteor.isClient && Template.bookCheckOutCell
-        }
-    ]
-});
-        */

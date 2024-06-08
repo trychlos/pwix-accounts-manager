@@ -10,7 +10,8 @@
 
 |   Id | Date       | Description and comment(s) |
 | ---: | :---       | :---                       |
-|    1 | 2024- 6- 3 |  |
+|    1 | 2024- 6- 3 | Manage several email addresses per user |
+|    2 |  |  |
 
 ---
 ## Done
