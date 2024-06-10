@@ -1,6 +1,6 @@
 Package.describe({
     name: 'pwix:accounts-manager',
-    version: '0.9.0-rc',
+    version: '1.0.0-rc',
     summary: 'Provide the most common parts of a simple accounts management system',
     git: 'https://github.com/trychlos/pwix-accounts-manager',
     documentation: 'README.md'
@@ -24,6 +24,7 @@ Package.onTest( function( api ){
 
 function configure( api ){
     api.versionsFrom([ '2.9.0', '3.0-rc.0' ]);
+    api.use( 'aldeed:collection2@4.0.1' );
     api.use( 'aldeed:simple-schema@1.13.1' );
     api.use( 'blaze-html-templates@2.0.0 || 3.0.0-alpha300.0', 'client' );
     api.use( 'ecmascript' );
@@ -31,7 +32,8 @@ function configure( api ){
     api.use( 'mongo' );
     api.use( 'pwix:collection-timestampable@2.0.0' );
     api.use( 'pwix:i18n@1.5.7' );
-    api.use( 'pwix:tabular-ext@0.9.0-rc' );
+    api.use( 'pwix:tabbed@1.0.0-rc' );
+    api.use( 'pwix:tabular-ext@1.0.0-rc' );
     api.use( 'pwix:ui-utils@1.0.0-rc' );
     api.addFiles( 'src/client/components/AccountPanel/AccountPanel.js', 'client' );
     api.addFiles( 'src/client/components/AccountsList/AccountsList.js', 'client' );

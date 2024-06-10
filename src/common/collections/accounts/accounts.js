@@ -59,9 +59,6 @@ AccountsManager.schema = new SimpleSchema({
         type: String,
         optional: true
     },
-    createdAt: {
-        type: Date,
-    },
     profile: {
         type: Object,
         optional: true,
@@ -79,10 +76,6 @@ AccountsManager.schema = new SimpleSchema({
         type: Boolean,
         defaultValue: true
     },
-    apiAllowed: {
-        type: Boolean,
-        defaultValue: false
-    },
     userNotes: {
         type: String
     },
@@ -94,6 +87,20 @@ AccountsManager.schema = new SimpleSchema({
 // add behaviours to our collection
 Meteor.users.attachSchema( AccountsManager.schema );
 Meteor.users.attachBehaviour( 'timestampable' );
+
+// extends the above default schema with an application-provided piece
+const schema = AccountsManager._conf.schema;
+if( schema ){
+    if( typeof schema === 'function' ){
+        const o = schema();
+        check( o, Object );
+        Meteor.users.attachSchema( new SimpleSchema( o ));
+    } else if( typeof schema === 'Object' ){
+        Meteor.users.attachSchema( new SimpleSchema( schema ));
+    } else {
+        console.error( 'expected a function or an Object, found', schema );
+    }
+}
 
 /*
 import validator from 'email-validator';

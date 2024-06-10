@@ -8,7 +8,6 @@ AccountsManager.i18n = {
         en: {
             header: {
                 admin_notes_th: 'Admin Notes',
-                api_allowed_th: 'Is API access allowed',
                 email_address_th: 'Email address',
                 email_verified_th: 'Is verified',
                 last_connection_th: 'Last connection',
@@ -18,6 +17,11 @@ AccountsManager.i18n = {
             },
             more: {
                 title: 'Display more email addresses...'
+            },
+            buttons: {
+                delete_title: 'Delete the "%s" account',
+                edit_title: 'Edit the "%s" account',
+                info_title: 'Informations about the "%s" account record'
             }
             /*
             accounts: {

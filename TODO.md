@@ -11,7 +11,8 @@
 |   Id | Date       | Description and comment(s) |
 | ---: | :---       | :---                       |
 |    1 | 2024- 6- 3 | Manage several email addresses per user |
-|    2 |  |  |
+|    2 | 2024- 6- 9 | AccountsList: let the application manage the info, edit and delete buttons |
+|    3 |  |  |
 
 ---
 ## Done

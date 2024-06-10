@@ -7,7 +7,8 @@ import _ from 'lodash';
 AccountsManager._conf = {};
 
 AccountsManager._defaults = {
-    verbosity: AccountsManager.C.Verbose.CONFIGURE
+    verbosity: AccountsManager.C.Verbose.CONFIGURE,
+    schema: {}
 };
 
 /**
