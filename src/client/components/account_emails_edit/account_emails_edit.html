@@ -1,0 +1,40 @@
+<template name="account_emails_edit">
+    <div class="c-account-emails-edit">
+
+        <table class="form-table am-subtable">
+            <thead>
+                <tr>
+                    <th class="ui-w100">{{ i18n key="list.email_address_th" }}</th>
+                    <th>{{ i18n key="list.email_verified_th" }}</th>
+                    <th class="d-flex">
+                        <button class="btn btn-sm no-border ui-transparent">
+                            <span class="fa-solid fa-fw fa-checked"></span>
+                        </button>
+                        <button class="btn btn-sm btn-outline-primary js-plus" title="{{ i18n key="panel.add_title" }}">
+                            <span class="fa-solid fa-fw fa-plus"></span>
+                        </button>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                {{#each it in itemsList }}
+                    <tr data-row-id="{{ it.DYN.rowid }}">
+                        <td><input class="form-control js-email" type="email" id="ident-tab-email" placeholder="{{ i18n key="panel.email_ph" }}" value="{{ it.address }}" /></td>
+                        <td><input class="form-check-input js-verified" type="checkbox" id="ident-tab-verified" value="{{ it.verified }}" /></td>
+                        <td>
+                            <div class="d-flex">
+                                <button class="btn btn-sm no-border js-check {{ transparentIfNotValid it }}" title="{{ i18n key="panel.line_valid" }}">
+                                    <span class="fa-solid fa-fw fa-check"></span>
+                                </button>
+                                <button class="btn btn-sm btn-outline-primary js-minus" title="{{ i18n key="panel.remove_title" }}">
+                                    <span class="fa-solid fa-fw fa-minus"></span>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                {{/each}}
+            </tbody>
+        </table>
+
+    </div>
+</template>

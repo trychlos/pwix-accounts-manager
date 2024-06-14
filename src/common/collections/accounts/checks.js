@@ -1,114 +1,75 @@
 /*
- * pwix:accounts-manager/src/common/collections/accounts/accounts.js
- *
- * Source:
- *  https://guide.meteor.com/accounts.html
- *  https://docs.meteor.com/api/accounts.html
- *
- * Thanks to the accounts-base package, Meteor automagically creates a 'users' collection. The document created defaults to be:
- * 
- *  {
- *      _id: 'oDTZ93Dr3TyRKgeaF',
- *      services: {
- *        password: {
- *          bcrypt: '$2b$10$C8brjVoSZhl4phmV7KJGGeKP3az9bd7YB4i5xpyIE172D5RWrmjJ6'
- *        },
- *        resume: {
- *          loginTokens: [
- *            {
- *              when: ISODate('2024-06-03T15:42:20.849Z'),
- *              hashedToken: '+g9yq6RdL1jMrYVSDXmVhLIDfS2IVtUdBVHC6A63jjs='
- *            },
- *            {
- *              when: ISODate('2024-06-03T15:42:43.305Z'),
- *              hashedToken: 'ACQ/4Z8WSevPzDLo9ix6GZ+SLZgTO9qK4Yf0TDdPX7Q='
- *            }
- *          ]
- *        },
- *        email: { verificationTokens: [] }
- *      },
- *      emails: [ { address: 'aaaa@aaa.aa', verified: false } ],
- *    }
- * 
- * We define here the desired schema.
+ * pwix:accounts-manager/src/common/collections/accounts/checks.js
  */
 
-import SimpleSchema from 'meteor/aldeed:simple-schema';
+import validator from 'email-validator';
 
-// define the schema without taking care of added behaviours
-// Meteor base Accounts already (and only) defines emails, username, profile and services
-AccountsManager.schema = new SimpleSchema({
-    _id: {
-        type: String
-    },
-    emails: {
-        type: Array,
-        optional: true
-    },
-    'emails.$': {
-        type: Object
-    },
-    'emails.$.address': {
-        type: String,
-        regEx: SimpleSchema.RegEx.Email,
-    },
-    'emails.$.verified': {
-        type: Boolean
-    },
-    username: {
-        type: String,
-        optional: true
-    },
-    profile: {
-        type: Object,
-        optional: true,
-        blackbox: true
-    },
-    services: {
-        type: Object,
-        optional: true,
-        blackbox: true
-    },
-    lastConnection: {
-        type: Date
-    },
-    loginAllowed: {
-        type: Boolean,
-        defaultValue: true
-    },
-    userNotes: {
-        type: String
-    },
-    adminNotes: {
-        type: String
+import { pwixI18n } from 'meteor/pwix:i18n';
+import { Roles } from 'meteor/pwix:roles';
+import { TM } from 'meteor/pwix:typed-message';
+
+AccountsManager.checks = {};
+
+AccountsManager.checks.canDelete = async function( userId ){
+    return await Roles.userIsInRoles( userId, AccountsManager._conf.roles.delete );
+};
+
+// fields check
+//  - value: mandatory, the value to be tested
+//  - item: optional, if set the target item, i.e. the item to be updated with this value
+//  - index: the index of the current record in an array (for example the index of an email address in the emails array)
+//  - update: unless false, let the item be updated with the value if no TypedMessage is emitted
+// returns a TypedMessage, or an array of TypedMessage, or null
+
+AccountsManager.checks.check_email_address = async function( args ){
+    if( args.update !== false ){
+        args.item = args.item || {};
+        args.item.emails = args.item.emails || [];
+        args.item.emails[args.index] = args.item.emails[args.index] || {};
+        args.item.emails[args.index].address = value;
     }
-});
-
-// add behaviours to our collection
-Meteor.users.attachSchema( AccountsManager.schema );
-Meteor.users.attachBehaviour( 'timestampable' );
-
-// extends the above default schema with an application-provided piece
-const schema = AccountsManager._conf.schema;
-if( schema ){
-    if( typeof schema === 'function' ){
-        const o = schema();
-        check( o, Object );
-        Meteor.users.attachSchema( new SimpleSchema( o ));
-    } else if( typeof schema === 'Object' ){
-        Meteor.users.attachSchema( new SimpleSchema( schema ));
-    } else {
-        console.error( 'expected a function or an Object, found', schema );
+    if( !value ){
+        return new TM.TypedMessage({
+            type: TM.MessageType.C.ERROR,
+            message: pwixI18n.label( I18N, 'check.email_unset' )
+        });
     }
+    if( !validator.validate( value )){
+        return new TM.TypedMessage({
+            type: TM.MessageType.C.ERROR,
+            message: pwixI18n.label( I18N, 'check.email_invalid' )
+        });
+    }
+    return AccountsTools.byEmail( value )
+        .then(( user ) => {
+            let ok = false;
+            if( user ){
+                // we have found a user
+                ok = user._id === args.item._id;
+            } else {
+                ok = true;
+            }
+            return ok ? null : new TM.TypedMessage({
+                type: TM.MessageType.C.ERROR,
+                message: pwixI18n.label( I18N, 'accounts.check.email_exists' )
+            });
+        });
+};
+
+AccountsManager.checks.check_email_verified = async function( args ){
+    if( args.update !== false ){
+        args.item = args.item || {};
+        args.item.emails = args.item.emails || [];
+        args.item.emails[args.index] = args.item.emails[args.index] || {};
+        args.item.emails[args.index].verified = value;
+    }
+    return null;
 }
 
 /*
-import validator from 'email-validator';
 
 import { Accounts } from 'meteor/accounts-base';
-import { CoreApp } from 'meteor/pwix:core-app';
 import { Mongo } from 'meteor/mongo';
-import { pwixI18n } from 'meteor/pwix:i18n';
 
 // check functions to be able to use a FormChecker in the UI
 export const AccountsChecks = {

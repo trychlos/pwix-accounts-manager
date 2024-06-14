@@ -2,13 +2,13 @@
  * pwix:accounts-manager/src/common/collections/accounts/server/methods.js
  */
 
-/*
-import { Accounts } from 'meteor/accounts-base';
-
-import '../accounts.js';
-
 Meteor.methods({
+    // remove an account
+    async 'account.remove'( id ){
+        return await AccountsManager.server.removeAccount( id, Meteor.userId());
+    },
 
+/*
     // retrieve an account by its email address
     'account.byEmail'( email ){
         return Accounts.findUserByEmail( email );
@@ -29,19 +29,6 @@ Meteor.methods({
         const res = Meteor.users.update({ _id: id }, { $unset: unset });
         console.debug( 'account.clearAttributes', id, array, res );
         return res;
-    },
-
-    // remove an account
-    'account.remove'( id ){
-        let ret = null;
-        try {
-            ret = Meteor.users.remove({ _id: id });
-        } catch( e ){
-            throw new Meteor.Error(
-                'account.remove',
-                'Unable to remove "'+id+'" account' );
-        }
-        return ret;
     },
 
     // set attributes on an account
@@ -99,5 +86,5 @@ Meteor.methods({
         }
         return ret;
     }
-});
 */
+});

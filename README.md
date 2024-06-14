@@ -1,6 +1,6 @@
 # pwix:accounts-manager
 
-## What is it
+## What is it ?
 
 A try to mutualize and factorize the most common part of a simple accounts management system:
 
@@ -12,7 +12,7 @@ A try to mutualize and factorize the most common part of a simple accounts manag
 
 `pwix:accounts-manager` is based on Meteor `accounts-base`, and extends its standard schema as:
 
-```
+```js
     {
         _id: {
             type: String
@@ -63,12 +63,26 @@ A try to mutualize and factorize the most common part of a simple accounts manag
 
 As it also makes the collection timestampable, following fields are also added and maintained:
 
-```
+```js
     createdAt
     updatedAt
     CreatedBy
     updatedBy
 ```
+
+## Provides
+
+### `AccountsManager`
+
+The exported `AccountsManager` global object provides following items:
+
+#### Functions
+
+#### Blaze components
+
+##### `AccountsList`
+
+The component list the defined accounts as a `pwix:tabular_ext` table, with standard 'Informations', 'Edit' and 'Delete' buttons.
 
 ## Configuration
 
@@ -76,18 +90,58 @@ The package's behavior can be configured through a call to the `AccountsManager.
 
 Known configuration options are:
 
-- `schema`
+- `classes`
 
-    Let the application extends the default schema by providing an object suitable to be used for a `SimpleSchema` instanciation.
+    Let the application provides some classes to add to the display.
 
     Defauts to nothing.
+
+- `fields`
+
+    Let the application extends the default schema by providing additional fields as an object:
+
+    - where keys are the names of the fields to be added in the MongoDB
+    - and values are themselves an object with following keys:
+
+        - `schema`: a description suitable to be used for a `SimpleSchema` instanciation
+
+    Defauts to nothing.
+
+- `haveEmailAddress`
+- `haveUsername`
+
+    Whether the user accounts are to be configured with or without a username (resp. an email address), and whether it is optional or mandatory.
+
+    For each of these terms, accepted values are:
+
+    - `AccountsManager.C.Input.NONE`: the field is not displayed nor considered
+    - `AccountsManager.C.Input.OPTIONAL`: the input field is proposed to the user, but may be left empty
+    - `AccountsManager.C.Input.MANDATORY`: the input field must be filled by the user
+
+    At least one of these fields MUST be set as `AccountsManager.C.Input.MANDATORY`. Else, the default value will be applied.
+
+    Defauts to:
+
+    - `haveEmailAddress`: `AccountsManager.C.Input.MANDATORY`
+    - `haveUsername`: `AccountsManager.C.Input.NONE`
+
+    Please be conscious that some features of your application may want display an identifier for each user. It would be a security hole to let the application display a verified email address anywhere, as this would be some sort of spam magnet!
+
+- `roles`
+
+    Let the application provides the permissions required to perform CRUD operations on the Users collection. This is an object with following keys:
+
+    - `list`: defaulting to `null` (allowed to all)
+    - `create`: defaulting to `null` (allowed to all)
+    - `edit`: defaulting to `null` (allowed to all)
+    - `delete`: defaulting to `null` (allowed to all)
 
 - `verbosity`
 
     The verbosity level as:
-    
+
     - `AccountsManager.C.Verbose.NONE`
-    
+
     or an OR-ed value of integer constants:
 
     - `AccountsManager.C.Verbose.CONFIGURE`
@@ -102,21 +156,37 @@ Please note that `AccountsManager.configure()` method should be called in the sa
 
 Remind too that Meteor packages are instanciated at application level. They are so only configurable once, or, in other words, only one instance has to be or can be configured. Addtionnal calls to `AccountsManager.configure()` will just override the previous one. You have been warned: **only the application should configure a package**.
 
-## Provides
-
-### `AccountsManager`
-
-The globally exported object of this package.
-
-### Blaze components
-
-#### `AccountsList`
-
-The component list the defined accounts as a `pwix:tabular_ext` table, with standard 'Informations', 'Edit' and 'Delete' buttons.
-
 ## NPM peer dependencies
 
-This package has no NPM dependencies.
+Starting with v 0.1.0, and in accordance with advices from [the Meteor Guide](https://guide.meteor.com/writing-atmosphere-packages.html#peer-npm-dependencies), we no more hardcode NPM dependencies in the `Npm.depends` clause of the `package.js`.
+
+Instead we check npm versions of installed packages at runtime, on server startup, in development environment.
+
+Dependencies as of v 0.3.0:
+
+```js
+    '@popperjs/core': '^2.11.6',
+    'bootstrap': '^5.2.1',
+    'lodash': '^4.17.0'
+```
+
+Each of these dependencies should be installed at application level:
+
+```sh
+    meteor npm install <package> --save
+```
+
+## Translations
+
+None at the moment.
+
+## Cookies and comparable technologies
+
+None at the moment.
+
+## Issues & help
+
+In case of support or error, please report your issue request to our [Issues tracker](https://github.com/trychlos/pwix-accounts-manager/issues).
 
 ---
 P. Wieser

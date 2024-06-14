@@ -7,8 +7,17 @@ import _ from 'lodash';
 AccountsManager._conf = {};
 
 AccountsManager._defaults = {
-    verbosity: AccountsManager.C.Verbose.CONFIGURE,
-    schema: {}
+    classes: '',
+    fields: {},
+    haveEmailAddress: AccountsManager.C.Input.MANDATORY,
+    haveUsername: AccountsManager.C.Input.NONE,
+    roles: {
+        list: null,
+        create: null,
+        edit: null,
+        delete: null
+    },
+    verbosity: AccountsManager.C.Verbose.CONFIGURE
 };
 
 /**

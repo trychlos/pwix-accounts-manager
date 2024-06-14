@@ -5,15 +5,14 @@
  * - see README
  */
 
-//import { Bootbox } from 'meteor/pwix:bootbox';
-//import { jqTable } from 'meteor/pwix:jqtable';
-//import { Modal } from 'meteor/pwix:modal';
+import { Modal } from 'meteor/pwix:modal';
 import { pwixI18n } from 'meteor/pwix:i18n';
-//import { Roles } from 'meteor/pwix:roles';
-//import { Tolert } from 'meteor/pwix:tolert';
+import { Roles } from 'meteor/pwix:roles';
+import { Tolert } from 'meteor/pwix:tolert';
+
+import '../AccountPanel/AccountPanel.js';
 
 import './AccountsList.html';
-import './AccountsList.less';
 
 Template.AccountsList.onCreated( function(){
     const self = this;
@@ -27,38 +26,6 @@ Template.AccountsList.onCreated( function(){
             handle: self.subscribe( 'Roles.allAssignments'),
             list: null
         },
-        /*
-        // compare two booleans
-        compareBool( tra, trb, name ){
-            const idx = self.$( 'table.js-table th[data-jqwt-name="'+name+'"]' ).data( 'jqwt-idx' );
-            const ba = self.$( self.$( tra ).find( 'td' )[idx] ).find( 'input[type="checkbox"]' ).is( ':checked' );
-            const bb = self.$( self.$( trb ).find( 'td' )[idx] ).find( 'input[type="checkbox"]' ).is( ':checked' );
-            return (( ba && bb ) || ( !ba && !bb )) ? 0 : ( ba ? 1 : -1 );
-        },
-        // compare isAllowed booleans
-        compareBoolAllowed( tra, trb ){
-            return self.APP.compareBool( tra, trb, 'allowed' );
-        },
-        // compare apiAllowed booleans
-        compareBoolApiAllowed( tra, trb ){
-            return self.APP.compareBool( tra, trb, 'api-allowed' );
-        },
-        // compare mailVerified booleans
-        compareBoolVerified( tra, trb ){
-            return self.APP.compareBool( tra, trb, 'verified' );
-        },
-        // compare two dates
-        compareDate( tra, trb, name ){
-            const idx = self.$( 'table.js-table th[data-jqwt-name="'+name+'"]' ).data( 'jqwt-idx' );
-            const da = self.$( self.$( tra ).find( 'td' )[idx] ).find( 'p' ).data( 'app-date' );
-            const db = self.$( self.$( trb ).find( 'td' )[idx] ).find( 'p' ).data( 'app-date' );
-            return da.localeCompare( bb );
-        },
-        // compare lastConnection dates
-        compareDateConnection( tra, trb ){
-            return self.APP.compareDate( tra, trb, 'lastconnection' );
-        },
-        */
         // returns the identified user
         user( id ){
             //console.log( 'id',id, 'accounts', self.APP.accounts.list.get());
@@ -99,7 +66,9 @@ Template.AccountsList.onCreated( function(){
     self.autorun(() => {
         if( self.AL.assignments.handle.ready()){
             self.AL.accounts.list.get().forEach(( u ) => {
-                u.attributedRoles.set( Roles.directRolesForUser( u, { anyScope: true }));
+                Roles.directRolesForUser( u, { anyScope: true }).then(( res ) => {
+                    u.attributedRoles.set( res );
+                });
             });
         }
     });
@@ -114,14 +83,37 @@ Template.AccountsList.onCreated( function(){
     });
 });
 
-Template.AccountsList.onRendered( function(){
-    const self = this;
-
-    //self.AL.table = new jqTable.DataTable( '.AccountsList table.jq-table' );
-});
-
 Template.AccountsList.helpers({
+    // whether the current user has the permission to see the list of accounts
+    allowed(){
+        return true;
+    }
 });
 
 Template.AccountsList.events({
+    // delete an account
+    'tabular-ext-delete-event .AccountsList'( event, instance, data ){
+        const label = data.item.emails.length ? data.item.emails[0].address : data.item._id;
+        Meteor.callAsync( 'account.remove', data._id, ( e, res ) => {
+            if( e ){
+                Tolert.error({ type:e.error, message:e.reason });
+            } else {
+                Tolert.success( pwixI18n.label( I18N, 'delete.success', label ));
+            }
+        });
+        return false; // doesn't propagate
+    },
+
+    // edit an account
+    'tabular-ext-edit-event .AccountsList'( event, instance, data ){
+        Modal.run({
+            mdBody: 'AccountPanel',
+            mdButtons: [ Modal.C.Button.CANCEL, Modal.C.Button.OK ],
+            mdClasses: 'modal-lg',
+            //mdClassesContent: Meteor.APP.Pages.current.page().get( 'theme' ),
+            mdTitle: pwixI18n.label( I18N, 'edit.modal_title' ),
+            item: data.item
+        });
+        return false;
+    }
 });

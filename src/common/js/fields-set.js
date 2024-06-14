@@ -1,0 +1,117 @@
+/*
+ * pwix:accounts-manager/src/common/js/fields.js
+ *
+ * Define here the fields we manage at the pwix:accounts-manager level, so that these definitions can be used:
+ * - by SimpleSchema
+ * - by Datatables, via pwix:tabular-ext and aldeed:tabular
+ * - when rendering the edition templates
+ * - chen cheking the fields in the edition panels
+ */
+
+import { Forms } from 'meteor/pwix:forms';
+import { Notes } from 'meteor/pwix:notes';
+import { pwixI18n } from 'meteor/pwix:i18n';
+import SimpleSchema from 'meteor/aldeed:simple-schema';
+
+import '../collections/accounts/checks.js';
+
+AccountsManager.fieldsSet = new Forms.FieldsSet(
+    {
+        field: '_id',
+        type: String,
+        dt_tabular: false
+    },
+    {
+        field: 'emails',
+        type: Array,
+        optional: true,
+        dt_visible: false
+    },
+    {
+        field: 'emails.$',
+        type: Object,
+        optional: true,
+        dt_tabular: false
+    },
+    {
+        field: 'emails.$.address',
+        type: String,
+        regEx: SimpleSchema.RegEx.Email,
+        dt_data: false,
+        dt_title: pwixI18n.label( I18N, 'list.email_address_th' ),
+        dt_template: Meteor.isClient && Template.email_address,
+        form_check: AccountsManager.checks.check_email_address
+    },
+    {
+        field: 'emails.$.verified',
+        type: Boolean,
+        dt_data: false,
+        dt_title: pwixI18n.label( I18N, 'list.email_verified_th' ),
+        dt_template: Meteor.isClient && Template.email_verified,
+        form_check: AccountsManager.checks.check_email_verified
+    },
+    {
+        dt_template: Meteor.isClient && Template.email_more
+    },
+    {
+        field: 'username',
+        type: String,
+        optional: true,
+        dt_title: pwixI18n.label( I18N, 'list.username_th' )
+    },
+    {
+        field: 'profile',
+        type: Object,
+        optional: true,
+        blackbox: true,
+        dt_tabular: false
+    },
+    {
+        field:  'services',
+        type: Object,
+        optional: true,
+        blackbox: true,
+        dt_tabular: false
+    },
+    {
+        field: 'lastConnection',
+        type: Date,
+        dt_title: pwixI18n.label( I18N, 'list.last_connection_th' ),
+    },
+    {
+        field: 'loginAllowed',
+        type: Boolean,
+        defaultValue: true,
+        dt_title: pwixI18n.label( I18N, 'list.login_allowed_th' )
+    },
+    Notes.field({
+        field: 'adminNotes',
+        dt_title: pwixI18n.label( I18N, 'list.admin_notes_th' ),
+        //dt_template: Meteor.isClient && Notes.template
+    }),
+    Notes.field({
+        field: 'userNotes',
+        dt_title: pwixI18n.label( I18N, 'list.user_notes_th' ),
+        //dt_template: Meteor.isClient && Notes.template
+    }),
+    {
+        field: 'createdAt',
+        schema: false,
+        dt_visible: false
+    },
+    {
+        field: 'createdBy',
+        schema: false,
+        dt_visible: false
+    },
+    {
+        field: 'updatedAt',
+        schema: false,
+        dt_visible: false
+    },
+    {
+        field: 'updatedBy',
+        schema: false,
+        dt_visible: false
+    }
+);

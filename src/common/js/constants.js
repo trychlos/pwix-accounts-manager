@@ -3,6 +3,14 @@
  */
 
 AccountsManager.C = {
+
+    // username / email address input rule
+    Input: {
+        NONE: 'AM_FIELD_NONE',
+        OPTIONAL: 'AM_FIELD_OPTIONAL',
+        MANDATORY: 'AM_FIELD_MANDATORY'
+    },
+
     // verbosity levels
     Verbose: {
         NONE: 0,

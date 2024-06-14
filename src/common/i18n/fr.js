@@ -1,52 +1,52 @@
 /*
- * pwix:accounts-manager/src/common/i18n/en.js
+ * pwix:accounts-manager/src/common/i18n/fr.js
  */
 
 AccountsManager.i18n = {
     ...AccountsManager.i18n,
     ...{
-        en: {
+        fr: {
             buttons: {
-                delete_title: 'Delete the "%s" account',
-                edit_title: 'Edit the "%s" account',
-                info_title: 'Informations about the "%s" account record'
+                delete_title: 'Supprime le compte "%s"',
+                edit_title: 'Edite le compte "%s"',
+                info_title: 'Informations sur l\'enregistrement "%s"'
             },
             check: {
-                email_exists: 'This email address already exists',
-                email_invalid: 'This email address is not valid',
-                email_unset: 'An email address is mandatory',
-                username_exists: 'This username already exists'
+                email_exists: 'Cette adresse de messagerie est déjà utilisée',
+                email_invalid: 'Cette adresse de messagerie n\'est pas valide',
+                email_unset: 'Une adresse de messagerie est obligatoire',
+                username_exists: 'Ce nom d\'utilisateur est déjà utilisé'
             },
             delete: {
-                success: 'The "%s" has been successfully deleted'
+                success: 'Le compte "%s" a été supprimé avec succès'
             },
             edit: {
-                modal_title: 'Editing an account'
+                modal_title: 'Editer un compte'
             },
             list: {
-                admin_notes_th: 'Admin Notes',
-                email_address_th: 'Email address',
-                email_verified_th: 'Is verified',
-                last_connection_th: 'Last connection',
-                login_allowed_th: 'Is connection allowed',
-                more_title: 'Display more email addresses...',
-                user_notes_th: 'User Notes',
-                username_th: 'Username'
+                admin_notes_th: 'Notes de l\'administrateur',
+                email_address_th: 'Addresse email',
+                email_verified_th: 'Vérifiéee',
+                last_connection_th: 'Dernière connexion',
+                login_allowed_th: 'Connexion autorisée',
+                more_title: 'Afficher davantage d\'adresses email...',
+                user_notes_th: 'Notes de l\'utilisateur',
+                username_th: 'Nom d\'utilisateur'
             },
             panel: {
-                add_title: 'Add an email address',
-                email_label: 'Email :',
+                add_title: 'Ajouter une adresse de messagerie',
+                email_label: 'Adresse de messagerie :',
                 email_ph: 'you@example.com',
-                last_login_label: 'Last connection :',
-                line_valid: 'Whether this line is valid',
-                login_allowed_label: 'Is connection allowed :',
-                remove_title: 'Remove this email address',
-                username_label: 'Username :',
-                username_ph: 'John42',
-                verified_label: 'Is email verified :'
+                last_login_label: 'Dernière connexion :',
+                line_valid: 'Indicateur de validité de la ligne',
+                login_allowed_label: 'Connexion autorisée :',
+                remove_title: 'Supprimer cette adresse de messagerie',
+                username_label: 'Nom d\'utilisateur :',
+                username_ph: 'Un nom d\'utilisateur',
+                verified_label: 'Adresse email vérifiée :'
             },
             tabs: {
-                ident_title: 'Identity'
+                ident_title: 'Identité'
             }
         /*
             accounts: {
