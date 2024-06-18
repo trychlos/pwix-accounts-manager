@@ -26,7 +26,7 @@ import './AccountPanel.html';
 Template.AccountPanel.onCreated( function(){
     const self = this;
 
-    self.APP = {
+    self.AM = {
         // the global Checker for this modal
         checker: new ReactiveVar( null ),
         // the global Message zone for this modal
@@ -41,12 +41,12 @@ Template.AccountPanel.onCreated( function(){
 
     // keep the initial 'new' state
     self.autorun(() => {
-        self.APP.isNew.set( _.isNil( Template.currentData().item ));
+        self.AM.isNew.set( _.isNil( Template.currentData().item ));
     });
 
     // setup the item to be edited
     self.autorun(() => {
-        self.APP.item.set( Template.currentData().item || {} );
+        self.AM.item.set( Template.currentData().item || {} );
     });
 });
 
@@ -54,10 +54,10 @@ Template.AccountPanel.onRendered( function(){
     const self = this;
 
     // whether we are running inside of a Modal
-    self.APP.isModal = self.$( '.AccountPanel' ).closest( '.modal-dialog' ).length > 0;
+    self.AM.isModal = self.$( '.AccountPanel' ).closest( '.modal-dialog' ).length > 0;
 
     // set the modal target+title
-    if( self.APP.isModal ){
+    if( self.AM.isModal ){
         Modal.set({
             target: self.$( '.AccountPanel' )
         });
@@ -65,9 +65,14 @@ Template.AccountPanel.onRendered( function(){
 
     // allocate an Checker for this (topmost parent) template
     self.autorun(() => {
-        self.APP.checker.set( new Forms.Checker({
+        self.AM.checker.set( new Forms.Checker({
             instance: self,
-            messager: self.APP.messager
+            messager: self.AM.messager,
+            okFn( valid ){
+                if( self.AM.isModal ){
+                    Modal.set({ buttons: { id: Modal.C.Button.OK, enabled: valid }});
+                }
+            }
         }));
     });
 });
@@ -76,7 +81,7 @@ Template.AccountPanel.helpers({
     // parms to coreErrorMsg
     parmsErrorMsg(){
         return {
-            errorsSet: Template.instance().APP.checker.get()
+            orderable: Template.instance().AM.messager
         };
     },
 
@@ -84,8 +89,8 @@ Template.AccountPanel.helpers({
     parmsTabbed(){
         const dataContext = this;
         const paneData = {
-            item: Template.instance().APP.item,
-            checker: Template.instance().APP.checker
+            item: Template.instance().AM.item,
+            checker: Template.instance().AM.checker
         };
         return {
             tabs: [
@@ -135,7 +140,7 @@ Template.AccountPanel.events({
     //  those who are using FormChecker directly update the edited item
     //  we have to manage others
     'panel-data .AccountPanel'( event, instance, data ){
-        //console.debug( 'id', data.id, 'myTabId', instance.APP.tabId.get(), data );
+        //console.debug( 'id', data.id, 'myTabId', instance.AM.tabId.get(), data );
         switch( data.emitter ){
             case 'notes':
                 instance.item.get().notes = data.data;
@@ -156,19 +161,19 @@ Template.AccountPanel.events({
     // submit
     'iz-submit .AccountPanel'( event, instance ){
         //console.debug( event, instance );
-        let item = instance.APP.item.get();
+        let item = instance.AM.item.get();
         let email = item.emails[0].address;
         // merge all data parts
-        Object.keys( instance.APP.dataParts.all()).every(( emitter ) => {
+        Object.keys( instance.AM.dataParts.all()).every(( emitter ) => {
             // ident panel
             if( emitter === 'ident' ){
                 ;
             } else if( emitter === 'roles' ){
-                item.roles = instance.APP.dataParts.get( emitter ).data;
+                item.roles = instance.AM.dataParts.get( emitter ).data;
             } else if( emitter === 'settings' ){
                 ;
             } else if( emitter === 'notes' ){
-                item.notes = instance.APP.dataParts.get( emitter ).data
+                item.notes = instance.AM.dataParts.get( emitter ).data
             }
             return true;
         });
@@ -199,7 +204,7 @@ Template.AccountPanel.events({
             }
         }
         // when creating a new account, we let the user create several by reusing the same modal
-        if( instance.APP.isNew.get()){
+        if( instance.AM.isNew.get()){
             AccountsUI.Account.createUser({
                 username: item.username,
                 password: item.password,

@@ -21,19 +21,14 @@ Template.account_ident_panel.onCreated( function(){
     const self = this;
 
     self.APP = {
-        fields: {
+        panel: new Forms.PanelSpec({
             username: {
-                js: '.js-username',
-                valFrom( it ){
-                    return it.username || '';
-                }
+                js: '.js-username'
             },
             loginAllowed: {
-                js: '.js-login-allowed',
-                valFrom( it ){
-                    return it.isAllowed || false;
-                }
-            },
+                js: '.js-login-allowed'
+            }
+        }),
             /*
             apiAllowed: {
                 js: '.js-api-allowed',
@@ -42,7 +37,6 @@ Template.account_ident_panel.onCreated( function(){
                 }
             }
                 */
-        },
         // the Form.Checker instance for this panel
         checker: new ReactiveVar( null ),
 
@@ -69,8 +63,10 @@ Template.account_ident_panel.onRendered( function(){
             self.APP.checker.set( new Forms.Checker({
                 instance: self,
                 parent: parentChecker,
-                fields: self.APP.fields,
-                checks: AccountsManager.checks
+                panel: self.APP.panel.iPanelPlus( AccountsManager.fieldsSet ),
+                data: {
+                    item: Template.currentData().item
+                }
             }));
         }
     });

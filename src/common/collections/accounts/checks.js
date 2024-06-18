@@ -2,6 +2,7 @@
  * pwix:accounts-manager/src/common/collections/accounts/checks.js
  */
 
+const assert = require( 'assert' ).strict;
 import validator from 'email-validator';
 
 import { pwixI18n } from 'meteor/pwix:i18n';
@@ -16,17 +17,43 @@ AccountsManager.checks.canDelete = async function( userId ){
 
 // fields check
 //  - value: mandatory, the value to be tested
-//  - item: optional, if set the target item, i.e. the item to be updated with this value
-//  - index: the index of the current record in an array (for example the index of an email address in the emails array)
-//  - update: unless false, let the item be updated with the value if no TypedMessage is emitted
+//  - data: optional, the data passed to Checker instanciation
+//    if set the target item as a ReactiveVar, i.e. the item to be updated with this value
+//  - opts: an optional behaviour options, with following keys:
+//    > update: whether the item be updated with the value, defaults to true
+//    > id: the identifier of the edited row when editing an array
 // returns a TypedMessage, or an array of TypedMessage, or null
 
-AccountsManager.checks.check_email_address = async function( args ){
-    if( args.update !== false ){
-        args.item = args.item || {};
-        args.item.emails = args.item.emails || [];
-        args.item.emails[args.index] = args.item.emails[args.index] || {};
-        args.item.emails[args.index].address = value;
+// item is a ReactiveVar which contains the edited record
+const _assert_data_itemrv = function( caller, data ){
+    assert.ok( data, caller+' data required' );
+    assert.ok( data.item, caller+' data.item required' );
+    assert.ok( data.item instanceof ReactiveVar, caller+' data.item expected to be a ReactiveVar' );
+}
+
+// returns the index of the identified row in the array
+const _id2index = function( array, id ){
+    for( let i=0 ; i<array.length ; ++i ){
+        if( array[i].id === id ){
+            return i;
+        }
+    }
+    console.warn( 'id='+id+' not found' );
+    return -1;
+}
+
+AccountsManager.checks.check_email_address = async function( value, data, opts ){
+    _assert_data_itemrv( 'AccountsManager.checks.check_email_address()', data );
+    console.debug( 'check_email_address', arguments );
+    let item = data.item.get();
+    const index = opts.id ? _id2index( item.emails, opts.id ) : -1;
+    if( opts.update !== false ){
+        if( index < 0 ){
+            item.emails = item.emails || [];
+            item.emails.push({ id: opts.id });
+            index = 0;
+        }
+        item.emails[index].address = value;
     }
     if( !value ){
         return new TM.TypedMessage({
@@ -45,7 +72,7 @@ AccountsManager.checks.check_email_address = async function( args ){
             let ok = false;
             if( user ){
                 // we have found a user
-                ok = user._id === args.item._id;
+                ok = user._id === item._id;
             } else {
                 ok = true;
             }
@@ -56,15 +83,24 @@ AccountsManager.checks.check_email_address = async function( args ){
         });
 };
 
-AccountsManager.checks.check_email_verified = async function( args ){
-    if( args.update !== false ){
-        args.item = args.item || {};
-        args.item.emails = args.item.emails || [];
-        args.item.emails[args.index] = args.item.emails[args.index] || {};
-        args.item.emails[args.index].verified = value;
+AccountsManager.checks.check_email_verified = async function( value, data, opts ){
+    _assert_data_itemrv( 'AccountsManager.checks.check_email_verified()', data );
+    const item = data.item.get();
+    const index = opts.id ? _id2index( item.emails, opts.id ) : -1;
+    if( opts.update !== false ){
+        if( index < 0 ){
+            item.emails = item.emails || [];
+            item.emails.push({ id: opts.id });
+            index = 0;
+        }
+        item.emails[index].verified = value;
     }
     return null;
 }
+
+
+// loginAlllowed
+//  emit a warning when the user is about to disallow himself
 
 /*
 

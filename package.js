@@ -42,7 +42,8 @@ function configure( api ){
     api.use( 'pwix:tabular-ext@1.0.0-rc' );
     api.use( 'pwix:typed-message@1.0.0-rc' );
     api.use( 'pwix:ui-bootstrap5@2.0.0-rc' );
-    api.use( 'pwix:ui-utils@1.0.0-rc' );
+    api.use( 'pwix:ui-utils@1.1.0' );
+    api.use( 'random' );
     api.use( 'reactive-var' );
     api.addFiles( 'src/client/components/AccountPanel/AccountPanel.js', 'client' );
     api.addFiles( 'src/client/components/AccountsList/AccountsList.js', 'client' );

@@ -11,23 +11,46 @@
 import _ from 'lodash';
 
 import { pwixI18n } from 'meteor/pwix:i18n';
+import { Random } from 'meteor/random';
 
 import './account_emails_edit.html';
 
 Template.account_emails_edit.onCreated( function(){
     const self = this;
 
-    self.APP = {
-        fields: {
+    self.AM = {
+        panel: new Forms.PanelSpec({
             'emails.$.address': {
                 js: '.js-email'
             },
             'emails.$.verified': {
                 js: '.js-verified'
             }
-        },
+        }),
         // the Form.Checker instance for this panel
         checker: new ReactiveVar( null ),
+
+        // remove the email item
+        removeById( id ){
+            const item = Template.currentData().item.get();
+            let emails = item.emails;
+            let found = -1;
+            for( let i=0 ; i<emails.length ; ++i ){
+                if( emails[i].id === id ){
+                    found = i;
+                    break;
+                }
+            }
+            if( found !== -1 ){
+                emails.splice( found, 1 );
+                Template.currentData().item.set( item );
+                self.$( '.c-account-emails-edit' ).trigger( 'panel-clear', {
+                    emitter: 'emails'+id
+                });
+            } else {
+                console.warn( id, 'not found' );
+            }
+        },
 
         // send panel data
         sendPanelData( dataContext, valid ){
@@ -35,7 +58,7 @@ Template.account_emails_edit.onCreated( function(){
                 self.$( '.c-account-ident-panel' ).trigger( 'panel-data', {
                     emitter: 'ident',
                     ok: valid,
-                    data: self.APP.form.get().getForm()
+                    data: self.AM.checker.get().getForm()
                 });
             }
         }
@@ -44,31 +67,29 @@ Template.account_emails_edit.onCreated( function(){
 
 Template.account_emails_edit.onRendered( function(){
     const self = this;
+    let itemRv = null;
+
+    // get the item reactive var
+    self.autorun(() => {
+        itemRv = Template.currentData().item;
+    });
 
     // initialize the Checker for this panel as soon as we get the parent Checker
     self.autorun(() => {
         const parentChecker = Template.currentData().checker.get();
         if( parentChecker ){
-            self.APP.checker.set( new Forms.Checker({
+            self.AM.checker.set( new Forms.Checker({
                 instance: self,
                 parent: parentChecker,
-                fields: AccountsManager.fieldsSet.toForm( self.APP.fields )
+                panel: self.AM.panel.iPanelPlus( AccountsManager.fieldsSet ),
+                data: {
+                    item: itemRv
+                },
+                id( $eventTarget ){
+                    return $eventTarget.closest( 'tr' ).data( 'item-id' );
+                }
             }));
         }
-    });
-
-    // set data inside of an autorun so that it is reactive to datacontext changes
-    // initialize the display (check indicators) - let the error messages be displayed here: there should be none (though may be warnings)
-    self.autorun(() => {
-        /*
-        const form = self.APP.form.get();
-        if( form ){
-            const dataContext = Template.currentData();
-            form.setData({ item: dataContext.item })
-                .setForm( dataContext.item.get())
-                .check({ update: false }).then(( valid ) => { self.APP.sendPanelData( dataContext, valid ); });
-        }
-                */
     });
 });
 
@@ -80,34 +101,47 @@ Template.account_emails_edit.helpers({
 
     // emails addresses list
     itemsList(){
-        console.debug( 'this', this );
         return this.item.get().emails || [];
     },
 
-    // display a check if the line is valid
-    transparentIfNotValid( it ){
-        //;return it.DYN.lineValid.get() ? '' : 'x-transparent';
+    // rule: doesn't remove last connection way, i.e. keep at least one username or one email address
+    minusEnabled(){
+        return '';
+    },
+
+    // provide params to FormsCheckStatusIndicator template
+    parmsCheckStatus(){
+        return {
+            checker: Template.instance().AM.checker.get()
+        };
+    },
+
+    plusEnabled(){
+        return '';
     }
 });
 
 Template.account_emails_edit.events({
-    'ac-signup-ok .c-account-ident-panel'( event, instance, data ){
-        //console.debug( event, instance, data );
-        const ok = data.ok;
-        delete data.ok;
-        instance.APP.sendPanelData({
-            emitter: 'ident',
-            ok: ok,
-            data: { ...data }
+    'click .c-account-emails-edit .js-plus'( event, instance ){
+        const item = this.item.get();
+        let emails = item.emails || [];
+        const id = Random.id();
+        emails.push({
+            id: id
         });
+        item.emails = emails;
+        this.item.set( item );
+        // setup the new row
+        /*
+        CoreApp.DOM.waitFor( '.c-account-emails-edit tr[data-item-id="'+id+'"]' )
+            .then(( elt ) => { return instance.APP.form.get().setupDom({ id: id, $parent: instance.$( elt ) }); })
+            .then(( valid ) => { instance.APP.sendPanelData( id, valid ); });
+            */
     },
 
-        /*
-    'input .c-account-ident-panel'( event, instance ){
-        if( !Object.keys( event.originalEvent ).includes( 'FormChecker' ) || event.originalEvent['FormChecker'].handled !== true ){
-            const dataContext = this;
-            instance.APP.checker.get().inputHandler( event ).then(( valid ) => { instance.APP.sendPanelData( dataContext, valid ); });
-        }
-    }
-            */
+    'click .c-account-emails-edit .js-minus'( event, instance ){
+        //this.entityChecker.errorClear();
+        const id = instance.$( event.currentTarget ).closest( 'tr' ).data( 'item-id' );
+        instance.AM.removeById( id );
+    },
 });
