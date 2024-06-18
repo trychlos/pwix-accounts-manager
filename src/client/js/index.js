@@ -3,9 +3,9 @@
  */
 
 // import templates before defining the TabularExt class (which need them)
-import '../components/email_address/email_address.js';
-import '../components/email_more/email_more.js';
-import '../components/email_verified/email_verified.js';
+import '../components/dt_email_address/dt_email_address.js';
+import '../components/dt_email_more/dt_email_more.js';
+import '../components/dt_email_verified/dt_email_verified.js';
 //
 import '../../common/js/index.js';
 //

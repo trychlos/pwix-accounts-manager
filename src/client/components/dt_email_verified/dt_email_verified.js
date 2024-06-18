@@ -1,13 +1,13 @@
 /*
- * pwix:accounts-manager/src/client/components/email_verified/email_verified.js
+ * pwix:accounts-manager/src/client/components/dt_email_verified/dt_email_verified.js
  *
  * This template is used to display the first email address of the user.
  */
 
 
-import './email_verified.html';
+import './dt_email_verified.html';
 
-Template.email_verified.helpers({
+Template.dt_email_verified.helpers({
     // whether the first email address is verified ?
     verified(){
         const verified = this.emails.length ? this.emails[0].verified : false;

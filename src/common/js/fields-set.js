@@ -45,19 +45,21 @@ AccountsManager.fieldsSet = new Forms.FieldsSet(
         regEx: SimpleSchema.RegEx.Email,
         dt_data: false,
         dt_title: pwixI18n.label( I18N, 'list.email_address_th' ),
-        dt_template: Meteor.isClient && Template.email_address,
-        form_check: AccountsManager.checks.check_email_address
+        dt_template: Meteor.isClient && Template.dt_email_address,
+        form_check: AccountsManager.checks.check_email_address,
+        form_fieldType: Forms.FieldType.C.MANDATORY
+
     },
     {
         name: 'emails.$.verified',
         type: Boolean,
         dt_data: false,
         dt_title: pwixI18n.label( I18N, 'list.email_verified_th' ),
-        dt_template: Meteor.isClient && Template.email_verified,
+        dt_template: Meteor.isClient && Template.dt_email_verified,
         form_check: AccountsManager.checks.check_email_verified
     },
     {
-        dt_template: Meteor.isClient && Template.email_more
+        dt_template: Meteor.isClient && Template.dt_email_more
     },
     {
         name: 'username',

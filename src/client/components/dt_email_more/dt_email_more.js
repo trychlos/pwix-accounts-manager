@@ -1,5 +1,5 @@
 /*
- * pwix:accounts-manager/src/client/components/email_more/email_more.js
+ * pwix:accounts-manager/src/client/components/dt_email_more/dt_email_more.js
  *
  * This template is used to display all the email addresses of the user.
  *
@@ -10,9 +10,9 @@
 
 import { pwixI18n } from 'meteor/pwix:i18n';
 
-import './email_more.html';
+import './dt_email_more.html';
 
-Template.email_more.helpers({
+Template.dt_email_more.helpers({
     // have a blue button if active, or gray else
     colorBtnClass(){
         return this.emails.length > 1 ? 'btn-outline-primary' : 'btn-outline-secondary';

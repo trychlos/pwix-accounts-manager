@@ -10,8 +10,10 @@
 
 import _ from 'lodash';
 
+import { Forms } from 'meteor/pwix:forms';
 import { pwixI18n } from 'meteor/pwix:i18n';
 import { Random } from 'meteor/random';
+import { UI } from 'meteor/pwix:ui-utils';
 
 import './account_emails_edit.html';
 
@@ -132,11 +134,9 @@ Template.account_emails_edit.events({
         item.emails = emails;
         this.item.set( item );
         // setup the new row
-        /*
-        CoreApp.DOM.waitFor( '.c-account-emails-edit tr[data-item-id="'+id+'"]' )
-            .then(( elt ) => { return instance.APP.form.get().setupDom({ id: id, $parent: instance.$( elt ) }); })
-            .then(( valid ) => { instance.APP.sendPanelData( id, valid ); });
-            */
+        UI.DOM.waitFor( '.c-account-emails-edit tr[data-item-id="'+id+'"]' );
+            //.then(( elt ) => { return instance.APP.form.get().setupDom({ id: id, $parent: instance.$( elt ) }); })
+            //.then(( valid ) => { instance.APP.sendPanelData( id, valid ); });
     },
 
     'click .c-account-emails-edit .js-minus'( event, instance ){
