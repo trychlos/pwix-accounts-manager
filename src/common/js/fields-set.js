@@ -47,7 +47,7 @@ AccountsManager.fieldsSet = new Forms.FieldsSet(
         dt_title: pwixI18n.label( I18N, 'list.email_address_th' ),
         dt_template: Meteor.isClient && Template.dt_email_address,
         form_check: AccountsManager.checks.check_email_address,
-        form_fieldType: Forms.FieldType.C.MANDATORY
+        form_type: Forms.FieldType.C.MANDATORY
 
     },
     {

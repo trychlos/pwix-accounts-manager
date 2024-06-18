@@ -13,7 +13,7 @@ import _ from 'lodash';
 import { Forms } from 'meteor/pwix:forms';
 import { pwixI18n } from 'meteor/pwix:i18n';
 import { Random } from 'meteor/random';
-import { UI } from 'meteor/pwix:ui-utils';
+import { UIU } from 'meteor/pwix:ui-utils';
 
 import './account_emails_edit.html';
 
@@ -79,7 +79,8 @@ Template.account_emails_edit.onRendered( function(){
     // initialize the Checker for this panel as soon as we get the parent Checker
     self.autorun(() => {
         const parentChecker = Template.currentData().checker.get();
-        if( parentChecker ){
+        const checker = self.AM.checker.get();
+        if( parentChecker && !checker ){
             self.AM.checker.set( new Forms.Checker({
                 instance: self,
                 parent: parentChecker,
@@ -125,6 +126,7 @@ Template.account_emails_edit.helpers({
 
 Template.account_emails_edit.events({
     'click .c-account-emails-edit .js-plus'( event, instance ){
+        console.debug( 'click.js-plus' );
         const item = this.item.get();
         let emails = item.emails || [];
         const id = Random.id();
@@ -134,12 +136,13 @@ Template.account_emails_edit.events({
         item.emails = emails;
         this.item.set( item );
         // setup the new row
-        UI.DOM.waitFor( '.c-account-emails-edit tr[data-item-id="'+id+'"]' );
+        //UIU.DOM.waitFor( '.c-account-emails-edit tr[data-item-id="'+id+'"]' );
             //.then(( elt ) => { return instance.APP.form.get().setupDom({ id: id, $parent: instance.$( elt ) }); })
             //.then(( valid ) => { instance.APP.sendPanelData( id, valid ); });
     },
 
     'click .c-account-emails-edit .js-minus'( event, instance ){
+        console.debug( 'click.js-minus' );
         //this.entityChecker.errorClear();
         const id = instance.$( event.currentTarget ).closest( 'tr' ).data( 'item-id' );
         instance.AM.removeById( id );
