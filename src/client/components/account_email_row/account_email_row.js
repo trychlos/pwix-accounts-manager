@@ -7,6 +7,7 @@
  * - item: a ReactiveVar which holds the account object to edit (may be empty, but not null)
  * - checker: a ReactiveVar which holds the parent Checker
  * - it: the emails row to be managed here
+ * - emailsCount: a ReactiveVar which counts the email addresses
  */
 
 import _ from 'lodash';
@@ -34,7 +35,7 @@ Template.account_email_row.onCreated( function(){
         // remove the email item
         removeById( id ){
             const item = Template.currentData().item.get();
-            let emails = item.emails;
+            let emails = item.emails || [];
             let found = -1;
             for( let i=0 ; i<emails.length ; ++i ){
                 if( emails[i].id === id ){
@@ -44,17 +45,16 @@ Template.account_email_row.onCreated( function(){
             }
             if( found !== -1 ){
                 emails.splice( found, 1 );
-                //Template.currentData().item.set( item );
-                //console.debug( 'after remove', item.emails );
                 self.$( '.c-account-email-row' ).remove();
+                Blaze.remove( self.view );
+                const count = Template.currentData().emailsCount.get();
+                Template.currentData().emailsCount.set( count-1 );
                 //self.$( '.c-account-email-row' ).trigger( 'panel-clear', {
                 //    emitter: 'emails'+id
                 //});
             } else {
                 console.warn( id, 'not found' );
-                const trs = $( '.c-account-ident-panel .c-account-email-row tr[data-item-id]' );
-                console.debug( trs );
-                //console.debug( trs.data( 'item-id' ));
+                const trs = $( '.c-account-ident-panel tr.c-account-email-row' );
                 $.each( trs, function( index, object ){
                     console.debug( index, $( object ).data( 'item-id' ));
                 });
@@ -108,7 +108,8 @@ Template.account_email_row.helpers({
 
     // rule: doesn't remove last connection way, i.e. keep at least one username or one email address
     minusEnabled(){
-        return '';
+        const haveUseableUsername = AccountsManager._conf.haveUsername !== AccountsManager.C.Input.NONE && this.item.get().username;
+        return haveUseableUsername || this.emailsCount.get() > 1 ? '' : 'disabled';
     },
 
     // provide params to FormsCheckStatusIndicator template
@@ -123,14 +124,19 @@ Template.account_email_row.events({
     'click .c-account-email-row .js-minus'( event, instance ){
         console.debug( 'click.js-minus', event );
         //this.entityChecker.errorClear();
-        const id = instance.$( event.currentTarget ).closest( 'tr' ).data( 'item-id' );
+        //const id = instance.$( event.currentTarget ).closest( 'tr' ).data( 'item-id' );
+        const id = this.it.id;
         console.debug( 'removing', id );
-        const btnid = instance.$( event.currentTarget ).data( 'item-id' );
-        console.debug( 'btnid', btnid );
+        //const btnid = instance.$( event.currentTarget ).data( 'item-id' );
+        //console.debug( 'btnid', btnid );
         instance.AM.removeById( id );
     },
 });
 
 Template.account_email_row.onDestroyed( function(){
-    console.debug( 'onDestroyed' );
+    console.debug( 'onDestroyed', Template.currentData().it.id );
+    // a no-op operation just to trigger a reactivity on itemRV
+    const item = Template.currentData().item.get();
+    console.debug( item.emails );
+    //Template.currentData().item.set( item );
 });

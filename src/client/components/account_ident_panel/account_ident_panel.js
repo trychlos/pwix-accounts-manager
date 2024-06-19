@@ -15,6 +15,7 @@ import { AccountsUI } from 'meteor/pwix:accounts-ui';
 import { Forms } from 'meteor/pwix:forms';
 import { pwixI18n } from 'meteor/pwix:i18n';
 import { Random } from 'meteor/random';
+import { ReactiveVar } from 'meteor/reactive-var';
 
 import './account_ident_panel.html';
 
@@ -30,6 +31,7 @@ Template.account_ident_panel.onCreated( function(){
                 js: '.js-login-allowed'
             }
         }),
+        emailsCount: new ReactiveVar( 0 ),
             /*
             apiAllowed: {
                 js: '.js-api-allowed',
@@ -52,6 +54,17 @@ Template.account_ident_panel.onCreated( function(){
             }
         }
     };
+
+    // initialize the count of email addresses
+    self.autorun(() => {
+        const item = Template.currentData().item.get();
+        self.AM.emailsCount.set(( item.emails || [] ).length );
+    });
+
+    // tracking the count of email addresses
+    self.autorun(() => {
+        console.debug( 'emailsCount', self.AM.emailsCount.get());
+    });
 });
 
 Template.account_ident_panel.onRendered( function(){
@@ -117,6 +130,7 @@ Template.account_ident_panel.helpers({
     parmsEmailRow( it ){
         const parms = { ...this };
         parms.checker = Template.instance().AM.checker;
+        parms.emailsCount = Template.instance().AM.emailsCount;
         parms.it = it;
         return parms;
     },
@@ -161,19 +175,15 @@ Template.account_ident_panel.events({
     'click .c-account-ident-panel .js-plus'( event, instance ){
         console.debug( 'click.js-plus' );
         const item = this.item.get();
-        let emails = item.emails || [];
+        item.emails = item.emails || [];
         const id = Random.id();
-        emails.push({
+        item.emails.push({
             id: id
         });
-        console.debug( 'adding', id );
-        item.emails = emails;
         this.item.set( item );
-        // setup the new row
-        //UIU.DOM.waitFor( '.c-account-emails-edit tr[data-item-id="'+id+'"]' );
-            //.then(( elt ) => { return instance.APP.form.get().setupDom({ id: id, $parent: instance.$( elt ) }); })
-            //.then(( valid ) => { instance.APP.sendPanelData( id, valid ); });
-    },
+        //const count = instance.AM.emailsCount.get();
+        //instance.AM.emailsCount.set( count+1 );
+    }
 
         /*
     'input .c-account-ident-panel'( event, instance ){

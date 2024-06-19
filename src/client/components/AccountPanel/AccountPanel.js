@@ -16,7 +16,6 @@ import { pwixI18n } from 'meteor/pwix:i18n';
 import { ReactiveVar } from 'meteor/reactive-var';
 import { Roles } from 'meteor/pwix:roles';
 
-import '../account_emails_edit/account_emails_edit.js';
 import '../account_email_row/account_email_row.js';
 import '../account_ident_panel/account_ident_panel.js';
 //import '/imports/client/components/account_roles_panel/account_roles_panel.js';
@@ -34,7 +33,7 @@ Template.AccountPanel.onCreated( function(){
         messager: new Forms.Messager(),
         // whether the item is a new one ?
         isNew: new ReactiveVar( false ),
-        // the item to be edited
+        // the item to be edited (a deep copy of the original)
         item: new ReactiveVar( null ),
         // whether we are running inside of a Modal
         isModal: false
@@ -47,7 +46,7 @@ Template.AccountPanel.onCreated( function(){
 
     // setup the item to be edited
     self.autorun(() => {
-        self.AM.item.set( Template.currentData().item || {} );
+        self.AM.item.set( _.cloneDeep( Template.currentData().item || {} ));
     });
 });
 
