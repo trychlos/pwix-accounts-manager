@@ -14,13 +14,14 @@ import _ from 'lodash';
 import { AccountsUI } from 'meteor/pwix:accounts-ui';
 import { Forms } from 'meteor/pwix:forms';
 import { pwixI18n } from 'meteor/pwix:i18n';
+import { Random } from 'meteor/random';
 
 import './account_ident_panel.html';
 
 Template.account_ident_panel.onCreated( function(){
     const self = this;
 
-    self.APP = {
+    self.AM = {
         panel: new Forms.PanelSpec({
             username: {
                 js: '.js-username'
@@ -46,7 +47,7 @@ Template.account_ident_panel.onCreated( function(){
                 self.$( '.c-account-ident-panel' ).trigger( 'panel-data', {
                     emitter: 'ident',
                     ok: valid,
-                    data: self.APP.form.get().getForm()
+                    //data: self.AM.form.get().getForm()
                 });
             }
         }
@@ -59,11 +60,11 @@ Template.account_ident_panel.onRendered( function(){
     // initialize the Checker for this panel as soon as we get the parent Checker
     self.autorun(() => {
         const parentChecker = Template.currentData().checker.get();
-        if( parentChecker ){
-            self.APP.checker.set( new Forms.Checker({
-                instance: self,
+        const checker = self.AM.checker.get();
+        if( parentChecker && !checker ){
+            self.AM.checker.set( new Forms.Checker( self, {
                 parent: parentChecker,
-                panel: self.APP.panel.iPanelPlus( AccountsManager.fieldsSet ),
+                panel: self.AM.panel.iPanelPlus( AccountsManager.fieldsSet ),
                 data: {
                     item: Template.currentData().item
                 }
@@ -75,12 +76,12 @@ Template.account_ident_panel.onRendered( function(){
     // initialize the display (check indicators) - let the error messages be displayed here: there should be none (though may be warnings)
     self.autorun(() => {
         /*
-        const form = self.APP.form.get();
+        const form = self.AM.form.get();
         if( form ){
             const dataContext = Template.currentData();
             form.setData({ item: dataContext.item })
                 .setForm( dataContext.item.get())
-                .check({ update: false }).then(( valid ) => { self.APP.sendPanelData( dataContext, valid ); });
+                .check({ update: false }).then(( valid ) => { self.AM.sendPanelData( dataContext, valid ); });
         }
                 */
     });
@@ -102,9 +103,22 @@ Template.account_ident_panel.helpers({
         return pwixI18n.label( I18N, arg.hash.key );
     },
 
+    // emails addresses list
+    itemsList(){
+        return this.item.get().emails || [];
+    },
+
     // whether we are creating a new account
     newAccount(){
         return !this.item || !this.item.get() || !Object.keys( this.item.get()).length;
+    },
+
+    // passes the smae data conext, just replacing the parent checker by our own
+    parmsEmailRow( it ){
+        const parms = { ...this };
+        parms.checker = Template.instance().AM.checker;
+        parms.it = it;
+        return parms;
     },
 
     // on a new account, just use the AccountsUI
@@ -125,6 +139,10 @@ Template.account_ident_panel.helpers({
             signupSubmit: false,
             name: 'iziam:account-ident-panel:new'
         };
+    },
+
+    plusEnabled(){
+        return '';
     }
 });
 
@@ -133,18 +151,35 @@ Template.account_ident_panel.events({
         //console.debug( event, instance, data );
         const ok = data.ok;
         delete data.ok;
-        instance.APP.sendPanelData({
+        instance.AM.sendPanelData({
             emitter: 'ident',
             ok: ok,
             data: { ...data }
         });
     },
 
+    'click .c-account-ident-panel .js-plus'( event, instance ){
+        console.debug( 'click.js-plus' );
+        const item = this.item.get();
+        let emails = item.emails || [];
+        const id = Random.id();
+        emails.push({
+            id: id
+        });
+        console.debug( 'adding', id );
+        item.emails = emails;
+        this.item.set( item );
+        // setup the new row
+        //UIU.DOM.waitFor( '.c-account-emails-edit tr[data-item-id="'+id+'"]' );
+            //.then(( elt ) => { return instance.APP.form.get().setupDom({ id: id, $parent: instance.$( elt ) }); })
+            //.then(( valid ) => { instance.APP.sendPanelData( id, valid ); });
+    },
+
         /*
     'input .c-account-ident-panel'( event, instance ){
         if( !Object.keys( event.originalEvent ).includes( 'FormChecker' ) || event.originalEvent['FormChecker'].handled !== true ){
             const dataContext = this;
-            instance.APP.checker.get().inputHandler( event ).then(( valid ) => { instance.APP.sendPanelData( dataContext, valid ); });
+            instance.AM.checker.get().inputHandler( event ).then(( valid ) => { instance.AM.sendPanelData( dataContext, valid ); });
         }
     }
             */

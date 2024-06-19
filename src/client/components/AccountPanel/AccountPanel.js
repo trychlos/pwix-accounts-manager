@@ -17,6 +17,7 @@ import { ReactiveVar } from 'meteor/reactive-var';
 import { Roles } from 'meteor/pwix:roles';
 
 import '../account_emails_edit/account_emails_edit.js';
+import '../account_email_row/account_email_row.js';
 import '../account_ident_panel/account_ident_panel.js';
 //import '/imports/client/components/account_roles_panel/account_roles_panel.js';
 //import '/imports/client/components/account_settings_panel/account_settings_panel.js';
@@ -65,8 +66,7 @@ Template.AccountPanel.onRendered( function(){
 
     // allocate an Checker for this (topmost parent) template
     self.autorun(() => {
-        self.AM.checker.set( new Forms.Checker({
-            instance: self,
+        self.AM.checker.set( new Forms.Checker( self, {
             messager: self.AM.messager,
             okFn( valid ){
                 if( self.AM.isModal ){

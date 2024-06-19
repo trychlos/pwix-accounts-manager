@@ -9,7 +9,30 @@
                 {{#if haveEmailAddress }}
                     <tr>
                         <td></td>
-                        <td class="ui-w100">{{> account_emails_edit }}</td>
+                        <td class="ui-w100">
+                            <!--
+                            {{> account_emails_edit }}
+                            -->
+                            <table class="form-table am-subtable">
+                                <thead>
+                                    <tr>
+                                        <th class="ui-w100">{{ i18n key="list.email_address_th" }}</th>
+                                        <th>{{ i18n key="list.email_verified_th" }}</th>
+                                        <th></th>
+                                        <th>
+                                            <button class="btn btn-sm btn-outline-primary js-plus" title="{{ i18n key="panel.add_title" }}" {{ plusEnabled }}>
+                                                <span class="fa-solid fa-fw fa-plus"></span>
+                                            </button>
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {{#each it in itemsList }}
+                                        {{> account_email_row (parmsEmailRow it) }}
+                                    {{/each}}
+                                </tbody>
+                            </table>
+                        </td>
                     </tr>
                 {{/if}}
                 {{#if haveUsername}}
