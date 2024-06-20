@@ -78,9 +78,9 @@ Template.AccountPanel.onRendered( function(){
 
 Template.AccountPanel.helpers({
     // parms to coreErrorMsg
-    parmsErrorMsg(){
+    parmsMessager(){
         return {
-            orderable: Template.instance().AM.messager
+            messager: Template.instance().AM.messager
         };
     },
 

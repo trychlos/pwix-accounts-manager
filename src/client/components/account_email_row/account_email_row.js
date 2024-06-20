@@ -113,9 +113,10 @@ Template.account_email_row.helpers({
     },
 
     // provide params to FormsCheckStatusIndicator template
+    //  we are using here the CheckStatus value of the Checker itself
     parmsCheckStatus(){
         return {
-            checker: Template.instance().AM.checker.get()
+            statusRv: Template.instance().AM.checker.get()?.iStatusableStatusRv() || null
         };
     }
 });
