@@ -57,13 +57,13 @@ AccountsManager.checks.check_email_address = async function( value, data, opts )
     }
     if( !value ){
         return new TM.TypedMessage({
-            type: TM.MessageType.C.ERROR,
+            level: TM.MessageLevel.C.ERROR,
             message: pwixI18n.label( I18N, 'check.email_unset' )
         });
     }
     if( !validator.validate( value )){
         return new TM.TypedMessage({
-            type: TM.MessageType.C.ERROR,
+            level: TM.MessageLevel.C.ERROR,
             message: pwixI18n.label( I18N, 'check.email_invalid' )
         });
     }
@@ -77,7 +77,7 @@ AccountsManager.checks.check_email_address = async function( value, data, opts )
                 ok = true;
             }
             return ok ? null : new TM.TypedMessage({
-                type: TM.MessageType.C.ERROR,
+                level: TM.MessageLevel.C.ERROR,
                 message: pwixI18n.label( I18N, 'accounts.check.email_exists' )
             });
         });
