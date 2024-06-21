@@ -8,7 +8,7 @@ AccountsManager._conf = {};
 
 AccountsManager._defaults = {
     classes: '',
-    fields: {},
+    fieldsSet: null,
     haveEmailAddress: AccountsManager.C.Input.MANDATORY,
     haveUsername: AccountsManager.C.Input.NONE,
     roles: {
@@ -17,6 +17,7 @@ AccountsManager._defaults = {
         edit: null,
         delete: null
     },
+    scopesFn: null,
     verbosity: AccountsManager.C.Verbose.CONFIGURE
 };
 

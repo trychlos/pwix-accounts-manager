@@ -3,6 +3,9 @@
  *
  * Account editor.
  *
+ * Let the user edit the Meteor standard accounts attributes
+ * + have a 'Roles' panel
+ *
  * Parms:
  *  - item: the account's object to be edited, or null
  */
@@ -17,8 +20,9 @@ import { ReactiveVar } from 'meteor/reactive-var';
 import { Roles } from 'meteor/pwix:roles';
 
 import '../account_email_row/account_email_row.js';
+import '../account_emails_list/account_emails_list.js';
 import '../account_ident_panel/account_ident_panel.js';
-//import '/imports/client/components/account_roles_panel/account_roles_panel.js';
+import '../account_roles_panel/account_roles_panel.js';
 //import '/imports/client/components/account_settings_panel/account_settings_panel.js';
 
 import './AccountPanel.html';
@@ -100,14 +104,14 @@ Template.AccountPanel.helpers({
                     paneTemplate: 'account_ident_panel',
                     paneData: paneData
                 },
-                /*
                 {
                     tabid: 'roles_tab',
                     paneid: 'roles_pane',
-                    navLabel: pwixI18n.label( I18N, 'accounts.manager.roles_title' ),
+                    navLabel: pwixI18n.label( I18N, 'tabs.roles_title' ),
                     paneTemplate: 'account_roles_panel',
                     paneData: paneData
                 },
+                /*
                 {
                     tabid: 'settings_tab',
                     paneid: 'settings_pane',

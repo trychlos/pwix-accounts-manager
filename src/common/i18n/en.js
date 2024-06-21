@@ -46,7 +46,8 @@ AccountsManager.i18n = {
                 verified_label: 'Is email verified :'
             },
             tabs: {
-                ident_title: 'Identity'
+                ident_title: 'Identity',
+                roles_title: 'Roles'
             }
         /*
             accounts: {
@@ -66,7 +67,6 @@ AccountsManager.i18n = {
                     preamble: 'Register and manage here the accounts allowed to connect to the applications.',
                     roles_btn: 'Edit the roles',
                     roles_th: 'Roles',
-                    roles_title: 'Roles',
                     set_allowed_false: 'The "%s" email address is no more allowed to log in',
                     set_allowed_true: 'The "%s" email address is now allowed to log in',
                     set_api_allowed_false: 'The "%s" email address is no more allowed to access the API',

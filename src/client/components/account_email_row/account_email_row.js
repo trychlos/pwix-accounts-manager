@@ -31,6 +31,8 @@ Template.account_email_row.onCreated( function(){
         }),
         // the Form.Checker instance for this panel
         checker: new ReactiveVar( null ),
+        // whether this row is the last of the array ?
+        isLast: new ReactiveVar( false ),
 
         // remove the email item
         removeById( id ){
@@ -45,13 +47,8 @@ Template.account_email_row.onCreated( function(){
             }
             if( found !== -1 ){
                 emails.splice( found, 1 );
-                self.$( '.c-account-email-row' ).remove();
-                Blaze.remove( self.view );
-                const count = Template.currentData().emailsCount.get();
-                Template.currentData().emailsCount.set( count-1 );
-                //self.$( '.c-account-email-row' ).trigger( 'panel-clear', {
-                //    emitter: 'emails'+id
-                //});
+                Template.currentData().item.set( item );
+                self.AM.checker.get().removeMe();
             } else {
                 console.warn( id, 'not found' );
                 const trs = $( '.c-account-ident-panel tr.c-account-email-row' );
@@ -59,19 +56,24 @@ Template.account_email_row.onCreated( function(){
                     console.debug( index, $( object ).data( 'item-id' ));
                 });
             }
-        },
-
-        // send panel data
-        sendPanelData( dataContext, valid ){
-            if( _.isBoolean( valid )){
-                self.$( '.c-account-ident-panel' ).trigger( 'panel-data', {
-                    emitter: 'ident',
-                    ok: valid,
-                    data: self.AM.checker.get().getForm()
-                });
-            }
         }
     };
+
+    // whether this row is the last of the array ?
+    self.autorun(() => {
+        const myId = Template.currentData().it.id;
+        const emails = Template.currentData().item.get().emails || [];
+        let found = -1;
+        for( let i=0 ; i<emails.length ; ++i ){
+            if( emails[i].id === myId ){
+                found = i;
+                break;
+            }
+        }
+        const last = ( found === emails.length-1 );
+        //console.debug( 'isLast', myId, last );
+        self.AM.isLast.set( last );
+    });
 });
 
 Template.account_email_row.onRendered( function(){
@@ -94,7 +96,8 @@ Template.account_email_row.onRendered( function(){
                 data: {
                     item: itemRv
                 },
-                id: Template.currentData().it.id
+                id: Template.currentData().it.id,
+                checkStatusShow: Forms.C.CheckStatus.NONE
             }));
         }
     });
@@ -107,9 +110,10 @@ Template.account_email_row.helpers({
     },
 
     // rule: doesn't remove last connection way, i.e. keep at least one username or one email address
+    // note: weird things happen when inserting/deleting rows, unless we delete only last row..
     minusEnabled(){
         const haveUseableUsername = AccountsManager._conf.haveUsername !== AccountsManager.C.Input.NONE && this.item.get().username;
-        return haveUseableUsername || this.emailsCount.get() > 1 ? '' : 'disabled';
+        return Template.instance().AM.isLast.get() && ( haveUseableUsername || this.emailsCount.get() > 1 ) ? '' : 'disabled';
     },
 
     // provide params to FormsCheckStatusIndicator template
@@ -123,21 +127,13 @@ Template.account_email_row.helpers({
 
 Template.account_email_row.events({
     'click .c-account-email-row .js-minus'( event, instance ){
-        console.debug( 'click.js-minus', event );
-        //this.entityChecker.errorClear();
-        //const id = instance.$( event.currentTarget ).closest( 'tr' ).data( 'item-id' );
+        //console.debug( 'click.js-minus', event );
         const id = this.it.id;
-        console.debug( 'removing', id );
-        //const btnid = instance.$( event.currentTarget ).data( 'item-id' );
-        //console.debug( 'btnid', btnid );
+        //console.debug( 'removing', id );
         instance.AM.removeById( id );
     },
 });
 
 Template.account_email_row.onDestroyed( function(){
     console.debug( 'onDestroyed', Template.currentData().it.id );
-    // a no-op operation just to trigger a reactivity on itemRV
-    const item = Template.currentData().item.get();
-    console.debug( item.emails );
-    //Template.currentData().item.set( item );
 });

@@ -31,40 +31,9 @@ Template.account_ident_panel.onCreated( function(){
                 js: '.js-login-allowed'
             }
         }),
-        emailsCount: new ReactiveVar( 0 ),
-            /*
-            apiAllowed: {
-                js: '.js-api-allowed',
-                valFrom( it ){
-                    return Boolean( it ? it.apiAllowed : false );
-                }
-            }
-                */
         // the Form.Checker instance for this panel
-        checker: new ReactiveVar( null ),
-
-        // send panel data
-        sendPanelData( dataContext, valid ){
-            if( _.isBoolean( valid )){
-                self.$( '.c-account-ident-panel' ).trigger( 'panel-data', {
-                    emitter: 'ident',
-                    ok: valid,
-                    //data: self.AM.form.get().getForm()
-                });
-            }
-        }
+        checker: new ReactiveVar( null )
     };
-
-    // initialize the count of email addresses
-    self.autorun(() => {
-        const item = Template.currentData().item.get();
-        self.AM.emailsCount.set(( item.emails || [] ).length );
-    });
-
-    // tracking the count of email addresses
-    self.autorun(() => {
-        console.debug( 'emailsCount', self.AM.emailsCount.get());
-    });
 });
 
 Template.account_ident_panel.onRendered( function(){
@@ -84,20 +53,6 @@ Template.account_ident_panel.onRendered( function(){
             }));
         }
     });
-
-    // set data inside of an autorun so that it is reactive to datacontext changes
-    // initialize the display (check indicators) - let the error messages be displayed here: there should be none (though may be warnings)
-    self.autorun(() => {
-        /*
-        const form = self.AM.form.get();
-        if( form ){
-            const dataContext = Template.currentData();
-            form.setData({ item: dataContext.item })
-                .setForm( dataContext.item.get())
-                .check({ update: false }).then(( valid ) => { self.AM.sendPanelData( dataContext, valid ); });
-        }
-                */
-    });
 });
 
 Template.account_ident_panel.helpers({
@@ -116,23 +71,9 @@ Template.account_ident_panel.helpers({
         return pwixI18n.label( I18N, arg.hash.key );
     },
 
-    // emails addresses list
-    itemsList(){
-        return this.item.get().emails || [];
-    },
-
     // whether we are creating a new account
     newAccount(){
         return !this.item || !this.item.get() || !Object.keys( this.item.get()).length;
-    },
-
-    // passes the smae data conext, just replacing the parent checker by our own
-    parmsEmailRow( it ){
-        const parms = { ...this };
-        parms.checker = Template.instance().AM.checker;
-        parms.emailsCount = Template.instance().AM.emailsCount;
-        parms.it = it;
-        return parms;
     },
 
     // on a new account, just use the AccountsUI
@@ -153,10 +94,6 @@ Template.account_ident_panel.helpers({
             signupSubmit: false,
             name: 'iziam:account-ident-panel:new'
         };
-    },
-
-    plusEnabled(){
-        return '';
     }
 });
 
@@ -170,27 +107,5 @@ Template.account_ident_panel.events({
             ok: ok,
             data: { ...data }
         });
-    },
-
-    'click .c-account-ident-panel .js-plus'( event, instance ){
-        console.debug( 'click.js-plus' );
-        const item = this.item.get();
-        item.emails = item.emails || [];
-        const id = Random.id();
-        item.emails.push({
-            id: id
-        });
-        this.item.set( item );
-        //const count = instance.AM.emailsCount.get();
-        //instance.AM.emailsCount.set( count+1 );
     }
-
-        /*
-    'input .c-account-ident-panel'( event, instance ){
-        if( !Object.keys( event.originalEvent ).includes( 'FormChecker' ) || event.originalEvent['FormChecker'].handled !== true ){
-            const dataContext = this;
-            instance.AM.checker.get().inputHandler( event ).then(( valid ) => { instance.AM.sendPanelData( dataContext, valid ); });
-        }
-    }
-            */
 });

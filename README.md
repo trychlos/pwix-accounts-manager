@@ -96,16 +96,34 @@ Known configuration options are:
 
     Defauts to nothing.
 
-- `fields`
+- `fieldsSet`
 
-    Let the application extends the default schema by providing additional fields as an object:
-
-    - where keys are the names of the fields to be added in the MongoDB
-    - and values are themselves an object with following keys:
-
-        - `schema`: a description suitable to be used for a `SimpleSchema` instanciation
+    Let the application extends the default schema by providing additional fields as a `Forms.FieldSet` definition.
 
     Defauts to nothing.
+
+    Example:
+
+```js
+    AccountsManager.configure({
+        fieldsSet: new Forms.FieldsSet(
+            {
+                name: 'apiAllowed',
+                type: Boolean,
+                defaultValue: false
+            }
+        ),
+        //haveEmailAddress: AC_FIELD_MANDATORY,
+        //haveUsername: AC_FIELD_NONE
+        roles: {
+            list: 'ACCOUNTS_LIST',
+            create: 'ACCOUNT_CREATE',
+            edit: 'ACCOUNT_EDIT',
+            delete: 'ACCOUNT_DELETE'
+        }
+        // verbosity: AccountsManager.C.Verbose.CONFIGURE
+    });
+```
 
 - `haveEmailAddress`
 - `haveUsername`
@@ -135,6 +153,12 @@ Known configuration options are:
     - `create`: defaulting to `null` (allowed to all)
     - `edit`: defaulting to `null` (allowed to all)
     - `delete`: defaulting to `null` (allowed to all)
+
+- `scopesFn`
+
+    An application-provided function which is expected to return all existing (roles) scopes.
+
+    Defaults to only manage scopes that are already used in the `Roles` package.
 
 - `verbosity`
 

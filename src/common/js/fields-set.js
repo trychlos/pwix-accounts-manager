@@ -1,5 +1,5 @@
 /*
- * pwix:accounts-manager/src/common/js/fields.js
+ * pwix:accounts-manager/src/common/js/fields-set.js
  *
  * Define here the fields we manage at the pwix:accounts-manager level, so that these definitions can be used:
  * - by SimpleSchema
