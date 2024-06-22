@@ -17,6 +17,8 @@ import { pwixI18n } from 'meteor/pwix:i18n';
 import { Random } from 'meteor/random';
 import { ReactiveVar } from 'meteor/reactive-var';
 
+import { InputConvert } from '../../../common/definitions/input-convert.def.js';
+
 import './account_ident_panel.html';
 
 Template.account_ident_panel.onCreated( function(){
@@ -89,17 +91,18 @@ Template.account_ident_panel.helpers({
             signupPasswordTwice: true,
             signupAutoClose: false,
             signupAutoConnect: false,
-            signupHaveEmailAddress: AccountsUI.C.Input.MANDATORY,
-            signupHaveUsername: AccountsUI.C.Input.OPTIONAL,
+            signupHaveEmailAddress: InputConvert.uiValue( AccountsManager._conf.haveEmailAddress ),
+            signupHaveUsername: InputConvert.uiValue( AccountsManager._conf.haveUsername ),
             signupSubmit: false,
-            name: 'iziam:account-ident-panel:new'
+            name: 'accounts-manager:account-ident-panel:new'
         };
     }
 });
 
 Template.account_ident_panel.events({
     'ac-signup-ok .c-account-ident-panel'( event, instance, data ){
-        //console.debug( event, instance, data );
+        console.debug( event, instance, data );
+        /*
         const ok = data.ok;
         delete data.ok;
         instance.AM.sendPanelData({
@@ -107,5 +110,6 @@ Template.account_ident_panel.events({
             ok: ok,
             data: { ...data }
         });
+        */
     }
 });

@@ -1,5 +1,5 @@
 /*
- * pwix:accounts-manager/src/client/components/AccountPanel/AccountPanel.js
+ * pwix:accounts-manager/src/client/components/AccountEditPanel/AccountEditPanel.js
  *
  * Account editor.
  *
@@ -25,9 +25,9 @@ import '../account_ident_panel/account_ident_panel.js';
 import '../account_roles_panel/account_roles_panel.js';
 //import '/imports/client/components/account_settings_panel/account_settings_panel.js';
 
-import './AccountPanel.html';
+import './AccountEditPanel.html';
 
-Template.AccountPanel.onCreated( function(){
+Template.AccountEditPanel.onCreated( function(){
     const self = this;
 
     self.AM = {
@@ -54,16 +54,16 @@ Template.AccountPanel.onCreated( function(){
     });
 });
 
-Template.AccountPanel.onRendered( function(){
+Template.AccountEditPanel.onRendered( function(){
     const self = this;
 
     // whether we are running inside of a Modal
-    self.AM.isModal = self.$( '.AccountPanel' ).closest( '.modal-dialog' ).length > 0;
+    self.AM.isModal = self.$( '.AccountEditPanel' ).closest( '.modal-dialog' ).length > 0;
 
     // set the modal target+title
     if( self.AM.isModal ){
         Modal.set({
-            target: self.$( '.AccountPanel' )
+            target: self.$( '.AccountEditPanel' )
         });
     }
 
@@ -80,7 +80,7 @@ Template.AccountPanel.onRendered( function(){
     });
 });
 
-Template.AccountPanel.helpers({
+Template.AccountEditPanel.helpers({
     // parms to coreErrorMsg
     parmsMessager(){
         return {
@@ -95,15 +95,17 @@ Template.AccountPanel.helpers({
             item: Template.instance().AM.item,
             checker: Template.instance().AM.checker
         };
-        return {
-            tabs: [
-                {
-                    tabid: 'ident_tab',
-                    paneid: 'ident_pane',
-                    navLabel: pwixI18n.label( I18N, 'tabs.ident_title' ),
-                    paneTemplate: 'account_ident_panel',
-                    paneData: paneData
-                },
+        const tabs = [{
+            tabid: 'ident_tab',
+            paneid: 'ident_pane',
+            navLabel: pwixI18n.label( I18N, 'tabs.ident_title' ),
+            paneTemplate: 'account_ident_panel',
+            paneData: paneData
+        }];
+        // when creating a new account, only displays the identity tab
+        // other tabs are only proposed when an existing account is to be edited
+        if( this.item ){
+            tabs.push(
                 {
                     tabid: 'roles_tab',
                     paneid: 'roles_pane',
@@ -132,17 +134,20 @@ Template.AccountPanel.helpers({
                         };
                     }
                 }
-                    */
-            ]
+                */
+            );
+        }
+        return {
+            tabs: tabs
         };
     }
 });
 
-Template.AccountPanel.events({
+Template.AccountEditPanel.events({
     // this component is expected to 'know' which of its subcomponents uses or not a FormChecker.
     //  those who are using FormChecker directly update the edited item
     //  we have to manage others
-    'panel-data .AccountPanel'( event, instance, data ){
+    'panel-data .AccountEditPanel'( event, instance, data ){
         //console.debug( 'id', data.id, 'myTabId', instance.AM.tabId.get(), data );
         switch( data.emitter ){
             case 'notes':
@@ -154,7 +159,7 @@ Template.AccountPanel.events({
 
     // submit
     //  event triggered in case of a modal
-    'md-click .AccountPanel'( event, instance, data ){
+    'md-click .AccountEditPanel'( event, instance, data ){
         //console.debug( event, data );
         if( data.button.id === Modal.C.Button.OK ){
             instance.$( event.currentTarget ).trigger( 'iz-submit' );
@@ -162,7 +167,7 @@ Template.AccountPanel.events({
     },
 
     // submit
-    'iz-submit .AccountPanel'( event, instance ){
+    'iz-submit .AccountEditPanel'( event, instance ){
         //console.debug( event, instance );
         let item = instance.AM.item.get();
         let email = item.emails[0].address;

@@ -1,5 +1,5 @@
 /*
- * pwix:accounts-manager/src/common/collections/accounts/accounts.js
+ * pwix:accounts-manager/src/common/collections/accounts/schema.js
  *
  * Source:
  *  https://guide.meteor.com/accounts.html
@@ -40,15 +40,15 @@ Meteor.users.attachSchema( AccountsManager.fieldsSet.toSchema());
 Meteor.users.attachBehaviour( 'timestampable' );
 
 // extends the above default schema with an application-provided piece
-const schema = AccountsManager._conf.schema;
-if( schema ){
-    if( typeof schema === 'function' ){
-        const o = schema();
-        check( o, Object );
+const fieldsSet = AccountsManager._conf.fieldsSet;
+if( fieldsSet ){
+    if( typeof fieldsSet === 'function' ){
+        const o = fieldsSet();
+        check( o, Forms.FieldsSet );
         Meteor.users.attachSchema( new SimpleSchema( o ));
-    } else if( typeof schema === 'Object' ){
+    } else if( fieldsSet instanceof Forms.FieldsSet ){
         Meteor.users.attachSchema( new SimpleSchema( schema ));
     } else {
-        console.error( 'expected a function or an Object, found', schema );
+        console.error( 'expected a function or a FieldsSet, found', fieldsSet );
     }
 }

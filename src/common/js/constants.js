@@ -5,6 +5,7 @@
 AccountsManager.C = {
 
     // username / email address input rule
+    //  to keep aligned with /src/common/definitions/input-convert.def.js
     Input: {
         NONE: 'AM_FIELD_NONE',
         OPTIONAL: 'AM_FIELD_OPTIONAL',

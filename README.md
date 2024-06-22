@@ -80,9 +80,31 @@ The exported `AccountsManager` global object provides following items:
 
 #### Blaze components
 
+##### `AccountEditPanel`
+
+A tabbed editing panel to be run inside of a page or of a modal.
+
+When run from (below) `AccountsList`, it is run in a modal to edit the current item.
+
+##### `AccountNewButton`
+
+A `PlusButton` component customized to create a new account.
+
+It takes itself care of checking the permissions of the user, and, depending of its runtime parameters, either is disabled, or doesn't display at all if the user is not allowed.
+
 ##### `AccountsList`
 
-The component list the defined accounts as a `pwix:tabular_ext` table, with standard 'Informations', 'Edit' and 'Delete' buttons.
+The component list the defined accounts as a `pwix:tabular` table, with standard 'Informations', 'Edit' and 'Delete' buttons.
+
+It takes itself care of checking the permissions of the user, and, depending of its runtime parameters, either disabled, or doesn't display at all, the relevant buttons if the user is not allowed.
+
+Known data context is:
+
+- `classes`: the classes to be added to any display, defaulting to none
+
+- `disableUnallowed`: whether to display the unallowed functions as disabled buttons, defaulting to `true`.
+
+    When `false`, the unallowed functions links are not displayed at all.
 
 ## Configuration
 
@@ -144,6 +166,12 @@ Known configuration options are:
     - `haveUsername`: `AccountsManager.C.Input.NONE`
 
     Please be conscious that some features of your application may want display an identifier for each user. It would be a security hole to let the application display a verified email address anywhere, as this would be some sort of spam magnet!
+
+- `hideDisabled`
+
+    Whether to hide disabled actions instead of displaying the disabled state.
+
+    Defaults to `true`: disabled actions are hidden.
 
 - `roles`
 

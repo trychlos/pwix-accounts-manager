@@ -11,6 +11,7 @@ AccountsManager._defaults = {
     fieldsSet: null,
     haveEmailAddress: AccountsManager.C.Input.MANDATORY,
     haveUsername: AccountsManager.C.Input.NONE,
+    hideDisabled: true,
     roles: {
         list: null,
         create: null,
@@ -35,6 +36,7 @@ AccountsManager.configure = function( o ){
             //console.log( 'pwix:accounts-manager configure() with', o, 'building', AccountsList._conf );
             console.log( 'pwix:accounts-manager configure() with', o );
         }
+        Meteor.isClient && AccountsManager.perms.resetRoles();
     }
     // also acts as a getter
     return AccountsManager._conf;

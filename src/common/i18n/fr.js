@@ -25,13 +25,20 @@ AccountsManager.i18n = {
             },
             list: {
                 admin_notes_th: 'Notes de l\'administrateur',
-                email_address_th: 'Addresse email',
+                email_address_th: 'Addresse(s) email',
                 email_verified_th: 'Vérifiéee',
                 last_connection_th: 'Dernière connexion',
                 login_allowed_th: 'Connexion autorisée',
                 more_title: 'Afficher davantage d\'adresses email...',
+                not_allowed: '<p>Vous n\'êtes malheureusement pas autorisé à consulter la liste des comptes.</p>'
+                    +'<p>Merci de vous rapprocher de l\'administrateur de l\'application.<p>',
                 user_notes_th: 'Notes de l\'utilisateur',
                 username_th: 'Nom d\'utilisateur'
+            },
+            new: {
+                btn_plus_label: 'Nouveau compte',
+                btn_plus_title: 'Définit un nouveau compte',
+                modal_title: 'Définir un nouveau compte'
             },
             panel: {
                 add_title: 'Ajouter une adresse de messagerie',

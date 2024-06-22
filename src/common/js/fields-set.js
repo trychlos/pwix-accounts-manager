@@ -3,7 +3,7 @@
  *
  * Define here the fields we manage at the pwix:accounts-manager level, so that these definitions can be used:
  * - by SimpleSchema
- * - by Datatables, via pwix:tabular-ext and aldeed:tabular
+ * - by Datatables, via pwix:tabular and aldeed:tabular
  * - when rendering the edition templates
  * - chen cheking the fields in the edition panels
  */

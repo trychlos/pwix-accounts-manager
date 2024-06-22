@@ -1,23 +1,26 @@
 /*
  * pwix:accounts-manager/src/client/components/AccountsList/AccountsList.js
  *
+ * Display here a table whith a row per account (the 'item'), whatever be the count of email addresses and if the account has a username.
+ *
  * Parms:
- * - see README
+ * - none
  */
 
 import { Modal } from 'meteor/pwix:modal';
 import { pwixI18n } from 'meteor/pwix:i18n';
 import { Roles } from 'meteor/pwix:roles';
+import { ReactiveVar } from 'meteor/reactive-var';
 import { Tolert } from 'meteor/pwix:tolert';
 
-import '../AccountPanel/AccountPanel.js';
+import '../AccountEditPanel/AccountEditPanel.js';
 
 import './AccountsList.html';
 
 Template.AccountsList.onCreated( function(){
     const self = this;
 
-    self.AL = {
+    self.AM = {
         accounts: {
             handle: self.subscribe( 'accounts.listAll' ),
             list: new ReactiveVar( [] )
@@ -25,47 +28,28 @@ Template.AccountsList.onCreated( function(){
         assignments: {
             handle: self.subscribe( 'Roles.allAssignments'),
             list: null
-        },
-        // returns the identified user
-        user( id ){
-            //console.log( 'id',id, 'accounts', self.APP.accounts.list.get());
-            let found = null;
-            self.AL.accounts.list.get().every(( u ) => {
-                if( u._id === id ){
-                    found = u;
-                    return false;
-                }
-                return true;
-            });
-            return found;
-        },
-        /*
-        email( item ){
-            return item.emails[0].address;
-        },
-        // the user_edit template view
-        userEditView: null
-        */
+        }
     };
 
     // load the user's list
     self.autorun(() => {
-        if( self.AL.accounts.handle.ready()){
+        if( self.AM.accounts.handle.ready()){
             //console.debug( 'accounts handle ready' );
             let users = [];
-            Meteor.users.find().forEach(( u ) => {
-                u.attributedRoles = new ReactiveVar( [] );
-                users.push( u );
+            Meteor.users.find().forEachAsync(( o ) => {
+                o.attributedRoles = new ReactiveVar( [] );
+                users.push( o );
+            }).then(() => {
+                self.AM.accounts.list.set( users );
+                //console.debug( users );
             });
-            self.AL.accounts.list.set( users );
-            //console.debug( users );
         }
     });
 
     // attach to each user a reactive var with his/her set of (attributed) roles
     self.autorun(() => {
-        if( self.AL.assignments.handle.ready()){
-            self.AL.accounts.list.get().forEach(( u ) => {
+        if( self.AM.assignments.handle.ready()){
+            self.AM.accounts.list.get().forEach(( u ) => {
                 Roles.directRolesForUser( u, { anyScope: true }).then(( res ) => {
                     u.attributedRoles.set( res );
                 });
@@ -76,7 +60,7 @@ Template.AccountsList.onCreated( function(){
     // debug (attributed) roles
     self.autorun(() => {
         if( false ){
-            self.AL.accounts.list.get().forEach(( u ) => {
+            self.AM.accounts.list.get().forEach(( u ) => {
                 console.debug( u.attributedRoles.get());
             });
         }
@@ -85,14 +69,19 @@ Template.AccountsList.onCreated( function(){
 
 Template.AccountsList.helpers({
     // whether the current user has the permission to see the list of accounts
-    allowed(){
-        return true;
+    canList(){
+        return AccountsManager.perms.get( 'list' );
+    },
+
+    // string translation
+    i18n( arg ){
+        return pwixI18n.label( I18N, arg.hash.key );
     }
 });
 
 Template.AccountsList.events({
     // delete an account
-    'tabular-ext-delete-event .AccountsList'( event, instance, data ){
+    'tabular-delete-event .AccountsList'( event, instance, data ){
         const label = data.item.emails.length ? data.item.emails[0].address : data.item._id;
         Meteor.callAsync( 'account.remove', data._id, ( e, res ) => {
             if( e ){
@@ -105,12 +94,12 @@ Template.AccountsList.events({
     },
 
     // edit an account
-    'tabular-ext-edit-event .AccountsList'( event, instance, data ){
+    'tabular-edit-event .AccountsList'( event, instance, data ){
         Modal.run({
-            mdBody: 'AccountPanel',
+            mdBody: 'AccountEditPanel',
             mdButtons: [ Modal.C.Button.CANCEL, Modal.C.Button.OK ],
             mdClasses: 'modal-lg',
-            //mdClassesContent: Meteor.APP.Pages.current.page().get( 'theme' ),
+            mdClassesContent: AccountsManager._conf.classes,
             mdTitle: pwixI18n.label( I18N, 'edit.modal_title' ),
             item: data.item
         });

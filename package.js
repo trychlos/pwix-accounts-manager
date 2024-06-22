@@ -27,6 +27,7 @@ function configure( api ){
     api.use( 'aldeed:collection2@4.0.1' );
     api.use( 'aldeed:simple-schema@1.13.1' );
     api.use( 'blaze-html-templates@2.0.0 || 3.0.0-alpha300.0', 'client' );
+    api.use( 'check' );
     api.use( 'ecmascript' );
     api.use( 'less@4.0.0', 'client' );
     api.use( 'mongo' );
@@ -37,14 +38,17 @@ function configure( api ){
     api.use( 'pwix:i18n@1.5.7' );
     api.use( 'pwix:modal@2.0.0' );
     api.use( 'pwix:notes@1.0.0-rc' );
+    api.use( 'pwix:plus-button@1.0.0-rc' );
     api.use( 'pwix:roles@1.3.0' );
     api.use( 'pwix:tabbed@1.0.0-rc' );
-    api.use( 'pwix:tabular-ext@1.0.0-rc' );
+    api.use( 'pwix:tabular@1.0.0-rc' );
     api.use( 'pwix:typed-message@1.2.0' );
     api.use( 'pwix:ui-bootstrap5@2.0.0-rc' );
     api.use( 'pwix:ui-utils@1.1.0' );
     api.use( 'random' );
+    api.use( 'reactive-dict' );
     api.use( 'reactive-var' );
-    api.addFiles( 'src/client/components/AccountPanel/AccountPanel.js', 'client' );
+    api.addFiles( 'src/client/components/AccountEditPanel/AccountEditPanel.js', 'client' );
+    api.addFiles( 'src/client/components/AccountNewButton/AccountNewButton.js', 'client' );
     api.addFiles( 'src/client/components/AccountsList/AccountsList.js', 'client' );
 }
