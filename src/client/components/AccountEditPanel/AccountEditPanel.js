@@ -25,7 +25,6 @@ import '../account_email_row/account_email_row.js';
 import '../account_emails_list/account_emails_list.js';
 import '../account_ident_panel/account_ident_panel.js';
 import '../account_roles_panel/account_roles_panel.js';
-//import '/imports/client/components/account_settings_panel/account_settings_panel.js';
 
 import './AccountEditPanel.html';
 
@@ -179,11 +178,44 @@ Template.AccountEditPanel.events({
     'iz-submit .AccountEditPanel'( event, instance ){
         //console.debug( event, instance );
         let item = instance.AM.item.get();
-        let email = item.emails[0].address;
-        console.debug( 'item', item );
+        AccountsTools.preferredLabel( item ).then(( label ) => {
+            // when creating a new account, we let the user create several by reusing the same modal
+            if( instance.AM.isNew.get()){
+                AccountsUI.Account.createUser({
+                    username: item.username,
+                    password: item.password,
+                    email: item.emails[0].address
+                }, {
+                    autoConnect: false,
+                    successFn(){
+                        AccountsTools.byEmail( email ).then(( user ) => {
+                            if( user ){
+                                item._id = user._id;
+                            } else {
+                                console.warn( 'unable to retrieve the user account', label );
+                            }
+                        });
+                    }
+                });
+                instance.$( '.c-account-ident-panel .ac-signup' ).trigger( 'ac-clear-panel' );
+                instance.$( '.c-account-roles-panel' ).trigger( 'clear-panel' );
+                instance.$( '.notes-edit' ).trigger( 'clear-panel' );
+            // on update, then... update and close
+            } else {
+                // update users
+                return Meteor.callAsync( 'account.updateAccount', item );
+            }
+        }).then(( res ) => {
+            console.debug( 'res', res );
+            if( !instance.AM.isNew.get()){
+                // update roles
+                Modal.close();
+            }
+        });
         // whether the user has been just created or is to be updated, other panels are to be considered separately
         const _updateFromPanels = function(){
             // roles panel: replace all roles for the user
+            /*
             Roles.removeAllRolesFromUser( item._id ).then(( res ) => {
                 item.roles.every(( role ) => {
                     const scope = role.scope;
@@ -194,55 +226,7 @@ Template.AccountEditPanel.events({
                     return true;
                 });
             });
-            // notes panel
-            if( item.notes ){
-                Meteor.callPromise( 'account.setAttribute', item._id, { notes: item.notes });
-            } else {
-                Meteor.callPromise( 'account.clearAttributes', item._id, [ 'notes' ]);
-            }
-        }
-        // when creating a new account, we let the user create several by reusing the same modal
-        if( instance.AM.isNew.get()){
-            AccountsUI.Account.createUser({
-                username: item.username,
-                password: item.password,
-                email: email
-            }, {
-                autoConnect: false,
-                successFn(){
-                    AccountsTools.byEmail( email ).then(( user ) => {
-                        if( user ){
-                            item._id = user._id;
-                            //_updateFromPanels();
-                        } else {
-                            console.warn( 'unable to retrieve the user account', email );
-                        }
-                    });
-                }
-            });
-            instance.$( '.c-account-ident-panel .ac-signup' ).trigger( 'ac-clear-panel' );
-            instance.$( '.c-account-roles-panel' ).trigger( 'clear-panel' );
-            instance.$( '.c-account-settings-panel' ).trigger( 'clear-panel' );
-            instance.$( '.c-notes-panel' ).trigger( 'clear-panel' );
-        } else {
-            // merge all data parts
-            Object.keys( instance.AM.dataParts.all()).every(( emitter ) => {
-                // ident panel
-                if( emitter === 'ident' ){
-                    ;
-                } else if( emitter === 'roles' ){
-                    item.roles = instance.AM.dataParts.get( emitter ).data;
-                } else if( emitter === 'settings' ){
-                    ;
-                } else if( emitter === 'notes' ){
-                    item.notes = instance.AM.dataParts.get( emitter ).data
-                }
-                return true;
-            });
-            // update users
-            Meteor.callAsync( 'account.updateUser', item );
-            _updateFromPanels();
-            Modal.close();
+            */
         }
     }
 });

@@ -10,7 +10,7 @@ import './dt_email_verified.html';
 Template.dt_email_verified.helpers({
     // whether the first email address is verified ?
     verified(){
-        const verified = this.emails.length ? this.emails[0].verified : false;
+        const verified = this.item.emails.length ? this.item.emails[0].verified : false;
         return verified ? 'checked' : '';
     }
 });

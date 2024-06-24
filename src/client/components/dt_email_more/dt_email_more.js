@@ -15,12 +15,12 @@ import './dt_email_more.html';
 Template.dt_email_more.helpers({
     // have a blue button if active, or gray else
     colorBtnClass(){
-        return this.emails.length > 1 ? 'btn-outline-primary' : 'btn-outline-secondary';
+        return this.item.emails.length > 1 ? 'btn-outline-primary' : 'btn-outline-secondary';
     },
 
     // disable the button if only zero or one email address
     disabled(){
-        return this.emails.length > 1 ? '' : 'disabled';
+        return this.item.emails.length > 1 ? '' : 'disabled';
     },
 
     // string translation

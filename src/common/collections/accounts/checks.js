@@ -15,6 +15,10 @@ AccountsManager.checks.canDelete = async function( userId ){
     return await Roles.userIsInRoles( userId, AccountsManager._conf.roles.delete );
 };
 
+AccountsManager.checks.canEdit = async function( userId ){
+    return await Roles.userIsInRoles( userId, AccountsManager._conf.roles.edit );
+};
+
 // fields check
 //  - value: mandatory, the value to be tested
 //  - data: optional, the data passed to Checker instanciation

@@ -15,13 +15,14 @@ import SimpleSchema from 'meteor/aldeed:simple-schema';
 
 import '../collections/accounts/checks.js';
 
-AccountsManager.fieldSet = new Field.Set(
-    {
-        name: '_id',
-        type: String,
-        dt_tabular: false
-    },
-    {
+let columns = [{
+    name: '_id',
+    type: String,
+    dt_tabular: false
+}];
+
+if( AccountsManager._conf.haveEmailAddress !== AccountsManager.C.Input.NONE ){
+    columns.push({
         name: 'emails',
         type: Array,
         optional: true,
@@ -60,66 +61,80 @@ AccountsManager.fieldSet = new Field.Set(
     },
     {
         dt_template: Meteor.isClient && Template.dt_email_more
-    },
-    {
+    });
+}
+if( AccountsManager._conf.haveUsername !== AccountsManager.C.Input.NONE ){
+    columns.push({
         name: 'username',
         type: String,
         optional: true,
         dt_title: pwixI18n.label( I18N, 'list.username_th' )
-    },
-    {
-        name: 'profile',
-        type: Object,
-        optional: true,
-        blackbox: true,
-        dt_tabular: false
-    },
-    {
-        name:  'services',
-        type: Object,
-        optional: true,
-        blackbox: true,
-        dt_tabular: false
-    },
-    {
-        name: 'lastConnection',
-        type: Date,
-        dt_title: pwixI18n.label( I18N, 'list.last_connection_th' ),
-    },
-    {
-        name: 'loginAllowed',
-        type: Boolean,
-        defaultValue: true,
-        dt_title: pwixI18n.label( I18N, 'list.login_allowed_th' )
-    },
-    Notes.fieldDef({
-        name: 'adminNotes',
-        dt_title: pwixI18n.label( I18N, 'list.admin_notes_th' ),
-        form_title: pwixI18n.label( I18N, 'tabs.admin_notes_title' )
-    }),
-    Notes.fieldDef({
-        name: 'userNotes',
-        dt_title: pwixI18n.label( I18N, 'list.user_notes_th' ),
-        form_title: pwixI18n.label( I18N, 'tabs.user_notes_title' )
-    }),
-    {
-        name: 'createdAt',
-        schema: false,
-        dt_visible: false
-    },
-    {
-        name: 'createdBy',
-        schema: false,
-        dt_visible: false
-    },
-    {
-        name: 'updatedAt',
-        schema: false,
-        dt_visible: false
-    },
-    {
-        name: 'updatedBy',
-        schema: false,
-        dt_visible: false
+    });
+}
+columns.push({
+    name: 'profile',
+    type: Object,
+    optional: true,
+    blackbox: true,
+    dt_tabular: false
+},
+{
+    name:  'services',
+    type: Object,
+    optional: true,
+    blackbox: true,
+    dt_tabular: false
+},
+{
+    name: 'lastConnection',
+    type: Date,
+    optional: true,
+    dt_title: pwixI18n.label( I18N, 'list.last_connection_th' ),
+},
+{
+    name: 'loginAllowed',
+    type: Boolean,
+    defaultValue: true,
+    dt_title: pwixI18n.label( I18N, 'list.login_allowed_th' ),
+    dt_className: 'dt-center',
+    dt_template: 'dt_checkbox',
+    dt_templateContext( rowData ){
+        return {
+            item: rowData,
+            readonly: true,
+            enabled: true
+        }
     }
-);
+},
+Notes.fieldDef({
+    name: 'adminNotes',
+    dt_title: pwixI18n.label( I18N, 'list.admin_notes_th' ),
+    form_title: pwixI18n.label( I18N, 'tabs.admin_notes_title' )
+}),
+Notes.fieldDef({
+    name: 'userNotes',
+    dt_title: pwixI18n.label( I18N, 'list.user_notes_th' ),
+    form_title: pwixI18n.label( I18N, 'tabs.user_notes_title' )
+}),
+{
+    name: 'createdAt',
+    schema: false,
+    dt_visible: false
+},
+{
+    name: 'createdBy',
+    schema: false,
+    dt_visible: false
+},
+{
+    name: 'updatedAt',
+    schema: false,
+    dt_visible: false
+},
+{
+    name: 'updatedBy',
+    schema: false,
+    dt_visible: false
+});
+
+AccountsManager.fieldSet = new Field.Set( columns );

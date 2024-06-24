@@ -61,30 +61,10 @@ Meteor.methods({
         }
         return ret;
     },
+*/
 
     // update the user account
-    'account.updateUser'( item ){
-        const orig = Meteor.users.findOne({ _id: item._id });
-        let ret = null;
-        if( orig ){
-            ret = Meteor.users.update({ _id: item._id }, { $set: Meteor.APP.Helpers.removeUnsetValues({
-                updatedAt: new Date(),
-                updatedBy: this.userId,
-                'emails.0.address': item.emails[0].address,
-                'emails.0.verified': item.emails[0].verified,
-                isAllowed: item.isAllowed,
-                apiAllowed: item.apiAllowed,
-                username: item.username ? item.username : null
-            }) });
-            if( !ret ){
-                throw new Meteor.Error(
-                    'account.updateUser',
-                    'Unable to update "'+item._id+'" account' );
-            }
-        } else {
-            console.warn( 'user not found', item._id );
-        }
-        return ret;
+    async 'account.updateAccount'( item ){
+        return await AccountsManager.server.updateAccount( item, Meteor.userId());
     }
-*/
 });

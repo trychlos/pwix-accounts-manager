@@ -11,7 +11,8 @@
 |   Id | Date       | Description and comment(s) |
 | ---: | :---       | :---                       |
 |    3 | 2024- 6-24 | admin notes should not be available to standard user |
-|    4 |  |  |
+|    4 | 2024- 6-24 | whether to be able to reuse the same input panel when creating an account should be a configurable option |
+|    5 |  |  |
 
 ---
 ## Done

@@ -10,6 +10,6 @@ import './dt_email_address.html';
 Template.dt_email_address.helpers({
     // list the first email address if any
     address(){
-        return this.emails.length ? this.emails[0].address : '';
+        return this.item.emails.length ? this.item.emails[0].address : '';
     }
 });
