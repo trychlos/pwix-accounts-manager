@@ -6,6 +6,7 @@
  *
  * Parms:
  * - item: a ReactiveVar which holds the account object to edit (may be empty, but not null)
+ * - isNew: true|false
  * - checker: a ReactiveVar which holds the parent Checker
  */
 
@@ -25,14 +26,6 @@ Template.account_ident_panel.onCreated( function(){
     const self = this;
 
     self.AM = {
-        panel: new Forms.PanelSpec({
-            username: {
-                js: '.js-username'
-            },
-            loginAllowed: {
-                js: '.js-login-allowed'
-            }
-        }),
         // the Form.Checker instance for this panel
         checker: new ReactiveVar( null )
     };
@@ -48,7 +41,14 @@ Template.account_ident_panel.onRendered( function(){
         if( parentChecker && !checker ){
             self.AM.checker.set( new Forms.Checker( self, {
                 parent: parentChecker,
-                panel: self.AM.panel.iPanelPlus( AccountsManager.fieldsSet ),
+                panel: new Forms.Panel({
+                    username: {
+                        js: '.js-username'
+                    },
+                    loginAllowed: {
+                        js: '.js-login-allowed'
+                    }
+                }, AccountsManager.fieldSet ),
                 data: {
                     item: Template.currentData().item
                 }
@@ -73,9 +73,9 @@ Template.account_ident_panel.helpers({
         return pwixI18n.label( I18N, arg.hash.key );
     },
 
-    // whether we are creating a new account
+    // whether we are creating a new account (this has been decided/computed by the parent)
     newAccount(){
-        return !this.item || !this.item.get() || !Object.keys( this.item.get()).length;
+        return this.isNew;
     },
 
     // on a new account, just use the AccountsUI
@@ -102,14 +102,20 @@ Template.account_ident_panel.helpers({
 Template.account_ident_panel.events({
     'ac-signup-ok .c-account-ident-panel'( event, instance, data ){
         console.debug( event, instance, data );
-        /*
-        const ok = data.ok;
-        delete data.ok;
-        instance.AM.sendPanelData({
-            emitter: 'ident',
-            ok: ok,
-            data: { ...data }
-        });
-        */
+        const checker = instance.AM.checker.get();
+        if( checker ){
+            checker.setValid( data.ok );
+            // setup the relevant part of the item
+            const item = this.item.get();
+            item.emails = item.emails || [];
+            item.emails[0] = item.emails[0] || {};
+            if( AccountsManager._conf.haveEmailAddress !== AccountsManager.C.Input.NONE ){
+                item.emails[0].address = data.email;
+            }
+            if( AccountsManager._conf.haveUsername !== AccountsManager.C.Input.NONE ){
+                item.username = data.username;
+            }
+            item.password = data.password;
+        }
     }
 });

@@ -12,10 +12,12 @@
 
 import _ from 'lodash';
 
+import { AccountsTools } from 'meteor/pwix:accounts-tools';
 import { AccountsUI } from 'meteor/pwix:accounts-ui';
 import { Forms } from 'meteor/pwix:forms';
 import { Modal } from 'meteor/pwix:modal';
 import { pwixI18n } from 'meteor/pwix:i18n';
+import { ReactiveDict } from 'meteor/reactive-dict';
 import { ReactiveVar } from 'meteor/reactive-var';
 import { Roles } from 'meteor/pwix:roles';
 
@@ -81,7 +83,14 @@ Template.AccountEditPanel.onRendered( function(){
 });
 
 Template.AccountEditPanel.helpers({
-    // parms to coreErrorMsg
+    // see below when building tabs:
+    //  when defining a new account, the panel will make use of acUserLogin component which provides itself its message zone
+    //  do not display in this case
+    haveMessager(){
+        return this.item !== null;
+    },
+
+    // parms to Forms.Messager
     parmsMessager(){
         return {
             messager: Template.instance().AM.messager
@@ -93,6 +102,7 @@ Template.AccountEditPanel.helpers({
         const dataContext = this;
         const paneData = {
             item: Template.instance().AM.item,
+            isNew: Template.instance().AM.isNew.get(),
             checker: Template.instance().AM.checker
         };
         const tabs = [{
@@ -102,41 +112,40 @@ Template.AccountEditPanel.helpers({
             paneTemplate: 'account_ident_panel',
             paneData: paneData
         }];
-        // when creating a new account, only displays the identity tab
-        // other tabs are only proposed when an existing account is to be edited
+        // when creating a new account, do not display the roles tab
         if( this.item ){
-            tabs.push(
-                {
-                    tabid: 'roles_tab',
-                    paneid: 'roles_pane',
-                    navLabel: pwixI18n.label( I18N, 'tabs.roles_title' ),
-                    paneTemplate: 'account_roles_panel',
-                    paneData: paneData
-                },
-                /*
-                {
-                    tabid: 'settings_tab',
-                    paneid: 'settings_pane',
-                    navLabel: pwixI18n.label( I18N, 'accounts.manager.settings_title' ),
-                    paneTemplate: 'account_settings_panel',
-                    paneData: paneData
-                },
-                {
-                    navLabel: pwixI18n.label( I18N, 'ext_notes.panel.tab_title' ),
-                    paneTemplate: 'ext_notes_panel',
-                    paneData(){
-                        return {
-                            notes: dataContext.item ? dataContext.item.notes : '',
-                            event: 'panel-data',
-                            data: {
-                                emitter: 'notes'
-                            }
-                        };
-                    }
-                }
-                */
-            );
+            tabs.push({
+                tabid: 'roles_tab',
+                paneid: 'roles_pane',
+                navLabel: pwixI18n.label( I18N, 'tabs.roles_title' ),
+                paneTemplate: 'account_roles_panel',
+                paneData: paneData
+            });
         }
+        tabs.push(
+            /*
+            {
+                tabid: 'settings_tab',
+                paneid: 'settings_pane',
+                navLabel: pwixI18n.label( I18N, 'accounts.manager.settings_title' ),
+                paneTemplate: 'account_settings_panel',
+                paneData: paneData
+            },
+            {
+                navLabel: pwixI18n.label( I18N, 'ext_notes.panel.tab_title' ),
+                paneTemplate: 'ext_notes_panel',
+                paneData(){
+                    return {
+                        notes: dataContext.item ? dataContext.item.notes : '',
+                        event: 'panel-data',
+                        data: {
+                            emitter: 'notes'
+                        }
+                    };
+                }
+            }
+            */
+        );
         return {
             tabs: tabs
         };
@@ -171,26 +180,7 @@ Template.AccountEditPanel.events({
         //console.debug( event, instance );
         let item = instance.AM.item.get();
         let email = item.emails[0].address;
-        // merge all data parts
-        Object.keys( instance.AM.dataParts.all()).every(( emitter ) => {
-            // ident panel
-            if( emitter === 'ident' ){
-                ;
-            } else if( emitter === 'roles' ){
-                item.roles = instance.AM.dataParts.get( emitter ).data;
-            } else if( emitter === 'settings' ){
-                ;
-            } else if( emitter === 'notes' ){
-                item.notes = instance.AM.dataParts.get( emitter ).data
-            }
-            return true;
-        });
         console.debug( 'item', item );
-        // after the user has been created we get back its internal identifier to be used on updates for other panels
-        //  a Promise which resolves to the newly created user account
-        const _getAccountAfterCreation = function( email ){
-            return Meteor.callPromise( 'account.byEmail', email );
-        };
         // whether the user has been just created or is to be updated, other panels are to be considered separately
         const _updateFromPanels = function(){
             // roles panel: replace all roles for the user
@@ -220,12 +210,12 @@ Template.AccountEditPanel.events({
             }, {
                 autoConnect: false,
                 successFn(){
-                    _getAccountAfterCreation( item.email ).then(( user ) => {
+                    AccountsTools.byEmail( email ).then(( user ) => {
                         if( user ){
                             item._id = user._id;
-                            _updateFromPanels();
+                            //_updateFromPanels();
                         } else {
-                            console.warn( 'unable to retrieve the user account', item.email );
+                            console.warn( 'unable to retrieve the user account', email );
                         }
                     });
                 }
@@ -235,8 +225,22 @@ Template.AccountEditPanel.events({
             instance.$( '.c-account-settings-panel' ).trigger( 'clear-panel' );
             instance.$( '.c-notes-panel' ).trigger( 'clear-panel' );
         } else {
+            // merge all data parts
+            Object.keys( instance.AM.dataParts.all()).every(( emitter ) => {
+                // ident panel
+                if( emitter === 'ident' ){
+                    ;
+                } else if( emitter === 'roles' ){
+                    item.roles = instance.AM.dataParts.get( emitter ).data;
+                } else if( emitter === 'settings' ){
+                    ;
+                } else if( emitter === 'notes' ){
+                    item.notes = instance.AM.dataParts.get( emitter ).data
+                }
+                return true;
+            });
             // update users
-            Meteor.call( 'account.updateUser', item );
+            Meteor.callAsync( 'account.updateUser', item );
             _updateFromPanels();
             Modal.close();
         }

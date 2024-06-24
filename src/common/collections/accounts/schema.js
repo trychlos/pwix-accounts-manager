@@ -36,7 +36,7 @@
 import SimpleSchema from 'meteor/aldeed:simple-schema';
 
 // add behaviours to our collection
-Meteor.users.attachSchema( AccountsManager.fieldsSet.toSchema());
+Meteor.users.attachSchema( new SimpleSchema( AccountsManager.fieldSet.toSchema()));
 Meteor.users.attachBehaviour( 'timestampable' );
 
 // extends the above default schema with an application-provided piece

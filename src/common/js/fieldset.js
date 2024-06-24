@@ -1,5 +1,5 @@
 /*
- * pwix:accounts-manager/src/common/js/fields-set.js
+ * pwix:accounts-manager/src/common/js/fieldset.js
  *
  * Define here the fields we manage at the pwix:accounts-manager level, so that these definitions can be used:
  * - by SimpleSchema
@@ -8,14 +8,14 @@
  * - chen cheking the fields in the edition panels
  */
 
-import { Forms } from 'meteor/pwix:forms';
+import { Field } from 'meteor/pwix:field';
 import { Notes } from 'meteor/pwix:notes';
 import { pwixI18n } from 'meteor/pwix:i18n';
 import SimpleSchema from 'meteor/aldeed:simple-schema';
 
 import '../collections/accounts/checks.js';
 
-AccountsManager.fieldsSet = new Forms.FieldsSet(
+AccountsManager.fieldSet = new Field.Set(
     {
         name: '_id',
         type: String,
@@ -92,12 +92,12 @@ AccountsManager.fieldsSet = new Forms.FieldsSet(
         defaultValue: true,
         dt_title: pwixI18n.label( I18N, 'list.login_allowed_th' )
     },
-    Notes.field({
+    Notes.fieldDef({
         name: 'adminNotes',
         dt_title: pwixI18n.label( I18N, 'list.admin_notes_th' ),
         //dt_template: Meteor.isClient && Notes.template
     }),
-    Notes.field({
+    Notes.fieldDef({
         name: 'userNotes',
         dt_title: pwixI18n.label( I18N, 'list.user_notes_th' ),
         //dt_template: Meteor.isClient && Notes.template

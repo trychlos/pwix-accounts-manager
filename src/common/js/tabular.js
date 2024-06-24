@@ -12,7 +12,7 @@ const _identifier = function( it ){
 AccountsManager.tabular = new Tabular.Table({
     name: 'Users',
     collection: Meteor.users,
-    columns: AccountsManager.fieldsSet.toTabular(),
+    columns: AccountsManager.fieldSet.toTabular(),
     tabular: {
         // display the first email address (if any) instead of the identifier in the button title
         deleteButtonTitle( it ){

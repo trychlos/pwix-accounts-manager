@@ -6,7 +6,7 @@
 
 import { AccountsUI } from 'meteor/pwix:accounts-ui';
 
-InputConvert = {
+export const InputConvert = {
     K: {
         AM_FIELD_NONE: AccountsUI.C.Input.NONE,
         AM_FIELD_OPTIONAL: AccountsUI.C.Input.OPTIONAL,
@@ -30,4 +30,4 @@ InputConvert = {
         }
         return res;
     }
-}
+};

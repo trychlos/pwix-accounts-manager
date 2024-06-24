@@ -34,6 +34,7 @@ function configure( api ){
     api.use( 'pwix:accounts-tools@2.1.0-rc' );
     api.use( 'pwix:accounts-ui@1.5.0' );
     api.use( 'pwix:collection-timestampable@2.0.0' );
+    api.use( 'pwix:field@1.0.0-rc' );
     api.use( 'pwix:forms@1.0.0-rc' );
     api.use( 'pwix:i18n@1.5.7' );
     api.use( 'pwix:modal@2.0.0' );

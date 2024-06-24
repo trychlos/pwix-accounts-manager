@@ -3,6 +3,7 @@
  *
  * Parms:
  * - item: a ReactiveVar which holds the account object to edit (may be empty, but not null)
+ * - isNew: true|false
  * - checker: a ReactiveVar which holds the parent Checker
  */
 

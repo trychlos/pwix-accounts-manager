@@ -2,7 +2,10 @@
     <div class="AccountEditPanel">
 
         {{> Tabbed (parmsTabbed) }}
-        {{> FormsMessager (parmsMessager) }}
+
+        {{#if haveMessager }}
+            {{> FormsMessager (parmsMessager) }}
+        {{/if}}
 
     </div>
 </template>

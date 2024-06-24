@@ -21,14 +21,6 @@ Template.account_email_row.onCreated( function(){
     const self = this;
 
     self.AM = {
-        panel: new Forms.PanelSpec({
-            'emails.$.address': {
-                js: '.js-email'
-            },
-            'emails.$.verified': {
-                js: '.js-verified'
-            }
-        }),
         // the Form.Checker instance for this panel
         checker: new ReactiveVar( null ),
         // whether this row is the last of the array ?
@@ -92,7 +84,14 @@ Template.account_email_row.onRendered( function(){
         if( parentChecker && !checker ){
             self.AM.checker.set( new Forms.Checker( self, {
                 parent: parentChecker,
-                panel: self.AM.panel.iPanelPlus( AccountsManager.fieldsSet ),
+                panel: new Forms.Panel({
+                    'emails.$.address': {
+                        js: '.js-email'
+                    },
+                    'emails.$.verified': {
+                        js: '.js-verified'
+                    }
+                }, AccountsManager.fieldSet ),
                 data: {
                     item: itemRv
                 },
