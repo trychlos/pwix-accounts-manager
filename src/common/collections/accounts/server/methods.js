@@ -66,5 +66,10 @@ Meteor.methods({
     // update the user account
     async 'account.updateAccount'( item ){
         return await AccountsManager.server.updateAccount( item, Meteor.userId());
-    }
+    },
+
+    // set attribute(s) on an account
+    async 'account.updateAttribute'( id, modifier ){
+        return await AccountsManager.server.updateAttribute( id, Meteor.userId(), modifier );
+    },
 });

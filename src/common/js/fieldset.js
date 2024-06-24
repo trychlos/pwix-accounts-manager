@@ -8,6 +8,8 @@
  * - chen cheking the fields in the edition panels
  */
 
+import strftime from 'strftime';
+
 import { Field } from 'meteor/pwix:field';
 import { Notes } from 'meteor/pwix:notes';
 import { pwixI18n } from 'meteor/pwix:i18n';
@@ -90,6 +92,9 @@ columns.push({
     type: Date,
     optional: true,
     dt_title: pwixI18n.label( I18N, 'list.last_connection_th' ),
+    dt_render( data, type, rowData ){
+        return strftime( AccountsManager._conf.datetime, data );
+    }
 },
 {
     name: 'loginAllowed',

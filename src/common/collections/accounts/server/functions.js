@@ -40,7 +40,7 @@ AccountsManager.server.updateAccount = async function( item, userId ){
             ret = await Meteor.users.updateAsync({ _id: item._id }, { $set: item });
             if( !ret ){
                 throw new Meteor.Error(
-                    'account.updateUser',
+                    'account.updateAccount',
                     'Unable to update "'+item._id+'" account' );
             }
         } else {
@@ -51,6 +51,34 @@ AccountsManager.server.updateAccount = async function( item, userId ){
         throw new Meteor.Error(
             'AccountsManager.server.updateAccount',
             'Unable to update "'+item._id+'" account' );
+    }
+};
+
+AccountsManager.server.updateAttribute = async function( id, userId, modifier ){
+    let ret = null;
+    if( !await AccountsManager.checks.canEdit( userId )){
+        throw new Meteor.Error(
+            'AccountsManager.check.canEdit',
+            'Unallowed to edit "'+id+'" account' );
+    }
+    try {
+        const orig = await Meteor.users.findOneAsync({ _id: id });
+        let ret = null;
+        if( orig ){
+            ret = await Meteor.users.updateAsync({ _id: id }, { $set: modifier });
+            if( !ret ){
+                throw new Meteor.Error(
+                    'account.updateAttribute',
+                    'Unable to update "'+id+'" account' );
+            }
+        } else {
+            console.warn( 'user not found', id );
+        }
+        return ret;
+    } catch( e ){
+        throw new Meteor.Error(
+            'AccountsManager.server.updateAttribute',
+            'Unable to update "'+id+'" account' );
     }
 };
 

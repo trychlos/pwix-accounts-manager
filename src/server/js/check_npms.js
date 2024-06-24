@@ -10,6 +10,7 @@ if( false ){
 
 checkNpmVersions({
     'lodash': '^4.17.0',
+    'strftime': '^0.10.2'
 },
     'pwix:accounts-manager'
 );

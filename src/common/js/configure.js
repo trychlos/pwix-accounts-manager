@@ -8,7 +8,7 @@ AccountsManager._conf = {};
 
 AccountsManager._defaults = {
     classes: '',
-    fieldsSet: null,
+    fieldSet: null,
     haveEmailAddress: AccountsManager.C.Input.MANDATORY,
     haveUsername: AccountsManager.C.Input.NONE,
     hideDisabled: true,
@@ -19,6 +19,7 @@ AccountsManager._defaults = {
         delete: null
     },
     scopesFn: null,
+    datetime: '%Y-%m-%d %H:%M:%S',
     verbosity: AccountsManager.C.Verbose.CONFIGURE
 };
 
