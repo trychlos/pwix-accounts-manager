@@ -95,12 +95,12 @@ AccountsManager.fieldSet = new Field.Set(
     Notes.fieldDef({
         name: 'adminNotes',
         dt_title: pwixI18n.label( I18N, 'list.admin_notes_th' ),
-        //dt_template: Meteor.isClient && Notes.template
+        form_title: pwixI18n.label( I18N, 'tabs.admin_notes_title' )
     }),
     Notes.fieldDef({
         name: 'userNotes',
         dt_title: pwixI18n.label( I18N, 'list.user_notes_th' ),
-        //dt_template: Meteor.isClient && Notes.template
+        form_title: pwixI18n.label( I18N, 'tabs.user_notes_title' )
     }),
     {
         name: 'createdAt',

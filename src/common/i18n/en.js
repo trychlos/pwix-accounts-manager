@@ -54,7 +54,9 @@ AccountsManager.i18n = {
             },
             tabs: {
                 ident_title: 'Identity',
-                roles_title: 'Roles'
+                roles_title: 'Roles',
+                admin_notes_title: 'Admin notes',
+                user_notes_title: 'User notes'
             }
         }
     }

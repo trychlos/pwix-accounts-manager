@@ -113,6 +113,7 @@ Template.AccountEditPanel.helpers({
             paneData: paneData
         }];
         // when creating a new account, do not display the roles tab
+        //  in other words: only let the roles be set/updated on an existing account
         if( this.item ){
             tabs.push({
                 tabid: 'roles_tab',
@@ -122,29 +123,33 @@ Template.AccountEditPanel.helpers({
                 paneData: paneData
             });
         }
+        const adminNotes = AccountsManager.fieldSet.byName( 'adminNotes' );
+        const userNotes = AccountsManager.fieldSet.byName( 'userNotes' );
         tabs.push(
-            /*
             {
-                tabid: 'settings_tab',
-                paneid: 'settings_pane',
-                navLabel: pwixI18n.label( I18N, 'accounts.manager.settings_title' ),
-                paneTemplate: 'account_settings_panel',
-                paneData: paneData
-            },
-            {
-                navLabel: pwixI18n.label( I18N, 'ext_notes.panel.tab_title' ),
-                paneTemplate: 'ext_notes_panel',
+                tabid: 'admin_notes_tab',
+                paneid: 'admin_notes_pane',
+                navLabel: adminNotes.toForm().title,
+                paneTemplate: 'NotesEdit',
                 paneData(){
                     return {
-                        notes: dataContext.item ? dataContext.item.notes : '',
-                        event: 'panel-data',
-                        data: {
-                            emitter: 'notes'
-                        }
+                        item: dataContext.item,
+                        field: adminNotes
+                    };
+                }
+            },
+            {
+                tabid: 'user_notes_tab',
+                paneid: 'user_notes_pane',
+                navLabel: userNotes.toForm().title,
+                paneTemplate: 'NotesEdit',
+                paneData(){
+                    return {
+                        item: dataContext.item,
+                        field: userNotes
                     };
                 }
             }
-            */
         );
         return {
             tabs: tabs
@@ -156,13 +161,8 @@ Template.AccountEditPanel.events({
     // this component is expected to 'know' which of its subcomponents uses or not a FormChecker.
     //  those who are using FormChecker directly update the edited item
     //  we have to manage others
-    'panel-data .AccountEditPanel'( event, instance, data ){
-        //console.debug( 'id', data.id, 'myTabId', instance.AM.tabId.get(), data );
-        switch( data.emitter ){
-            case 'notes':
-                instance.item.get().notes = data.data;
-                break;
-        }
+    'notes-data .AccountEditPanel'( event, instance, data ){
+        instance.AM.item.get()[data.field.name()] = data.content;
         // let bubble the event to be handled by client_edit
     },
 

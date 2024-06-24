@@ -10,15 +10,18 @@
 
 |   Id | Date       | Description and comment(s) |
 | ---: | :---       | :---                       |
-|    1 | 2024- 6- 3 | Manage several email addresses per user |
-|    2 | 2024- 6- 9 | AccountsList: let the application manage the info, edit and delete buttons |
-|    3 |  |  |
+|    3 | 2024- 6-24 | admin notes should not be available to standard user |
+|    4 |  |  |
 
 ---
 ## Done
 
 |   Id | Date       | Description and comment(s) |
 | ---: | :---       | :---                       |
+|    1 | 2024- 6- 3 | Manage several email addresses per user |
+|      | 2024- 6-22 | done |
+|    2 | 2024- 6- 9 | AccountsList: let the application manage the info, edit and delete buttons |
+|      | 2024- 6-22 | this is delegated to pwix:tabular |
 
 ---
 P. Wieser
