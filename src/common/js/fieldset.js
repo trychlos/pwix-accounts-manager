@@ -65,15 +65,8 @@ const _defaultFieldSet = function( conf ){
             type: Boolean,
             dt_data: false,
             dt_title: pwixI18n.label( I18N, 'list.email_verified_th' ),
-            dt_template: 'dt_checkbox',
+            dt_template: Meteor.isClient && Template.dt_email_verified,
             dt_className: 'dt-center',
-            dt_templateContext( rowData ){
-                return {
-                    item: rowData,
-                    readonly: true,
-                    enabled: true
-                };
-            },
             form_check: AccountsManager.checks.check_email_verified
         },
         {
