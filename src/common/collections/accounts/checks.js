@@ -12,11 +12,11 @@ import { TM } from 'meteor/pwix:typed-message';
 AccountsManager.checks = {};
 
 AccountsManager.checks.canDelete = async function( userId ){
-    return await Roles.userIsInRoles( userId, AccountsManager._conf.roles.delete );
+    return await Roles.userIsInRoles( userId, AccountsManager.configure().roles.delete );
 };
 
 AccountsManager.checks.canEdit = async function( userId ){
-    return await Roles.userIsInRoles( userId, AccountsManager._conf.roles.edit );
+    return await Roles.userIsInRoles( userId, AccountsManager.configure().roles.edit );
 };
 
 // fields check

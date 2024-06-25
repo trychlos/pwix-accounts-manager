@@ -11,14 +11,15 @@ import { Tracker } from 'meteor/tracker';
 
 AccountsManager.perms = new ReactiveDict();
 
-AccountsManager.perms.resetRoles = function(){
+Tracker.autorun(() => {
     AccountsManager.perms.clear();
-    Object.keys( AccountsManager._conf.roles ).forEach(( role ) => {
-        const roleName = AccountsManager._conf.roles[role];
+    const _conf = AccountsManager.configure();
+    Object.keys( _conf.roles ).forEach(( role ) => {
+        const roleName = _conf.roles[role];
         if( roleName ){
             Tracker.autorun(() => {
                 AccountsManager.perms.set( role, Meteor.userId() && ( Roles.current().globals || [] ).includes( roleName ));
             });
         }
     });
-}
+});

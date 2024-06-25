@@ -1,14 +1,19 @@
 /*
  * pwix:accounts-manager/src/common/js/configure.js
+ *
+ * The configuration needs to be reactive as fieldset depends of configured additional fields, and tabular and schema both depend of fieldset.
  */
 
 import _ from 'lodash';
 
-AccountsManager._conf = {};
+import { ReactiveVar } from 'meteor/reactive-var';
+
+let _conf = {};
+AccountsManager._conf = new ReactiveVar( _conf );
 
 AccountsManager._defaults = {
     classes: '',
-    fieldSet: null,
+    fields: null,
     haveEmailAddress: AccountsManager.C.Input.MANDATORY,
     haveUsername: AccountsManager.C.Input.NONE,
     hideDisabled: true,
@@ -31,16 +36,18 @@ AccountsManager._defaults = {
  */
 AccountsManager.configure = function( o ){
     if( o && _.isObject( o )){
-        _.merge( AccountsManager._conf, AccountsManager._defaults, o );
+        _conf = AccountsManager._conf.get();
+        _.merge( _conf, AccountsManager._defaults, o );
+        AccountsManager._conf.set( _conf );
         // be verbose if asked for
-        if( AccountsManager._conf.verbosity & AccountsManager.C.Verbose.CONFIGURE ){
+        if( _conf.verbosity & AccountsManager.C.Verbose.CONFIGURE ){
             //console.log( 'pwix:accounts-manager configure() with', o, 'building', AccountsList._conf );
             console.log( 'pwix:accounts-manager configure() with', o );
         }
-        Meteor.isClient && AccountsManager.perms.resetRoles();
     }
     // also acts as a getter
-    return AccountsManager._conf;
+    return AccountsManager._conf.get();
 }
 
-_.merge( AccountsManager._conf, AccountsManager._defaults );
+_.merge( _conf, AccountsManager._defaults );
+AccountsManager._conf.set( _conf );

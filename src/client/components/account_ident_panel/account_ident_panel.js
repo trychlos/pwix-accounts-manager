@@ -48,7 +48,7 @@ Template.account_ident_panel.onRendered( function(){
                     loginAllowed: {
                         js: '.js-login-allowed'
                     }
-                }, AccountsManager.fieldSet ),
+                }, AccountsManager.fieldSet.get()),
                 data: {
                     item: Template.currentData().item
                 }
@@ -60,12 +60,12 @@ Template.account_ident_panel.onRendered( function(){
 Template.account_ident_panel.helpers({
     // whether we want an email address
     haveEmailAddress(){
-        return AccountsManager._conf.haveEmailAddress !== AccountsManager.C.Input.NONE;
+        return AccountsManager.configure().haveEmailAddress !== AccountsManager.C.Input.NONE;
     },
 
     // whether we want a username
     haveUsername(){
-        return AccountsManager._conf.haveUsername !== AccountsManager.C.Input.NONE;
+        return AccountsManager.configure().haveUsername !== AccountsManager.C.Input.NONE;
     },
 
     // string translation
@@ -91,8 +91,8 @@ Template.account_ident_panel.helpers({
             signupPasswordTwice: true,
             signupAutoClose: false,
             signupAutoConnect: false,
-            signupHaveEmailAddress: InputConvert.uiValue( AccountsManager._conf.haveEmailAddress ),
-            signupHaveUsername: InputConvert.uiValue( AccountsManager._conf.haveUsername ),
+            signupHaveEmailAddress: InputConvert.uiValue( AccountsManager.configure().haveEmailAddress ),
+            signupHaveUsername: InputConvert.uiValue( AccountsManager.configure().haveUsername ),
             signupSubmit: false,
             name: 'accounts-manager:account-ident-panel:new'
         };
@@ -109,10 +109,10 @@ Template.account_ident_panel.events({
             const item = this.item.get();
             item.emails = item.emails || [];
             item.emails[0] = item.emails[0] || {};
-            if( AccountsManager._conf.haveEmailAddress !== AccountsManager.C.Input.NONE ){
+            if( AccountsManager.configure().haveEmailAddress !== AccountsManager.C.Input.NONE ){
                 item.emails[0].address = data.email;
             }
-            if( AccountsManager._conf.haveUsername !== AccountsManager.C.Input.NONE ){
+            if( AccountsManager.configure().haveUsername !== AccountsManager.C.Input.NONE ){
                 item.username = data.username;
             }
             item.password = data.password;

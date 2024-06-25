@@ -122,8 +122,8 @@ Template.AccountEditPanel.helpers({
                 paneData: paneData
             });
         }
-        const adminNotes = AccountsManager.fieldSet.byName( 'adminNotes' );
-        const userNotes = AccountsManager.fieldSet.byName( 'userNotes' );
+        const adminNotes = AccountsManager.fieldSet.get().byName( 'adminNotes' );
+        const userNotes = AccountsManager.fieldSet.get().byName( 'userNotes' );
         tabs.push(
             {
                 tabid: 'admin_notes_tab',

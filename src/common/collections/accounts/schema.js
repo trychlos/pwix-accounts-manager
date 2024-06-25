@@ -34,21 +34,9 @@
  */
 
 import SimpleSchema from 'meteor/aldeed:simple-schema';
+import { Tracker } from 'meteor/tracker';
 
-// add behaviours to our collection
-Meteor.users.attachSchema( new SimpleSchema( AccountsManager.fieldSet.toSchema()));
-Meteor.users.attachBehaviour( 'timestampable' );
-
-// extends the above default schema with an application-provided piece
-const fieldsSet = AccountsManager._conf.fieldsSet;
-if( fieldsSet ){
-    if( typeof fieldsSet === 'function' ){
-        const o = fieldsSet();
-        check( o, Forms.FieldsSet );
-        Meteor.users.attachSchema( new SimpleSchema( o ));
-    } else if( fieldsSet instanceof Forms.FieldsSet ){
-        Meteor.users.attachSchema( new SimpleSchema( schema ));
-    } else {
-        console.error( 'expected a function or a FieldsSet, found', fieldsSet );
-    }
-}
+Tracker.autorun(() => {
+    Meteor.users.attachSchema( new SimpleSchema( AccountsManager.fieldSet.get().toSchema()), { replace: true });
+    Meteor.users.attachBehaviour( 'timestampable' );
+});

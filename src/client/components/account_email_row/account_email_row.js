@@ -91,7 +91,7 @@ Template.account_email_row.onRendered( function(){
                     'emails.$.verified': {
                         js: '.js-verified'
                     }
-                }, AccountsManager.fieldSet ),
+                }, AccountsManager.fieldSet.get()),
                 data: {
                     item: itemRv
                 },
@@ -111,7 +111,7 @@ Template.account_email_row.helpers({
     // rule: doesn't remove last connection way, i.e. keep at least one username or one email address
     // note: weird things happen when inserting/deleting rows, unless we delete only last row..
     minusEnabled(){
-        const haveUseableUsername = AccountsManager._conf.haveUsername !== AccountsManager.C.Input.NONE && this.item.get().username;
+        const haveUseableUsername = AccountsManager.configure().haveUsername !== AccountsManager.C.Input.NONE && this.item.get().username;
         return Template.instance().AM.isLast.get() && ( haveUseableUsername || this.emailsCount.get() > 1 ) ? '' : 'disabled';
     },
 

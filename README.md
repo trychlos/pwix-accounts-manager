@@ -208,6 +208,8 @@ Please note that `AccountsManager.configure()` method should be called in the sa
 
 Remind too that Meteor packages are instanciated at application level. They are so only configurable once, or, in other words, only one instance has to be or can be configured. Addtionnal calls to `AccountsManager.configure()` will just override the previous one. You have been warned: **only the application should configure a package**.
 
+`AccountsManager.configure()` is a reactive data source.
+
 ## NPM peer dependencies
 
 Starting with v 0.1.0, and in accordance with advices from [the Meteor Guide](https://guide.meteor.com/writing-atmosphere-packages.html#peer-npm-dependencies), we no more hardcode NPM dependencies in the `Npm.depends` clause of the `package.js`.
