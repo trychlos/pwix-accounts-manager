@@ -12,14 +12,16 @@ import { Tracker } from 'meteor/tracker';
 AccountsManager.perms = new ReactiveDict();
 
 Tracker.autorun(() => {
-    AccountsManager.perms.clear();
-    const _conf = AccountsManager.configure();
-    Object.keys( _conf.roles ).forEach(( role ) => {
-        const roleName = _conf.roles[role];
-        if( roleName ){
-            Tracker.autorun(() => {
-                AccountsManager.perms.set( role, Meteor.userId() && ( Roles.current().globals || [] ).includes( roleName ));
-            });
-        }
-    });
+    if( Roles.ready()){
+        AccountsManager.perms.clear();
+        const conf = AccountsManager.configure();
+        Object.keys( conf.roles ).forEach(( role ) => {
+            const roleName = conf.roles[role];
+            if( roleName ){
+                Tracker.autorun(() => {
+                    AccountsManager.perms.set( role, Meteor.userId() && ( Roles.current().globals || [] ).includes( roleName ));
+                });
+            }
+        });
+    }
 });

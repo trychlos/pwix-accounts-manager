@@ -160,11 +160,11 @@ const _defaultFieldSet = function( conf ){
 };
 
 Tracker.autorun(() => {
-    const _conf = AccountsManager.configure();
-    let columns = _defaultFieldSet( _conf );
+    const conf = AccountsManager.configure();
+    let columns = _defaultFieldSet( conf );
     let _fieldset = new Field.Set( columns );
-    if( _conf.fields ){
-        _fieldset.extend( _conf.fields );
+    if( conf.fields ){
+        _fieldset.extend( conf.fields );
     }
     AccountsManager.fieldSet.set( _fieldset );
 });

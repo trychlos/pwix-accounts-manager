@@ -15,6 +15,7 @@ AccountsManager.i18n = {
                 email_exists: 'Cette adresse de messagerie est déjà utilisée',
                 email_invalid: 'Cette adresse de messagerie n\'est pas valide',
                 email_unset: 'Une adresse de messagerie est obligatoire',
+                login_disallow_himself: 'Vous êtes sur le point de désactiver votre propre autorisation de connexion',
                 username_exists: 'Ce nom d\'utilisateur est déjà utilisé'
             },
             delete: {

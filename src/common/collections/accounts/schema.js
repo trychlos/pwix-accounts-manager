@@ -38,5 +38,8 @@ import { Tracker } from 'meteor/tracker';
 
 Tracker.autorun(() => {
     Meteor.users.attachSchema( new SimpleSchema( AccountsManager.fieldSet.get().toSchema()), { replace: true });
-    Meteor.users.attachBehaviour( 'timestampable' );
+    if( !Meteor.users.timestampableAttached ){
+        Meteor.users.attachBehaviour( 'timestampable' );
+        Meteor.users.timestampableAttached = true;
+    }
 });

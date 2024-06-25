@@ -36,19 +36,22 @@ Template.account_ident_panel.onRendered( function(){
 
     // initialize the Checker for this panel as soon as we get the parent Checker
     self.autorun(() => {
+        const fields = {
+            loginAllowed: {
+                js: '.js-login-allowed'
+            }
+        };
+        if( AccountsManager.configure().haveUsername !== AccountsManager.C.Input.NONE ){
+            fields.username = {
+                js: '.js-username'
+            };
+        }
         const parentChecker = Template.currentData().checker.get();
         const checker = self.AM.checker.get();
         if( parentChecker && !checker ){
             self.AM.checker.set( new Forms.Checker( self, {
                 parent: parentChecker,
-                panel: new Forms.Panel({
-                    username: {
-                        js: '.js-username'
-                    },
-                    loginAllowed: {
-                        js: '.js-login-allowed'
-                    }
-                }, AccountsManager.fieldSet.get()),
+                panel: new Forms.Panel( fields, AccountsManager.fieldSet.get()),
                 data: {
                     item: Template.currentData().item
                 }

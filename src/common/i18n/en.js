@@ -15,6 +15,7 @@ AccountsManager.i18n = {
                 email_exists: 'This email address already exists',
                 email_invalid: 'This email address is not valid',
                 email_unset: 'An email address is mandatory',
+                login_disallow_himself: 'You are about to disallow your own login authorization',
                 username_exists: 'This username already exists'
             },
             delete: {

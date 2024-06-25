@@ -103,8 +103,45 @@ AccountsManager.checks.check_email_verified = async function( value, data, opts 
 }
 
 
-// loginAlllowed
+// loginAllowed
 //  emit a warning when the user is about to disallow himself
+//  this should nonetheless be prohibited by the UI
+AccountsManager.checks.check_loginAllowed = async function( value, data, opts ){
+    _assert_data_itemrv( 'AccountsManager.checks.check_loginAllowed()', data );
+    const item = data.item.get();
+    if( opts.update !== false ){
+        item.loginAllowed = value;
+    }
+    if( Meteor.userId() === item._id ){
+        return new TM.TypedMessage({
+            level: TM.MessageLevel.C.WARNING,
+            message: pwixI18n.label( I18N, 'accounts.check.login_disallow_himself' )
+        });
+    }
+    return null;
+};
+
+AccountsManager.checks.check_username = async function( value, data, opts ){
+    _assert_data_itemrv( 'AccountsManager.checks.check_username()', data );
+    const item = data.item.get();
+    if( opts.update !== false ){
+        item.username = value;
+    }
+    return AccountsTools.byUsername( value )
+        .then(( user ) => {
+            let ok = false;
+            if( user ){
+                // we have found a user
+                ok = user._id === item._id;
+            } else {
+                ok = true;
+            }
+            return ok ? null : new TM.TypedMessage({
+                level: TM.MessageLevel.C.ERROR,
+                message: pwixI18n.label( I18N, 'accounts.check.username_exists' )
+            });
+        });
+};
 
 /*
 
@@ -162,32 +199,6 @@ export const AccountsChecks = {
                             });
                         });
                 }
-            });
-    },
-
-    async check_username( value, data, coreApp={} ){
-        if( coreApp.update !== false ){
-            data.item.username = value;
-        }
-        return Promise.resolve( null )
-            .then(() => {
-                if( value ){
-                    return Meteor.callPromise( 'account.byUsername', value )
-                        .then(( user ) => {
-                            let ok = false;
-                            if( user ){
-                                // we have found a user
-                                ok = user._id === data.item._id;
-                            } else {
-                                ok = true;
-                            }
-                            return ok ? null : new CoreApp.TypedMessage({
-                                type: CoreApp.MessageType.C.ERROR,
-                                message: pwixI18n.label( I18N, 'accounts.check.username_exists' )
-                            });
-                        });
-                }
-                return null;
             });
     },
 

@@ -49,6 +49,7 @@ function configure( api ){
     api.use( 'random' );
     api.use( 'reactive-dict' );
     api.use( 'reactive-var' );
+    api.use( 'tmeasday:check-npm-versions@1.0.2 || 2.0.0-beta.0', 'server' );
     api.use( 'tracker' );
     api.addFiles( 'src/client/components/AccountEditPanel/AccountEditPanel.js', 'client' );
     api.addFiles( 'src/client/components/AccountNewButton/AccountNewButton.js', 'client' );
