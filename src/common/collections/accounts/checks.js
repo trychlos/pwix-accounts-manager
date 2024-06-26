@@ -19,6 +19,10 @@ AccountsManager.checks.canEdit = async function( userId ){
     return await Roles.userIsInRoles( userId, AccountsManager.configure().roles.edit );
 };
 
+AccountsManager.checks.canList = async function( userId ){
+    return await Roles.userIsInRoles( userId, AccountsManager.configure().roles.list );
+};
+
 // fields check
 //  - value: mandatory, the value to be tested
 //  - data: optional, the data passed to Checker instanciation

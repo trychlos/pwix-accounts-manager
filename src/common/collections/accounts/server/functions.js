@@ -40,7 +40,7 @@ AccountsManager.server.updateAccount = async function( item, userId ){
             ret = await Meteor.users.updateAsync({ _id: item._id }, { $set: item });
             if( !ret ){
                 throw new Meteor.Error(
-                    'account.updateAccount',
+                    'pwix_accounts_manager_accounts_update_account',
                     'Unable to update "'+item._id+'" account' );
             }
         } else {
@@ -68,7 +68,7 @@ AccountsManager.server.updateAttribute = async function( id, userId, modifier ){
             ret = await Meteor.users.updateAsync({ _id: id }, { $set: modifier });
             if( !ret ){
                 throw new Meteor.Error(
-                    'account.updateAttribute',
+                    'pwix_accounts_manager_accounts_update_attribute',
                     'Unable to update "'+id+'" account' );
             }
         } else {

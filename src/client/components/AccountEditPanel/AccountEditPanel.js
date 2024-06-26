@@ -41,7 +41,7 @@ Template.AccountEditPanel.onCreated( function(){
         // the item to be edited (a deep copy of the original)
         item: new ReactiveVar( null ),
         // whether we are running inside of a Modal
-        isModal: false
+        isModal: new ReactiveVar( false )
     };
 
     // keep the initial 'new' state
@@ -59,21 +59,25 @@ Template.AccountEditPanel.onRendered( function(){
     const self = this;
 
     // whether we are running inside of a Modal
-    self.AM.isModal = self.$( '.AccountEditPanel' ).closest( '.modal-dialog' ).length > 0;
+    self.autorun(() => {
+        self.AM.isModal.set( self.$( '.AccountEditPanel' ).closest( '.modal-dialog' ).length > 0 );
+    });
 
     // set the modal target+title
-    if( self.AM.isModal ){
-        Modal.set({
-            target: self.$( '.AccountEditPanel' )
-        });
-    }
+    self.autorun(() => {
+        if( self.AM.isModal.get()){
+            Modal.set({
+                target: self.$( '.AccountEditPanel' )
+            });
+        }
+    });
 
     // allocate an Checker for this (topmost parent) template
     self.autorun(() => {
         self.AM.checker.set( new Forms.Checker( self, {
             messager: self.AM.messager,
             okFn( valid ){
-                if( self.AM.isModal ){
+                if( self.AM.isModal.get()){
                     Modal.set({ buttons: { id: Modal.C.Button.OK, enabled: valid }});
                 }
             }
@@ -203,7 +207,7 @@ Template.AccountEditPanel.events({
             // on update, then... update and close
             } else {
                 // update users
-                return Meteor.callAsync( 'account.updateAccount', item );
+                return Meteor.callAsync( 'pwix_accounts_manager_accounts_update_account', item );
             }
         }).then(( res ) => {
             console.debug( 'res', res );

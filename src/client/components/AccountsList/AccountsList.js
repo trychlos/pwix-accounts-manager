@@ -22,7 +22,7 @@ Template.AccountsList.onCreated( function(){
 
     self.AM = {
         accounts: {
-            handle: self.subscribe( 'accounts.listAll' ),
+            handle: self.subscribe( 'pwix_accounts_manager_accounts_list_all' ),
             list: new ReactiveVar( [] )
         },
         assignments: {
@@ -83,7 +83,7 @@ Template.AccountsList.events({
     // delete an account
     'tabular-delete-event .AccountsList'( event, instance, data ){
         const label = data.item.emails.length ? data.item.emails[0].address : data.item._id;
-        Meteor.callAsync( 'account.remove', data._id, ( e, res ) => {
+        Meteor.callAsync( 'pwix_accounts_manager_accounts_remove', data._id, ( e, res ) => {
             if( e ){
                 Tolert.error({ type:e.error, message:e.reason });
             } else {
