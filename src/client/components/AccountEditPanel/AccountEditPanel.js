@@ -136,7 +136,7 @@ Template.AccountEditPanel.helpers({
                 paneTemplate: 'NotesEdit',
                 paneData(){
                     return {
-                        item: dataContext.item,
+                        item: paneData.item,
                         field: adminNotes
                     };
                 }
@@ -148,7 +148,7 @@ Template.AccountEditPanel.helpers({
                 paneTemplate: 'NotesEdit',
                 paneData(){
                     return {
-                        item: dataContext.item,
+                        item: paneData.item,
                         field: userNotes
                     };
                 }
