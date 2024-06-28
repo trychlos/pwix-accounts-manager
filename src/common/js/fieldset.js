@@ -23,11 +23,7 @@ AccountsManager.fieldSet = new ReactiveVar( null );
 
 const _defaultFieldSet = function( conf ){
 
-    let columns = [{
-        name: '_id',
-        type: String,
-        dt_tabular: false
-    }];
+    let columns = [];
 
     // if have an email address
     if( conf.haveEmailAddress !== AccountsManager.C.Input.NONE ){
