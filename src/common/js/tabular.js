@@ -4,12 +4,13 @@
  * Datatables want to be defined in common code.
  */
 
+import { AccountsTools } from 'meteor/pwix:accounts-tools';
 import { pwixI18n } from 'meteor/pwix:i18n';
 import { Tabular } from 'meteor/pwix:tabular';
 import { Tracker } from 'meteor/tracker';
 
-const _identifier = function( it ){
-    return it.emails?.length ? it.emails[0].address : it._id;
+const _identifier = async function( it ){
+    return AccountsTools.preferredLabel( it ).label;
 };
 
 Tracker.autorun(() => {
@@ -19,17 +20,17 @@ Tracker.autorun(() => {
         columns: AccountsManager.fieldSet.get().toTabular(),
         tabular: {
             // display the first email address (if any) instead of the identifier in the button title
-            deleteButtonTitle( it ){
-                return pwixI18n.label( I18N, 'buttons.delete_title', _identifier( it ));
+            async deleteButtonTitle( it ){
+                return pwixI18n.label( I18N, 'buttons.delete_title', await _identifier( it ));
             },
             editButtonEnabled( it ){
                 return true;
             },
-            editButtonTitle( it ){
-                return pwixI18n.label( I18N, 'buttons.edit_title', _identifier( it ));
+            async editButtonTitle( it ){
+                return pwixI18n.label( I18N, 'buttons.edit_title', await _identifier( it ));
             },
-            infoButtonTitle( it ){
-                return pwixI18n.label( I18N, 'buttons.info_title', _identifier( it ));
+            async infoButtonTitle( it ){
+                return pwixI18n.label( I18N, 'buttons.info_title', await _identifier( it ));
             },
             // do not let the user delete himself
             deleteButtonEnabled( it ){
