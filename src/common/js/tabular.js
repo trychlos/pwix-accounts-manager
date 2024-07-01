@@ -10,7 +10,8 @@ import { Tabular } from 'meteor/pwix:tabular';
 import { Tracker } from 'meteor/tracker';
 
 const _identifier = async function( it ){
-    return AccountsTools.preferredLabel( it ).label;
+    const res = await AccountsTools.preferredLabel( it );
+    return res.label;
 };
 
 Tracker.autorun(() => {
@@ -23,7 +24,7 @@ Tracker.autorun(() => {
             async deleteButtonTitle( it ){
                 return pwixI18n.label( I18N, 'buttons.delete_title', await _identifier( it ));
             },
-            editButtonEnabled( it ){
+            async editButtonEnabled( it ){
                 return true;
             },
             async editButtonTitle( it ){
@@ -33,7 +34,7 @@ Tracker.autorun(() => {
                 return pwixI18n.label( I18N, 'buttons.info_title', await _identifier( it ));
             },
             // do not let the user delete himself
-            deleteButtonEnabled( it ){
+            async deleteButtonEnabled( it ){
                 return it._id !== Meteor.userId();
             }
         },

@@ -9,7 +9,7 @@ AccountsManager.i18n = {
             buttons: {
                 delete_title: 'Delete the "%s" account',
                 edit_title: 'Edit the "%s" account',
-                info_title: 'Informations about the "%s" account record'
+                info_title: 'Informations about the "%s" account'
             },
             check: {
                 email_exists: 'This email address already exists',
@@ -22,7 +22,9 @@ AccountsManager.i18n = {
                 success: 'The "%s" account has been successfully deleted'
             },
             edit: {
-                modal_title: 'Editing an account'
+                edit_success: 'The account "%s" has been successfully updated',
+                modal_title: 'Editing an account',
+                new_success: 'The account "%s" has been successfully created'
             },
             list: {
                 admin_notes_th: 'Admin Notes',

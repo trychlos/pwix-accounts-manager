@@ -20,6 +20,7 @@ import { pwixI18n } from 'meteor/pwix:i18n';
 import { ReactiveDict } from 'meteor/reactive-dict';
 import { ReactiveVar } from 'meteor/reactive-var';
 import { Roles } from 'meteor/pwix:roles';
+import { Tolert } from 'meteor/pwix:tolert';
 
 import '../account_email_row/account_email_row.js';
 import '../account_emails_list/account_emails_list.js';
@@ -161,14 +162,6 @@ Template.AccountEditPanel.helpers({
 });
 
 Template.AccountEditPanel.events({
-    // this component is expected to 'know' which of its subcomponents uses or not a FormChecker.
-    //  those who are using FormChecker directly update the edited item
-    //  we have to manage others
-    'notes-data .AccountEditPanel'( event, instance, data ){
-        instance.AM.item.get()[data.field.name()] = data.content;
-        // let bubble the event to be handled by client_edit
-    },
-
     // submit
     //  event triggered in case of a modal
     'md-click .AccountEditPanel'( event, instance, data ){
@@ -181,8 +174,12 @@ Template.AccountEditPanel.events({
     // submit
     'iz-submit .AccountEditPanel'( event, instance ){
         //console.debug( event, instance );
+        const self = this;
         let item = instance.AM.item.get();
-        AccountsTools.preferredLabel( item ).then(( label ) => {
+        let label = null;
+        console.debug( 'item', item );
+        AccountsTools.preferredLabel( item ).then(( res ) => {
+            label = res.label;
             // when creating a new account, we let the user create several by reusing the same modal
             if( instance.AM.isNew.get()){
                 AccountsUI.Account.createUser({
@@ -209,28 +206,28 @@ Template.AccountEditPanel.events({
                 // update users
                 return Meteor.callAsync( 'pwix_accounts_manager_accounts_update_account', item );
             }
-        }).then(( res ) => {
-            console.debug( 'res', res );
+        }).then(() => {
             if( !instance.AM.isNew.get()){
                 // update roles
+                // roles panel: replace all roles for the user
+                /*
+                Roles.removeAllRolesFromUser( item._id ).then(( res ) => {
+                    item.roles.every(( role ) => {
+                        const scope = role.scope;
+                        Meteor.callPromise( 'Roles.addUsersToRoles', item._id, role._id, scope === 'NONE' ? {} : { scope: scope })
+                            .then(( res ) => {
+                                //console.debug( 'Roles.addUsersToRoles()', role.doc._id, res );
+                            });
+                        return true;
+                    });
+                });
+                */
                 Modal.close();
+                if( self.onUpdate ){
+                    self.onUpdate();
+                }
+                Tolert.success( pwixI18n.label( I18N, instance.AM.isNew.get() ? 'edit.new_success' : 'edit.edit_success', label ));
             }
         });
-        // whether the user has been just created or is to be updated, other panels are to be considered separately
-        const _updateFromPanels = function(){
-            // roles panel: replace all roles for the user
-            /*
-            Roles.removeAllRolesFromUser( item._id ).then(( res ) => {
-                item.roles.every(( role ) => {
-                    const scope = role.scope;
-                    Meteor.callPromise( 'Roles.addUsersToRoles', item._id, role._id, scope === 'NONE' ? {} : { scope: scope })
-                        .then(( res ) => {
-                            //console.debug( 'Roles.addUsersToRoles()', role.doc._id, res );
-                        });
-                    return true;
-                });
-            });
-            */
-        }
     }
 });

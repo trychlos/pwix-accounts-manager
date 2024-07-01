@@ -28,6 +28,21 @@ Template.AccountsList.onCreated( function(){
         assignments: {
             handle: self.subscribe( 'Roles.allAssignments'),
             list: null
+        },
+
+        // get the user by id
+        // use case: item edition is driven by the tabular display which is able to provide the displayed item
+        //  but the reactivity of the tabular display may be defectuous and the provided item may be not up to date
+        //  while the found one here is provided by the Meteor publication reactivity and almost surely up to date
+        byId( id ){
+            let found = null;
+            self.AM.accounts.list.get().every(( doc ) => {
+                if( doc._id === id ){
+                    found = doc;
+                }
+                return found === null;
+            });
+            return found;
         }
     };
 
@@ -41,7 +56,7 @@ Template.AccountsList.onCreated( function(){
                 users.push( o );
             }).then(() => {
                 self.AM.accounts.list.set( users );
-                //console.debug( users );
+                console.debug( 'accounts', users );
             });
         }
     });
@@ -83,7 +98,7 @@ Template.AccountsList.events({
     // delete an account
     'tabular-delete-event .AccountsList'( event, instance, data ){
         const label = data.item.emails.length ? data.item.emails[0].address : data.item._id;
-        Meteor.callAsync( 'pwix_accounts_manager_accounts_remove', data._id, ( e, res ) => {
+        Meteor.callAsync( 'pwix_accounts_manager_accounts_remove', data.item._id, ( e, res ) => {
             if( e ){
                 Tolert.error({ type:e.error, message:e.reason });
             } else {
@@ -101,7 +116,11 @@ Template.AccountsList.events({
             mdClasses: 'modal-lg',
             mdClassesContent: AccountsManager.configure().classes,
             mdTitle: pwixI18n.label( I18N, 'edit.modal_title' ),
-            item: data.item
+            item: instance.AM.byId( data.item._id ),
+            onUpdate(){
+                console.debug( 'AccountsManager.tabular', AccountsManager.tabular );
+                //AccountsManager.tabular.ajax.reload
+            }
         });
         return false;
     }
