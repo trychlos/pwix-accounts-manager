@@ -42,7 +42,11 @@ Template.AccountEditPanel.onCreated( function(){
         // the item to be edited (a deep copy of the original)
         item: new ReactiveVar( null ),
         // whether we are running inside of a Modal
-        isModal: new ReactiveVar( false )
+        isModal: new ReactiveVar( false ),
+
+        // addressing the Tabbed component
+        tabbedId: null,
+        $tabbed: null
     };
 
     // keep the initial 'new' state
@@ -156,6 +160,7 @@ Template.AccountEditPanel.helpers({
             }
         );
         return {
+            name: ACCOUNT_EDIT_TABBED,
             tabs: tabs
         };
     }
@@ -176,38 +181,36 @@ Template.AccountEditPanel.events({
         //console.debug( event, instance );
         const self = this;
         let item = instance.AM.item.get();
-        let label = null;
         console.debug( 'item', item );
-        AccountsTools.preferredLabel( item ).then(( res ) => {
-            label = res.label;
-            // when creating a new account, we let the user create several by reusing the same modal
-            if( instance.AM.isNew.get()){
-                AccountsUI.Account.createUser({
-                    username: item.username,
-                    password: item.password,
-                    email: item.emails[0].address
-                }, {
-                    autoConnect: false,
-                    successFn(){
-                        AccountsTools.byEmail( email ).then(( user ) => {
-                            if( user ){
-                                item._id = user._id;
-                            } else {
-                                console.warn( 'unable to retrieve the user account', label );
-                            }
-                        });
-                    }
-                });
-                instance.$( '.c-account-ident-panel .ac-signup' ).trigger( 'ac-clear-panel' );
-                instance.$( '.c-account-roles-panel' ).trigger( 'clear-panel' );
-                instance.$( '.notes-edit' ).trigger( 'clear-panel' );
-            // on update, then... update and close
-            } else {
-                // update users
-                return Meteor.callAsync( 'pwix_accounts_manager_accounts_update_account', item );
-            }
-        }).then(() => {
-            if( !instance.AM.isNew.get()){
+        // we cannot call here AccountTools.preferredLabel() as this later requires an id - so compute something not too far of that
+        //  must have at least one of these two
+        const label = item.emails[0].address || item.username;
+        // when creating a new account, we let the user create several by reusing the same modal
+        if( instance.AM.isNew.get()){
+            AccountsUI.Account.createUser({
+                username: item.username,
+                password: item.password,
+                email: item.emails[0].address
+            }, {
+                name: ACCOUNTS_UI_SIGNUP_PANEL,
+                successFn(){
+                    AccountsTools.byEmail( item.emails[0].address ).then(( user ) => {
+                        if( user ){
+                            item._id = user._id;
+                            instance.$( '.c-account-ident-panel .ac-signup' ).trigger( 'ac-clear-panel' );
+                            instance.$( '.c-account-roles-panel' ).trigger( 'clear-panel' );
+                            instance.$( '.notes-edit' ).trigger( 'clear-panel' );
+                            instance.AM.$tabbed.trigger( 'tabbed-do-activate', { tabbedId: instance.AM.tabbedId, index: 0 });
+                        } else {
+                            console.warn( 'unable to retrieve the user account', label );
+                        }
+                    });
+                }
+            });
+        // on update, then... update and close
+        } else {
+            // update account
+            Meteor.callAsync( 'pwix_accounts_manager_accounts_update_account', item ).then(() => {
                 // update roles
                 // roles panel: replace all roles for the user
                 /*
@@ -223,11 +226,16 @@ Template.AccountEditPanel.events({
                 });
                 */
                 Modal.close();
-                if( self.onUpdate ){
-                    self.onUpdate();
-                }
-                Tolert.success( pwixI18n.label( I18N, instance.AM.isNew.get() ? 'edit.new_success' : 'edit.edit_success', label ));
-            }
-        });
+                Tolert.success( pwixI18n.label( I18N, 'edit.new_success', label ));
+            });
+        }
+    },
+
+    // get the Tabbed identifier to be able to address it
+    'tabbed-rendered .AccountEditPanel'( event, instance, data ){
+        if( data.tabbedName === ACCOUNT_EDIT_TABBED ){
+            instance.AM.tabbedId = data.tabbedId;
+            instance.AM.$tabbed = data.$tabbed;
+        }
     }
 });

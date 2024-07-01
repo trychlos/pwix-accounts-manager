@@ -116,11 +116,7 @@ Template.AccountsList.events({
             mdClasses: 'modal-lg',
             mdClassesContent: AccountsManager.configure().classes,
             mdTitle: pwixI18n.label( I18N, 'edit.modal_title' ),
-            item: instance.AM.byId( data.item._id ),
-            onUpdate(){
-                console.debug( 'AccountsManager.tabular', AccountsManager.tabular );
-                //AccountsManager.tabular.ajax.reload
-            }
+            item: instance.AM.byId( data.item._id )
         });
         return false;
     }

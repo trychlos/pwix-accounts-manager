@@ -18,6 +18,7 @@ import SimpleSchema from 'meteor/aldeed:simple-schema';
 import { Tracker } from 'meteor/tracker';
 
 import '../collections/accounts/checks.js';
+import { findLastKey } from 'lodash';
 
 AccountsManager.fieldSet = new ReactiveVar( null );
 
@@ -99,7 +100,7 @@ const _defaultFieldSet = function( conf ){
     {
         name: 'loginAllowed',
         type: Boolean,
-        defaultValue: true,
+        defaultValue: false,
         dt_title: pwixI18n.label( I18N, 'list.login_allowed_th' ),
         dt_className: 'dt-center',
         dt_template: 'dt_checkbox',

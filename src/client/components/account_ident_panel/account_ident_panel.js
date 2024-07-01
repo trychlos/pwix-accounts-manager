@@ -97,14 +97,14 @@ Template.account_ident_panel.helpers({
             signupHaveEmailAddress: InputConvert.uiValue( AccountsManager.configure().haveEmailAddress ),
             signupHaveUsername: InputConvert.uiValue( AccountsManager.configure().haveUsername ),
             signupSubmit: false,
-            name: 'accounts-manager:account-ident-panel:new'
+            name: ACCOUNTS_UI_SIGNUP_PANEL
         };
     }
 });
 
 Template.account_ident_panel.events({
     'ac-signup-ok .c-account-ident-panel'( event, instance, data ){
-        console.debug( event, instance, data );
+        //console.debug( event, instance, data );
         const checker = instance.AM.checker.get();
         if( checker ){
             checker.setValid( data.ok );
