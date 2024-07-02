@@ -118,7 +118,7 @@ const _defaultFieldSet = function( conf ){
         optional: true,
         dt_title: pwixI18n.label( I18N, 'list.last_connection_th' ),
         dt_render( data, type, rowData ){
-            return strftime( AccountsManager.configure().datetime, data );
+            return rowData.lastConnection ? strftime( AccountsManager.configure().datetime, rowData.lastConnection ) : '';
         },
         dt_className: 'dt-center'
     },

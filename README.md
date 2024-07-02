@@ -128,7 +128,13 @@ Known configuration options are:
 
     Defauts to nothing.
 
-- `fieldsSet`
+- `datetime`
+
+    The `strftime` format string used to display date and time timestamps.
+
+    Defaults to `%Y-%m-%d %H:%M:%S`.
+
+- `fields`
 
     Let the application extends the default schema by providing additional fields as a `Forms.FieldSet` definition.
 
@@ -138,7 +144,7 @@ Known configuration options are:
 
 ```js
     AccountsManager.configure({
-        fieldsSet: new Forms.FieldsSet(
+        fields: new Forms.FieldsSet(
             {
                 name: 'apiAllowed',
                 type: Boolean,
