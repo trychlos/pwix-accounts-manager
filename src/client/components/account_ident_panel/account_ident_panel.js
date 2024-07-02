@@ -11,11 +11,11 @@
  */
 
 import _ from 'lodash';
+import strftime from 'strftime';
 
 import { AccountsUI } from 'meteor/pwix:accounts-ui';
 import { Forms } from 'meteor/pwix:forms';
 import { pwixI18n } from 'meteor/pwix:i18n';
-import { Random } from 'meteor/random';
 import { ReactiveVar } from 'meteor/reactive-var';
 
 import { InputConvert } from '../../../common/definitions/input-convert.def.js';
@@ -39,6 +39,12 @@ Template.account_ident_panel.onRendered( function(){
         const fields = {
             loginAllowed: {
                 js: '.js-login-allowed'
+            },
+            lastConnection: {
+                js: '.js-last-login',
+                formTo( $node, item ){
+                    return $node.val( item.lastConnection ? strftime( AccountsManager.configure().datetime, item.lastConnection ) : '' );
+                }
             }
         };
         if( AccountsManager.configure().haveUsername !== AccountsManager.C.Input.NONE ){
@@ -54,7 +60,8 @@ Template.account_ident_panel.onRendered( function(){
                 panel: new Forms.Panel( fields, AccountsManager.fieldSet.get()),
                 data: {
                     item: Template.currentData().item
-                }
+                },
+                setForm: Template.currentData().item.get()
             }));
         }
     });
