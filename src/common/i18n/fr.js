@@ -19,6 +19,8 @@ AccountsManager.i18n = {
                 username_exists: 'Ce nom d\'utilisateur est déjà utilisé'
             },
             delete: {
+                confirmation_text: 'Vous êtes sur le point de supprimer le compte "%s".<br />Etes-vous sûr ?',
+                confirmation_title: 'Supprimer un compte',
                 success: 'Le compte "%s" a été supprimé avec succès'
             },
             edit: {

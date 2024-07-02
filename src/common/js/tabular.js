@@ -24,6 +24,12 @@ Tracker.autorun(() => {
             async deleteButtonTitle( it ){
                 return pwixI18n.label( I18N, 'buttons.delete_title', await _identifier( it ));
             },
+            async deleteConfirmationText( it ){
+                return pwixI18n.label( I18N, 'delete.confirmation_text', await _identifier( it ));
+            },
+            async deleteConfirmationTitle( it ){
+                return pwixI18n.label( I18N, 'delete.confirmation_title', await _identifier( it ));
+            },
             async editButtonEnabled( it ){
                 return true;
             },
