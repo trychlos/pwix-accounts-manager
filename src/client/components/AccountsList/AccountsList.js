@@ -7,6 +7,7 @@
  * - none
  */
 
+import { AccountsTools } from 'meteor/pwix:accounts-tools';
 import { Modal } from 'meteor/pwix:modal';
 import { pwixI18n } from 'meteor/pwix:i18n';
 import { Roles } from 'meteor/pwix:roles';
@@ -91,20 +92,29 @@ Template.AccountsList.helpers({
     // string translation
     i18n( arg ){
         return pwixI18n.label( I18N, arg.hash.key );
+    },
+
+    // tabular identifier
+   tabularId(){
+        return TABULAR_ID;
     }
 });
 
 Template.AccountsList.events({
     // delete an account
     'tabular-delete-event .AccountsList'( event, instance, data ){
-        const label = data.item.emails.length ? data.item.emails[0].address : data.item._id;
-        Meteor.callAsync( 'pwix_accounts_manager_accounts_remove', data.item._id, ( e, res ) => {
-            if( e ){
-                Tolert.error({ type:e.error, message:e.reason });
-            } else {
+        let label = null;
+        AccountsTools.preferredLabel( data.item )
+            .then(( res ) => {
+                label = res.label;
+                Meteor.callAsync( 'pwix_accounts_manager_accounts_remove', data.item._id )
+            })
+            .then(() => {
                 Tolert.success( pwixI18n.label( I18N, 'delete.success', label ));
-            }
-        });
+            })
+            .catch(( e ) => {
+                Tolert.error({ type:e.error, message:e.reason });
+            });
         return false; // doesn't propagate
     },
 

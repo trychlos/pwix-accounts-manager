@@ -12,7 +12,8 @@
 | ---: | :---       | :---                       |
 |    3 | 2024- 6-24 | admin notes should not be available to standard user |
 |    4 | 2024- 6-24 | whether to be able to reuse the same input panel when creating an account should be a configurable option |
-|    5 |  |  |
+|    5 | 2024- 7- 2 | should have an accounts-conf configuration package just to handle accounts configurations parameters which are at application level and shared between packages |
+|    6 |  |  |
 
 ---
 ## Done

@@ -28,5 +28,8 @@ ACCOUNT_EDIT_TABBED = 'accounts-manager:account-edit-panel:tabbed';
 // the name of the acUserLogin embedded panel when creating a new account
 ACCOUNTS_UI_SIGNUP_PANEL = 'accounts-manager:account-ident-panel:new';
 
+// tabular identifier
+TABULAR_ID = 'pwix:accounts-manager/tabular';
+
 // i18n namespace
 I18N = 'pwix:accounts-manager:i18n:namespace';
