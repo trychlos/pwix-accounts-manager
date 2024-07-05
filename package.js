@@ -31,6 +31,7 @@ function configure( api ){
     api.use( 'ecmascript' );
     api.use( 'less@4.0.0', 'client' );
     api.use( 'mongo' );
+    api.use( 'pwix:accounts-conf@1.0.0-rc' );
     api.use( 'pwix:accounts-tools@2.1.0-rc' );
     api.use( 'pwix:accounts-ui@1.5.0' );
     api.use( 'pwix:collection-timestampable@2.0.0' );

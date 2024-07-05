@@ -118,7 +118,9 @@ Known data context is:
 
 ## Configuration
 
-The package's behavior can be configured through a call to the `AccountsManager.configure()` method, with just a single javascript object argument, which itself should only contains the options you want override.
+This package relies on `pwix:accounts-conf` package for most of its configuration. Please see the relevant documentation.
+
+This package's behavior can be configured through a call to the `AccountsManager.configure()` method, with just a single javascript object argument, which itself should only contains the options you want override.
 
 Known configuration options are:
 
@@ -151,7 +153,6 @@ Known configuration options are:
                 defaultValue: false
             }
         ),
-        //haveEmailAddress: AC_FIELD_MANDATORY,
         //haveUsername: AC_FIELD_NONE
         roles: {
             list: 'ACCOUNTS_LIST',
@@ -162,26 +163,6 @@ Known configuration options are:
         // verbosity: AccountsManager.C.Verbose.CONFIGURE
     });
 ```
-
-- `haveEmailAddress`
-- `haveUsername`
-
-    Whether the user accounts are to be configured with or without a username (resp. an email address), and whether it is optional or mandatory.
-
-    For each of these terms, accepted values are:
-
-    - `AccountsManager.C.Input.NONE`: the field is not displayed nor considered
-    - `AccountsManager.C.Input.OPTIONAL`: the input field is proposed to the user, but may be left empty
-    - `AccountsManager.C.Input.MANDATORY`: the input field must be filled by the user
-
-    At least one of these fields MUST be set as `AccountsManager.C.Input.MANDATORY`. Else, the default value will be applied.
-
-    Defauts to:
-
-    - `haveEmailAddress`: `AccountsManager.C.Input.MANDATORY`
-    - `haveUsername`: `AccountsManager.C.Input.NONE`
-
-    Please be conscious that some features of your application may want display an identifier for each user. It would be a security hole to let the application display a verified email address anywhere, as this would be some sort of spam magnet!
 
 - `hideDisabled`
 

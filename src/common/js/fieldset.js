@@ -10,6 +10,7 @@
 
 import strftime from 'strftime';
 
+import { AccountsConf } from 'meteor/pwix:accounts-conf';
 import { Field } from 'meteor/pwix:field';
 import { Notes } from 'meteor/pwix:notes';
 import { pwixI18n } from 'meteor/pwix:i18n';
@@ -18,16 +19,15 @@ import SimpleSchema from 'meteor/aldeed:simple-schema';
 import { Tracker } from 'meteor/tracker';
 
 import '../collections/accounts/checks.js';
-import { findLastKey } from 'lodash';
 
 AccountsManager.fieldSet = new ReactiveVar( null );
 
-const _defaultFieldSet = function( conf ){
+const _defaultFieldSet = function(){
 
     let columns = [];
 
     // if have an email address
-    if( conf.haveEmailAddress !== AccountsManager.C.Input.NONE ){
+    if( AccountsConf.configure().haveEmailAddress() !== AccountsConf.C.Identifier.NONE ){
         columns.push({
             name: 'emails',
             type: Array,
@@ -73,7 +73,7 @@ const _defaultFieldSet = function( conf ){
     }
 
     // if have a username
-    if( conf.haveUsername !== AccountsManager.C.Input.NONE ){
+    if( AccountsConf.configure().haveUsername() !== AccountsConf.C.Identifier.NONE ){
         columns.push({
             name: 'username',
             type: String,

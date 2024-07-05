@@ -13,6 +13,7 @@
 import _ from 'lodash';
 import strftime from 'strftime';
 
+import { AccountsConf } from 'meteor/pwix:accounts-conf';
 import { AccountsUI } from 'meteor/pwix:accounts-ui';
 import { Forms } from 'meteor/pwix:forms';
 import { pwixI18n } from 'meteor/pwix:i18n';
@@ -70,12 +71,12 @@ Template.account_ident_panel.onRendered( function(){
 Template.account_ident_panel.helpers({
     // whether we want an email address
     haveEmailAddress(){
-        return AccountsManager.configure().haveEmailAddress !== AccountsManager.C.Input.NONE;
+        return AccountsConf.configure().haveEmailAddress() !== AccountsConf.C.Identifier.NONE;
     },
 
     // whether we want a username
     haveUsername(){
-        return AccountsManager.configure().haveUsername !== AccountsManager.C.Input.NONE;
+        return AccountsConf.configure().haveUsername() !== AccountsConf.C.Identifier.NONE;
     },
 
     // string translation
@@ -101,8 +102,6 @@ Template.account_ident_panel.helpers({
             signupPasswordTwice: true,
             signupAutoClose: false,
             signupAutoConnect: false,
-            signupHaveEmailAddress: InputConvert.uiValue( AccountsManager.configure().haveEmailAddress ),
-            signupHaveUsername: InputConvert.uiValue( AccountsManager.configure().haveUsername ),
             signupSubmit: false,
             name: ACCOUNTS_UI_SIGNUP_PANEL
         };
@@ -119,10 +118,10 @@ Template.account_ident_panel.events({
             const item = this.item.get();
             item.emails = item.emails || [];
             item.emails[0] = item.emails[0] || {};
-            if( AccountsManager.configure().haveEmailAddress !== AccountsManager.C.Input.NONE ){
+            if( AccountsConf.configure().haveEmailAddress() !== AccountsConf.C.Identifier.NONE ){
                 item.emails[0].address = data.email;
             }
-            if( AccountsManager.configure().haveUsername !== AccountsManager.C.Input.NONE ){
+            if( AccountsConf.configure().haveUsername() !== AccountsConf.C.Identifier.NONE ){
                 item.username = data.username;
             }
             item.password = data.password;

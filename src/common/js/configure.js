@@ -15,8 +15,6 @@ AccountsManager._defaults = {
     classes: '',
     datetime: '%Y-%m-%d %H:%M:%S',
     fields: null,
-    haveEmailAddress: AccountsManager.C.Input.MANDATORY,
-    haveUsername: AccountsManager.C.Input.NONE,
     hideDisabled: true,
     roles: {
         list: null,
