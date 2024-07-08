@@ -146,21 +146,19 @@ Known configuration options are:
 
 ```js
     AccountsManager.configure({
-        fields: new Forms.FieldsSet(
+        fields: [
             {
-                name: 'apiAllowed',
-                type: Boolean,
-                defaultValue: false
+                where: Field.C.Insert.BEFORE,
+                name: 'loginAllowed',
+                fields: [
+                    {
+                        name: 'apiAllowed',
+                        type: Boolean,
+                        defaultValue: false
+                    }
+                ]
             }
-        ),
-        //haveUsername: AC_FIELD_NONE
-        roles: {
-            list: 'ACCOUNTS_LIST',
-            create: 'ACCOUNT_CREATE',
-            edit: 'ACCOUNT_EDIT',
-            delete: 'ACCOUNT_DELETE'
-        }
-        // verbosity: AccountsManager.C.Verbose.CONFIGURE
+        ]
     });
 ```
 

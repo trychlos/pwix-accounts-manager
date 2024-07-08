@@ -3,6 +3,7 @@
  *
  * Maintain in the AccountsManager global object the permissions as a ReactiveDict for the current user.
  * These permissions are only available on the client.
+ * Note that at this AccountsManager level, we consider that roles must no be scoped (and so only look at global - non-scoped - roles).
  */
 
 import { ReactiveDict } from 'meteor/reactive-dict';
@@ -14,14 +15,17 @@ AccountsManager.perms = new ReactiveDict();
 Tracker.autorun(() => {
     if( Roles.ready()){
         AccountsManager.perms.clear();
-        const conf = AccountsManager.configure();
-        Object.keys( conf.roles ).forEach(( role ) => {
-            const roleName = conf.roles[role];
-            if( roleName ){
-                Tracker.autorun(() => {
-                    AccountsManager.perms.set( role, Meteor.userId() && ( Roles.current().globals || [] ).includes( roleName ));
-                });
-            }
-        });
+        if( Meteor.userId()){
+            const conf = AccountsManager.configure();
+            Object.keys( conf.roles ).forEach(( name ) => {
+                const roleId = conf.roles[name];
+                if( roleId ){
+                    Tracker.autorun(() => {
+                        //console.debug( 'name', name, 'globals', Roles.current().all, 'roleId', roleId, 'perm', Roles.current().all.includes( roleId ));
+                        AccountsManager.perms.set( name, Roles.current().global.all.includes( roleId ));
+                    });
+                }
+            });
+        }
     }
 });

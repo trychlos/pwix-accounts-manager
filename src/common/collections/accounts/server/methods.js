@@ -9,16 +9,6 @@ Meteor.methods({
     },
 
 /*
-    // retrieve an account by its email address
-    'account.byEmail'( email ){
-        return Accounts.findUserByEmail( email );
-    },
-
-    // retrieve an account by its username
-    'account.byUsername'( username ){
-        return Accounts.findUserByUsername( username );
-    },
-
     // remove specified attributes
     'account.clearAttributes'( id, array ){
         let unset = {};

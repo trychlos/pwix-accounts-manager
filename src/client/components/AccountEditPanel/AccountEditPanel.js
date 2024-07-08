@@ -17,7 +17,6 @@ import { AccountsUI } from 'meteor/pwix:accounts-ui';
 import { Forms } from 'meteor/pwix:forms';
 import { Modal } from 'meteor/pwix:modal';
 import { pwixI18n } from 'meteor/pwix:i18n';
-import { ReactiveDict } from 'meteor/reactive-dict';
 import { ReactiveVar } from 'meteor/reactive-var';
 import { Roles } from 'meteor/pwix:roles';
 import { Tolert } from 'meteor/pwix:tolert';
@@ -113,27 +112,23 @@ Template.AccountEditPanel.helpers({
             isNew: Template.instance().AM.isNew.get(),
             checker: Template.instance().AM.checker
         };
-        const tabs = [{
-            tabid: 'ident_tab',
-            paneid: 'ident_pane',
-            navLabel: pwixI18n.label( I18N, 'tabs.ident_title' ),
-            paneTemplate: 'account_ident_panel',
-            paneData: paneData
-        }];
-        // when creating a new account, do not display the roles tab
-        //  in other words: only let the roles be set/updated on an existing account
-        if( this.item ){
-            tabs.push({
+        const adminNotes = AccountsManager.fieldSet.get().byName( 'adminNotes' );
+        const userNotes = AccountsManager.fieldSet.get().byName( 'userNotes' );
+        const tabs = [
+            {
+                tabid: 'ident_tab',
+                paneid: 'ident_pane',
+                navLabel: pwixI18n.label( I18N, 'tabs.ident_title' ),
+                paneTemplate: 'account_ident_panel',
+                paneData: paneData
+            },
+            {
                 tabid: 'roles_tab',
                 paneid: 'roles_pane',
                 navLabel: pwixI18n.label( I18N, 'tabs.roles_title' ),
                 paneTemplate: 'account_roles_panel',
                 paneData: paneData
-            });
-        }
-        const adminNotes = AccountsManager.fieldSet.get().byName( 'adminNotes' );
-        const userNotes = AccountsManager.fieldSet.get().byName( 'userNotes' );
-        tabs.push(
+            },
             {
                 tabid: 'admin_notes_tab',
                 paneid: 'admin_notes_pane',
@@ -158,7 +153,7 @@ Template.AccountEditPanel.helpers({
                     };
                 }
             }
-        );
+        ];
         return {
             name: ACCOUNT_EDIT_TABBED,
             tabs: tabs
@@ -186,6 +181,10 @@ Template.AccountEditPanel.events({
         //  must have at least one of these two
         const label = item.emails[0].address || item.username;
         // when creating a new account, we let the user create several by reusing the same modal
+        const updateRoles = async function( user ){
+            const roles = Roles.EditPanel.roles();
+            return await Roles.setUserRoles( user, roles );
+        };
         if( instance.AM.isNew.get()){
             AccountsUI.Account.createUser({
                 username: item.username,
@@ -194,13 +193,14 @@ Template.AccountEditPanel.events({
             }, {
                 name: ACCOUNTS_UI_SIGNUP_PANEL,
                 successFn(){
-                    AccountsTools.byEmail( item.emails[0].address ).then(( user ) => {
+                    AccountsTools.byEmail( item.emails[0].address ).then( async ( user ) => {
                         if( user ){
                             item._id = user._id;
                             instance.$( '.c-account-ident-panel .ac-signup' ).trigger( 'ac-clear-panel' );
                             instance.$( '.c-account-roles-panel' ).trigger( 'clear-panel' );
                             instance.$( '.notes-edit' ).trigger( 'clear-panel' );
                             instance.AM.$tabbed.trigger( 'tabbed-do-activate', { tabbedId: instance.AM.tabbedId, index: 0 });
+                            const res = await updateRoles( item );
                         } else {
                             console.warn( 'unable to retrieve the user account', label );
                         }
@@ -210,23 +210,16 @@ Template.AccountEditPanel.events({
         // on update, then... update and close
         } else {
             // update account
-            Meteor.callAsync( 'pwix_accounts_manager_accounts_update_account', item ).then(() => {
-                // update roles
-                // roles panel: replace all roles for the user
-                /*
-                Roles.removeAllRolesFromUser( item._id ).then(( res ) => {
-                    item.roles.every(( role ) => {
-                        const scope = role.scope;
-                        Meteor.callPromise( 'Roles.addUsersToRoles', item._id, role._id, scope === 'NONE' ? {} : { scope: scope })
-                            .then(( res ) => {
-                                //console.debug( 'Roles.addUsersToRoles()', role.doc._id, res );
-                            });
-                        return true;
-                    });
-                });
-                */
+            Meteor.callAsync( 'pwix_accounts_manager_accounts_update_account', item ).then( async ( res ) => {
+                if( res ){
+                    res = await updateRoles( item );
+                }
+                if( res ){
+                    Tolert.success( pwixI18n.label( I18N, 'edit.edit_success', label ));
+                } else {
+                    Tolert.error( pwixI18n.label( I18N, 'edit.edit_error', label ));
+                }
                 Modal.close();
-                Tolert.success( pwixI18n.label( I18N, 'edit.new_success', label ));
             });
         }
     },

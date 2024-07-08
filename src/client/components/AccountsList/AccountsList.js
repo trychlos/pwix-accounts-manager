@@ -86,7 +86,9 @@ Template.AccountsList.onCreated( function(){
 Template.AccountsList.helpers({
     // whether the current user has the permission to see the list of accounts
     canList(){
-        return AccountsManager.perms.get( 'list' );
+        const res = AccountsManager.perms.get( 'list' );
+        //console.debug( 'res', res );
+        return res;
     },
 
     // string translation

@@ -83,75 +83,60 @@ const _defaultFieldSet = function(){
     }
 
     // other columns
-    columns.push({
-        name: 'profile',
-        type: Object,
-        optional: true,
-        blackbox: true,
-        dt_tabular: false
-    },
-    {
-        name:  'services',
-        type: Object,
-        optional: true,
-        blackbox: true,
-        dt_tabular: false
-    },
-    {
-        name: 'loginAllowed',
-        type: Boolean,
-        defaultValue: false,
-        dt_title: pwixI18n.label( I18N, 'list.login_allowed_th' ),
-        dt_className: 'dt-center',
-        dt_template: 'dt_checkbox',
-        dt_templateContext( rowData ){
-            return {
-                item: rowData,
-                readonly: true,
-                enabled: true
-            }
-        }
-    },
-    {
-        name: 'lastConnection',
-        type: Date,
-        optional: true,
-        dt_title: pwixI18n.label( I18N, 'list.last_connection_th' ),
-        dt_render( data, type, rowData ){
-            return rowData.lastConnection ? strftime( AccountsManager.configure().datetime, rowData.lastConnection ) : '';
+    columns.push(
+        {
+            name: 'profile',
+            type: Object,
+            optional: true,
+            blackbox: true,
+            dt_tabular: false
         },
-        dt_className: 'dt-center'
-    },
-    Notes.fieldDef({
-        name: 'adminNotes',
-        dt_title: pwixI18n.label( I18N, 'list.admin_notes_th' ),
-        form_title: pwixI18n.label( I18N, 'tabs.admin_notes_title' )
-    }),
-    Notes.fieldDef({
-        name: 'userNotes',
-        dt_title: pwixI18n.label( I18N, 'list.user_notes_th' ),
-        form_title: pwixI18n.label( I18N, 'tabs.user_notes_title' )
-    }),
-    {
-        name: 'createdAt',
-        schema: false,
-        dt_visible: false
-    },
-    {
-        name: 'createdBy',
-        schema: false,
-        dt_visible: false
-    },
-    {
-        name: 'updatedAt',
-        schema: false,
-        dt_visible: false
-    },
-    {
-        name: 'updatedBy',
-        schema: false,
-        dt_visible: false
-    });
+        {
+            name:  'services',
+            type: Object,
+            optional: true,
+            blackbox: true,
+            dt_tabular: false
+        },
+        {
+            name: 'loginAllowed',
+            type: Boolean,
+            defaultValue: false,
+            dt_title: pwixI18n.label( I18N, 'list.login_allowed_th' ),
+            dt_className: 'dt-center',
+            dt_template: 'dt_checkbox',
+            dt_templateContext( rowData ){
+                return {
+                    item: rowData,
+                    readonly: true,
+                    enabled: true
+                }
+            }
+        },
+        {
+            name: 'lastConnection',
+            type: Date,
+            optional: true,
+            dt_title: pwixI18n.label( I18N, 'list.last_connection_th' ),
+            dt_render( data, type, rowData ){
+                return rowData.lastConnection ? strftime( AccountsManager.configure().datetime, rowData.lastConnection ) : '';
+            },
+            dt_className: 'dt-center',
+            form_status: false,
+            form_check: false
+        },
+        Notes.fieldDef({
+            name: 'adminNotes',
+            dt_title: pwixI18n.label( I18N, 'list.admin_notes_th' ),
+            form_title: pwixI18n.label( I18N, 'tabs.admin_notes_title' )
+        }),
+        Notes.fieldDef({
+            name: 'userNotes',
+            dt_title: pwixI18n.label( I18N, 'list.user_notes_th' ),
+            form_title: pwixI18n.label( I18N, 'tabs.user_notes_title' )
+        }),
+        Timestampable.fieldDef()
+    );
 
     return columns;
 };

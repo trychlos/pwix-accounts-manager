@@ -24,9 +24,9 @@ AccountsManager.i18n = {
                 success: 'Le compte "%s" a été supprimé avec succès'
             },
             edit: {
+                edit_error: 'Nous sommes malheureusement dans l\'impossibilité de mettre à jour le compte "%s". Merci de réessayer ultérieurement',
                 edit_success: 'Le compte "%s" a été mis à jour avec succès',
-                modal_title: 'Editer un compte',
-                new_success: 'Le compte "%s" a été créé avec succès'
+                modal_title: 'Editer un compte'
             },
             list: {
                 admin_notes_th: 'Notes de l\'administrateur',

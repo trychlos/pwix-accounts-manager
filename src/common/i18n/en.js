@@ -24,9 +24,9 @@ AccountsManager.i18n = {
                 success: 'The "%s" account has been successfully deleted'
             },
             edit: {
+                edit_error: 'We are unfortunately unable to update the "%s" account. Please retry later',
                 edit_success: 'The account "%s" has been successfully updated',
-                modal_title: 'Editing an account',
-                new_success: 'The account "%s" has been successfully created'
+                modal_title: 'Editing an account'
             },
             list: {
                 admin_notes_th: 'Admin Notes',
