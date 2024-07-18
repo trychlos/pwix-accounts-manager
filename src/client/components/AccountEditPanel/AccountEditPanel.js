@@ -18,7 +18,6 @@ import { Forms } from 'meteor/pwix:forms';
 import { Modal } from 'meteor/pwix:modal';
 import { pwixI18n } from 'meteor/pwix:i18n';
 import { ReactiveVar } from 'meteor/reactive-var';
-import { Roles } from 'meteor/pwix:roles';
 import { Tolert } from 'meteor/pwix:tolert';
 
 import '../account_email_row/account_email_row.js';
@@ -122,46 +121,48 @@ Template.AccountEditPanel.helpers({
         };
         const adminNotes = AccountsManager.fieldSet.get().byName( 'adminNotes' );
         const userNotes = AccountsManager.fieldSet.get().byName( 'userNotes' );
-        const tabs = [
+        let tabs = [
             {
                 tabid: 'ident_tab',
                 paneid: 'ident_pane',
                 navLabel: pwixI18n.label( I18N, 'tabs.ident_title' ),
                 paneTemplate: 'account_ident_panel',
                 paneData: paneData
-            },
-            {
+            }
+        ];
+        if( Package['pwix:roles'] ){
+            tabs.push({
                 tabid: 'roles_tab',
                 paneid: 'roles_pane',
                 navLabel: pwixI18n.label( I18N, 'tabs.roles_title' ),
                 paneTemplate: 'account_roles_panel',
                 paneData: paneData
-            },
-            {
-                tabid: 'admin_notes_tab',
-                paneid: 'admin_notes_pane',
-                navLabel: adminNotes.toForm().title,
-                paneTemplate: 'NotesEdit',
-                paneData(){
-                    return {
-                        item: paneData.item,
-                        field: adminNotes
-                    };
-                }
-            },
-            {
-                tabid: 'user_notes_tab',
-                paneid: 'user_notes_pane',
-                navLabel: userNotes.toForm().title,
-                paneTemplate: 'NotesEdit',
-                paneData(){
-                    return {
-                        item: paneData.item,
-                        field: userNotes
-                    };
-                }
+            });
+        }
+        tabs.push({
+            tabid: 'admin_notes_tab',
+            paneid: 'admin_notes_pane',
+            navLabel: adminNotes.toForm().title,
+            paneTemplate: 'NotesEdit',
+            paneData(){
+                return {
+                    item: paneData.item,
+                    field: adminNotes
+                };
             }
-        ];
+        },
+        {
+            tabid: 'user_notes_tab',
+            paneid: 'user_notes_pane',
+            navLabel: userNotes.toForm().title,
+            paneTemplate: 'NotesEdit',
+            paneData(){
+                return {
+                    item: paneData.item,
+                    field: userNotes
+                };
+            }
+        });
         return {
             name: ACCOUNT_EDIT_TABBED,
             tabs: tabs
@@ -190,8 +191,10 @@ Template.AccountEditPanel.events({
         const label = item.emails[0].address || item.username;
         // when creating a new account, we let the user create several by reusing the same modal
         const updateRoles = async function( user ){
-            const roles = Roles.EditPanel.roles();
-            return await Roles.setUserRoles( user, roles );
+            if( Package['pwix:roles'] ){
+                const roles = Package['pwix:roles'].Roles.EditPanel.roles();
+                return await Package['pwix:roles'].Roles.setUserRoles( user, roles );
+            }
         };
         if( instance.AM.isNew.get()){
             AccountsUI.Account.createUser({

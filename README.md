@@ -98,11 +98,12 @@ Available both on the client and the server.
 A tabbed editing panel to be run inside of a page or of a modal. Default tabs are named and ordered as:
 
 - `ident_tab`
-- `roles_tab`
 - `admin_notes_tab`
 - `user_notes_tab`
 
-When run from (below) `AccountsList`, it is run in a modal to edit the current item.
+If the `pwix:roles` package is used by the application, a `roles_tab` is inserted before `admin_notes_tab`.
+
+When run from [`AccountsList`](#accountslist), it is run in a modal to edit the current item.
 
 The `AccountEditPanel` component accepts a data context as:
 

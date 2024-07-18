@@ -6,7 +6,7 @@
 
     Release date: 
 
-    - 
+    - Remove pwix:roles dependency, only having roles tab when the package is present
 
 ### 1.0.0
 

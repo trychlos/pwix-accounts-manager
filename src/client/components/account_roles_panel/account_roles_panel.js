@@ -7,8 +7,6 @@
  * - checker: a ReactiveVar which holds the parent Checker
  */
 
-import { Roles } from 'meteor/pwix:roles';
-
 import './account_roles_panel.html';
 
 Template.account_roles_panel.helpers({

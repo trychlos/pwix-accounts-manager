@@ -10,7 +10,6 @@
 import { AccountsTools } from 'meteor/pwix:accounts-tools';
 import { Modal } from 'meteor/pwix:modal';
 import { pwixI18n } from 'meteor/pwix:i18n';
-import { Roles } from 'meteor/pwix:roles';
 import { ReactiveVar } from 'meteor/reactive-var';
 import { Tolert } from 'meteor/pwix:tolert';
 
@@ -28,7 +27,7 @@ Template.AccountsList.onCreated( function(){
             list: new ReactiveVar( [] )
         },
         assignments: {
-            handle: self.subscribe( 'pwix_roles_user_assignments' ),
+            handle: null,
             list: null
         },
 
@@ -48,6 +47,10 @@ Template.AccountsList.onCreated( function(){
         }
     };
 
+    if( Package['pwix:roles'] ){
+        self.AM.assignments.handle = self.subscribe( 'pwix_roles_user_assignments' );
+    }
+
     // load the user's list
     self.autorun(() => {
         if( self.AM.accounts.handle.ready()){
@@ -65,9 +68,9 @@ Template.AccountsList.onCreated( function(){
 
     // attach to each user a reactive var with his/her set of (attributed) roles
     self.autorun(() => {
-        if( self.AM.assignments.handle.ready()){
+        if( self.AM.assignments.handle && self.AM.assignments.handle.ready()){
             self.AM.accounts.list.get().forEach(( u ) => {
-                Roles.directRolesForUser( u, { anyScope: true }).then(( res ) => {
+                Package['pwix:roles'].Roles.directRolesForUser( u, { anyScope: true }).then(( res ) => {
                     u.attributedRoles.set( res );
                 });
             });
