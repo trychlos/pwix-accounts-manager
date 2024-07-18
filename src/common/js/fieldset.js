@@ -132,12 +132,9 @@ const _defaultFieldSet = function(){
             schema: false,
             dt_title: pwixI18n.label( I18N, 'list.roles_th' ),
             dt_className: 'ui-ellipsized',
-            async dt_render( data, type, rowData ){
-                console.debug( rowData );
-                console.debug( Package['pwix:roles'].Roles );
-                const direct = await Package['pwix:roles'].Roles.directRolesForUser( rowData, { anyScope: true });
-                console.debug( 'direct', direct );
-                return direct.join( ', ' );
+            dt_render( data, type, rowData ){
+                const item = AccountsManager.list.byId( rowData._id );
+                return item.DYN.roles.get().join( ', ' );
             },
             form: false
         });

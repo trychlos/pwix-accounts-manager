@@ -17,76 +17,6 @@ import '../AccountEditPanel/AccountEditPanel.js';
 
 import './AccountsList.html';
 
-Template.AccountsList.onCreated( function(){
-    const self = this;
-    console.debug( this );
-
-    self.AM = {
-        accounts: {
-            handle: self.subscribe( 'pwix_accounts_manager_accounts_list_all' ),
-            list: new ReactiveVar( [] )
-        },
-        assignments: {
-            handle: null,
-            list: null
-        },
-
-        // get the user by id
-        // use case: item edition is driven by the tabular display which is able to provide the displayed item
-        //  but the reactivity of the tabular display may be defectuous and the provided item may be not up to date
-        //  while the found one here is provided by the Meteor publication reactivity and almost surely up to date
-        byId( id ){
-            let found = null;
-            self.AM.accounts.list.get().every(( doc ) => {
-                if( doc._id === id ){
-                    found = doc;
-                }
-                return found === null;
-            });
-            return found;
-        }
-    };
-
-    if( Package['pwix:roles'] ){
-        self.AM.assignments.handle = self.subscribe( 'pwix_roles_user_assignments' );
-    }
-
-    // load the user's list
-    self.autorun(() => {
-        if( self.AM.accounts.handle.ready()){
-            //console.debug( 'accounts handle ready' );
-            let users = [];
-            Meteor.users.find().forEachAsync(( o ) => {
-                o.attributedRoles = new ReactiveVar( [] );
-                users.push( o );
-            }).then(() => {
-                self.AM.accounts.list.set( users );
-                console.debug( 'accounts', users );
-            });
-        }
-    });
-
-    // attach to each user a reactive var with his/her set of (attributed) roles
-    self.autorun(() => {
-        if( self.AM.assignments.handle && self.AM.assignments.handle.ready()){
-            self.AM.accounts.list.get().forEach(( u ) => {
-                Package['pwix:roles'].Roles.directRolesForUser( u, { anyScope: true }).then(( res ) => {
-                    u.attributedRoles.set( res );
-                });
-            });
-        }
-    });
-
-    // debug (attributed) roles
-    self.autorun(() => {
-        if( false ){
-            self.AM.accounts.list.get().forEach(( u ) => {
-                console.debug( u.attributedRoles.get());
-            });
-        }
-    });
-});
-
 Template.AccountsList.helpers({
     // whether the current user has the permission to see the list of accounts
     canList(){
@@ -135,7 +65,7 @@ Template.AccountsList.events({
                     mdClasses: 'modal-lg',
                     mdClassesContent: AccountsManager.configure().classes,
                     mdTitle: pwixI18n.label( I18N, 'edit.modal_title', res.label ),
-                    item: instance.AM.byId( data.item._id )
+                    item: AccountsManager.list.byId( data.item._id )
                 });
             });
         return false;

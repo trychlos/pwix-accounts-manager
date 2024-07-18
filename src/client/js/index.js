@@ -9,6 +9,7 @@ import '../components/dt_email_verified/dt_email_verified.js';
 //
 import '../../common/js/index.js';
 //
+import './accounts-list.js';
 import './last-connection.js';
 //
 import '../stylesheets/accounts_manager.less';
