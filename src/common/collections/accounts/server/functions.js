@@ -113,13 +113,14 @@ Accounts.validateNewUser(( user ) => {
     // Return true to allow user creation to proceed
     return true;
 });
+*/
 
 // https://docs.meteor.com/api/accounts-multi.html#AccountsServer-validateLoginAttempt
+// https://v3-docs.meteor.com/api/accounts.html#AccountsServer-validateLoginAttempt
 Accounts.validateLoginAttempt(( o ) => {
     //console.log( o );
     if( !o.allowed ){
         return false;
     }
-    return ( o && o.user ) ? o.user.isAllowed : true;
+    return ( o && o.user ) ? o.user.loginAllowed : true;
 });
-*/
