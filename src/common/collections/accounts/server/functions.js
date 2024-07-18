@@ -24,6 +24,9 @@ AccountsManager.server.removeAccount = async function( id, userId ){
     return ret;
 };
 
+// update the account
+// NB 1: cowardly refuse to disallow login of the current user
+// NB 2: on login no more allowed, make sure login tokens are cleared in the database
 AccountsManager.server.updateAccount = async function( item, userId ){
     let ret = null;
     if( !await AccountsManager.isAllowed( 'pwix.accounts_manager.fn.updateAccount', userId, item )){
@@ -31,13 +34,23 @@ AccountsManager.server.updateAccount = async function( item, userId ){
     }
     try {
         const orig = await Meteor.users.findOneAsync({ _id: item._id });
+        const origAllowed = orig.loginAllowed;
+        if( item._id === userId && !item.loginAllowed && orig.loginAllowed ){
+            console.warn( 'cowardly refusing to disallow current user login' );
+            item.loginAllowed = true;
+        }
         let ret = null;
         if( orig ){
+            const itemId = item._id;
             ret = await Meteor.users.updateAsync({ _id: item._id }, { $set: item });
             if( !ret ){
                 throw new Meteor.Error(
                     'pwix.accounts_manager.fn.updateAccount',
                     'Unable to update "'+item._id+'" account' );
+            } else if( !item.loginAllowed && orig.loginAllowed ){
+                Meteor.users.updateAsync({ _id: itemId }, { $set: { 'services.resume.loginTokens': [] }}).then(( res ) => {
+                    console.debug( 'forced user logged-out', itemId, 'res', res );
+                });
             }
         } else {
             console.warn( 'user not found', item._id );

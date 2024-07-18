@@ -7,6 +7,7 @@
     Release date: 
 
     - Remove pwix:roles dependency, only having roles tab when the package is present
+    - Force user logged-out when loginAllowed becomes false
 
 ### 1.0.0
 

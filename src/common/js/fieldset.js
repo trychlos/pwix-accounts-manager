@@ -53,7 +53,7 @@ const _defaultFieldSet = function(){
             dt_data: false,
             dt_title: pwixI18n.label( I18N, 'list.email_address_th' ),
             dt_template: Meteor.isClient && Template.dt_email_address,
-            form_check: AccountsManager.checks.check_email_address,
+            form_check: AccountsManager.checks.email_address,
             form_type: Forms.FieldType.C.MANDATORY
 
         },
@@ -64,7 +64,7 @@ const _defaultFieldSet = function(){
             dt_title: pwixI18n.label( I18N, 'list.email_verified_th' ),
             dt_template: Meteor.isClient && Template.dt_email_verified,
             dt_className: 'dt-center',
-            form_check: AccountsManager.checks.check_email_verified
+            form_check: AccountsManager.checks.email_verified
         },
         {
             dt_template: Meteor.isClient && Template.dt_email_more,
@@ -111,7 +111,9 @@ const _defaultFieldSet = function(){
                     readonly: true,
                     enabled: true
                 }
-            }
+            },
+            form_check: AccountsManager.checks.loginAllowed,
+            form_status: false
         },
         {
             name: 'lastConnection',
