@@ -10,6 +10,5 @@ import '../components/dt_email_verified/dt_email_verified.js';
 import '../../common/js/index.js';
 //
 import './last-connection.js';
-import './permissions.js';
 //
 import '../stylesheets/accounts_manager.less';

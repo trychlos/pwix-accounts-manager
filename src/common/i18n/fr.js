@@ -16,7 +16,8 @@ AccountsManager.i18n = {
                 email_invalid: 'Cette adresse de messagerie n\'est pas valide',
                 email_unset: 'Une adresse de messagerie est obligatoire',
                 login_disallow_himself: 'Vous êtes sur le point de désactiver votre propre autorisation de connexion',
-                username_exists: 'Ce nom d\'utilisateur est déjà utilisé'
+                username_exists: 'Ce nom d\'utilisateur est déjà utilisé',
+                username_unset: 'Un nom d\'utilisateur est obligatoire'
             },
             delete: {
                 confirmation_text: 'Vous êtes sur le point de supprimer le compte "%s".<br />Etes-vous sûr ?',
@@ -26,7 +27,7 @@ AccountsManager.i18n = {
             edit: {
                 edit_error: 'Nous sommes malheureusement dans l\'impossibilité de mettre à jour le compte "%s". Merci de réessayer ultérieurement',
                 edit_success: 'Le compte "%s" a été mis à jour avec succès',
-                modal_title: 'Editer un compte'
+                modal_title: 'Editer le compte "%s"'
             },
             list: {
                 admin_notes_th: 'Notes de l\'administrateur',

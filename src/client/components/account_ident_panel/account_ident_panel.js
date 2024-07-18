@@ -19,25 +19,13 @@ import { Forms } from 'meteor/pwix:forms';
 import { pwixI18n } from 'meteor/pwix:i18n';
 import { ReactiveVar } from 'meteor/reactive-var';
 
-import { InputConvert } from '../../../common/definitions/input-convert.def.js';
-
 import './account_ident_panel.html';
 
 Template.account_ident_panel.onCreated( function(){
     const self = this;
 
     self.AM = {
-        // the Form.Checker instance for this panel
-        checker: new ReactiveVar( null )
-    };
-});
-
-Template.account_ident_panel.onRendered( function(){
-    const self = this;
-
-    // initialize the Checker for this panel as soon as we get the parent Checker
-    self.autorun(() => {
-        const fields = {
+        fields: {
             loginAllowed: {
                 js: '.js-login-allowed'
             },
@@ -47,18 +35,32 @@ Template.account_ident_panel.onRendered( function(){
                     return $node.val( item.lastConnection ? strftime( AccountsManager.configure().datetime, item.lastConnection ) : '' );
                 }
             }
-        };
-        if( AccountsManager.configure().haveUsername !== AccountsManager.C.Input.NONE ){
-            fields.username = {
+        },
+        // the Form.Checker instance for this panel
+        checker: new ReactiveVar( null )
+    };
+
+    // setup the fields dependin gof the accounts configuration
+    self.autorun(() => {
+        if( AccountsConf.configure().haveUsername !== AccountsConf.C.Identifier.NONE ){
+            self.AM.fields.username = {
                 js: '.js-username'
             };
         }
+    });
+});
+
+Template.account_ident_panel.onRendered( function(){
+    const self = this;
+
+    // initialize the Checker for this panel as soon as we get the parent Checker
+    self.autorun(() => {
         const parentChecker = Template.currentData().checker.get();
         const checker = self.AM.checker.get();
         if( parentChecker && !checker ){
             self.AM.checker.set( new Forms.Checker( self, {
                 parent: parentChecker,
-                panel: new Forms.Panel( fields, AccountsManager.fieldSet.get()),
+                panel: new Forms.Panel( self.AM.fields, AccountsManager.fieldSet.get()),
                 data: {
                     item: Template.currentData().item
                 },

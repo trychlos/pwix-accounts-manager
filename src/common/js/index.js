@@ -9,4 +9,5 @@ import './configure.js';
 import './trace.js';
 //
 import './fieldset.js';
+import './functions.js';
 import './tabular.js';

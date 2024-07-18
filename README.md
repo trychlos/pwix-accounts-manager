@@ -28,6 +28,9 @@ A try to mutualize and factorize the most common part of a simple accounts manag
             type: String,
             regEx: SimpleSchema.RegEx.Email,
         },
+        'emails.$.id': {
+            type: String
+        },
         'emails.$.verified': {
             type: Boolean
         },
@@ -61,7 +64,7 @@ A try to mutualize and factorize the most common part of a simple accounts manag
     }
 ```
 
-As it also makes the collection timestampable, following fields are also added and maintained:
+As it also makes the collection timestampable, following fields are added and maintained too:
 
 ```js
     createdAt
@@ -92,9 +95,20 @@ Available both on the client and the server.
 
 ##### `AccountEditPanel`
 
-A tabbed editing panel to be run inside of a page or of a modal.
+A tabbed editing panel to be run inside of a page or of a modal. Default tabs are named and ordered as:
+
+- `ident_tab`
+- `roles_tab`
+- `admin_notes_tab`
+- `user_notes_tab`
 
 When run from (below) `AccountsList`, it is run in a modal to edit the current item.
+
+The `AccountEditPanel` component accepts a data context as:
+
+- `item`: the item to be edited, or null (or unset)
+
+- `tabbed`: the item to be edited, or null (or unset)
 
 ##### `AccountNewButton`
 
@@ -116,6 +130,24 @@ Known data context is:
 
     When `false`, the unallowed functions links are not displayed at all.
 
+## Permissions management
+
+This package can take advantage of `pwix:permissions` package to manage the user permissions.
+
+It defines following tasks:
+
+- at the user interface level
+    - `pwix.accounts_manager.feat.edit`, with args `user<String|Object>`: edit the `user` account
+    - `pwix.accounts_manager.feat.new`: display a button to create a new account
+
+- at the server level
+    - `pwix.accounts_manager.fn.removeAccount`, with args `user<String|Object>`: remove the `user` account
+    - `pwix.accounts_manager.fn.updateAccount`, with args `user<Object>`: update the `user` account
+    - `pwix.accounts_manager.fn.updateAttribute`, with args `user<String|Object>, modifier<Object>`: apply the `modifier` Mongo modifier to the `user` account
+
+- on publications
+    - `pwix.accounts_manager.pub.list_all`: list all accounts and their contents (but the `service` and `profile` objects)
+
 ## Configuration
 
 This package relies on `pwix:accounts-conf` package for most of its configuration. Please see the relevant documentation.
@@ -123,6 +155,14 @@ This package relies on `pwix:accounts-conf` package for most of its configuratio
 This package's behavior can be configured through a call to the `AccountsManager.configure()` method, with just a single javascript object argument, which itself should only contains the options you want override.
 
 Known configuration options are:
+
+- `allowFn`
+
+    An async function which will be called with an action string identifier, and must return whether the current user is allowed to do the specified action.
+
+    If the function is not provided, then the default is to deny all actions.
+
+    `allowFn` prototype is: `async allowFn( action<String> [, ...<Any> ] ): Boolean`
 
 - `classes`
 
@@ -167,15 +207,6 @@ Known configuration options are:
     Whether to hide disabled actions instead of displaying the disabled state.
 
     Defaults to `true`: disabled actions are hidden.
-
-- `roles`
-
-    Let the application provides the permissions required to perform CRUD operations on the Users collection. This is an object with following keys:
-
-    - `list`: defaulting to `null` (allowed to all)
-    - `create`: defaulting to `null` (allowed to all)
-    - `edit`: defaulting to `null` (allowed to all)
-    - `delete`: defaulting to `null` (allowed to all)
 
 - `scopesFn`
 

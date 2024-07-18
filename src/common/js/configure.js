@@ -12,16 +12,11 @@ let _conf = {};
 AccountsManager._conf = new ReactiveVar( _conf );
 
 AccountsManager._defaults = {
+    allowFn: null,
     classes: '',
     datetime: '%Y-%m-%d %H:%M:%S',
     fields: null,
     hideDisabled: true,
-    roles: {
-        list: null,
-        create: null,
-        edit: null,
-        delete: null
-    },
     scopesFn: null,
     verbosity: AccountsManager.C.Verbose.CONFIGURE
 };

@@ -19,7 +19,7 @@ import './AccountNewButton.html';
 Template.AccountNewButton.helpers({
     // whether the user is allowed to create new account
     canCreate(){
-        return AccountsManager.perms.get( 'create' );
+        return AccountsManager.isAllowed( 'pwix.accounts_manager.feat.new' );
     },
 
     // parms for new account (plusButton)

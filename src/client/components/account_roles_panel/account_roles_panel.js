@@ -24,11 +24,13 @@ Template.account_roles_panel.events({
     // trace global roles updates
     'pr-global-state .c-account-roles-panel'( event, instance, data ){
         //console.debug( event, data, Roles.EditPanel.roles());
-        console.debug( Roles.EditPanel.roles());
+        //console.debug( Roles.EditPanel.roles());
+        console.debug( 'global', data.global );
     },
     // trace scoped roles updates
     'pr-scoped-state .c-account-roles-panel'( event, instance, data ){
         //console.debug( event, data, Roles.EditPanel.roles());
-        console.debug( Roles.EditPanel.roles());
+        //console.debug( Roles.EditPanel.roles());
+        console.debug( 'scoped', data.scoped );
     }
 });

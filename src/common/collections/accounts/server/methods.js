@@ -5,7 +5,7 @@
 Meteor.methods({
     // remove an account
     async 'pwix_accounts_manager_accounts_remove'( id ){
-        return await AccountsManager.server.removeAccount( id, Meteor.userId());
+        return await AccountsManager.server.removeAccount( id, this.userId );
     },
 
 /*
@@ -55,11 +55,11 @@ Meteor.methods({
 
     // update the user account
     async 'pwix_accounts_manager_accounts_update_account'( item ){
-        return await AccountsManager.server.updateAccount( item, Meteor.userId());
+        return await AccountsManager.server.updateAccount( item, this.userId );
     },
 
     // set attribute(s) on an account
     async 'pwix_accounts_manager_accounts_update_attribute'( id, modifier ){
-        return await AccountsManager.server.updateAttribute( id, Meteor.userId(), modifier );
+        return await AccountsManager.server.updateAttribute( id, modifier, this.userId );
     },
 });

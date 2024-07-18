@@ -20,6 +20,10 @@ Tracker.autorun(() => {
         collection: Meteor.users,
         columns: AccountsManager.fieldSet.get().toTabular(),
         tabular: {
+            // do not let the user delete himself
+            async deleteButtonEnabled( it ){
+                return it._id !== Meteor.userId();
+            },
             // display the first email address (if any) instead of the identifier in the button title
             async deleteButtonTitle( it ){
                 return pwixI18n.label( I18N, 'buttons.delete_title', await _identifier( it ));
@@ -31,17 +35,13 @@ Tracker.autorun(() => {
                 return pwixI18n.label( I18N, 'delete.confirmation_title', await _identifier( it ));
             },
             async editButtonEnabled( it ){
-                return true;
+                return await AccountsManager.isAllowed( 'pwix.accounts_manager.feat.edit', null, it );
             },
             async editButtonTitle( it ){
                 return pwixI18n.label( I18N, 'buttons.edit_title', await _identifier( it ));
             },
             async infoButtonTitle( it ){
                 return pwixI18n.label( I18N, 'buttons.info_title', await _identifier( it ));
-            },
-            // do not let the user delete himself
-            async deleteButtonEnabled( it ){
-                return it._id !== Meteor.userId();
             }
         },
         destroy: true

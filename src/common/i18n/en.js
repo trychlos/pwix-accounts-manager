@@ -16,7 +16,8 @@ AccountsManager.i18n = {
                 email_invalid: 'This email address is not valid',
                 email_unset: 'An email address is mandatory',
                 login_disallow_himself: 'You are about to disallow your own login authorization',
-                username_exists: 'This username already exists'
+                username_exists: 'This username already exists',
+                username_unset: 'A username is mandatory'
             },
             delete: {
                 confirmation_text: 'You are about to delete the "%s" account.<br />Are you sure ?',
@@ -26,7 +27,7 @@ AccountsManager.i18n = {
             edit: {
                 edit_error: 'We are unfortunately unable to update the "%s" account. Please retry later',
                 edit_success: 'The account "%s" has been successfully updated',
-                modal_title: 'Editing an account'
+                modal_title: 'Editing "%s" account'
             },
             list: {
                 admin_notes_th: 'Admin Notes',

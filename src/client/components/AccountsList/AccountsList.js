@@ -20,6 +20,7 @@ import './AccountsList.html';
 
 Template.AccountsList.onCreated( function(){
     const self = this;
+    console.debug( this );
 
     self.AM = {
         accounts: {
@@ -27,7 +28,7 @@ Template.AccountsList.onCreated( function(){
             list: new ReactiveVar( [] )
         },
         assignments: {
-            handle: self.subscribe( 'Roles.allAssignments'),
+            handle: self.subscribe( 'pwix_roles_user_assignments' ),
             list: null
         },
 
@@ -86,7 +87,7 @@ Template.AccountsList.onCreated( function(){
 Template.AccountsList.helpers({
     // whether the current user has the permission to see the list of accounts
     canList(){
-        const res = AccountsManager.perms.get( 'list' );
+        const res = AccountsManager.isAllowed( 'pwix.accounts_manager.pub.list_all' );
         //console.debug( 'res', res );
         return res;
     },
@@ -122,14 +123,18 @@ Template.AccountsList.events({
 
     // edit an account
     'tabular-edit-event .AccountsList'( event, instance, data ){
-        Modal.run({
-            mdBody: 'AccountEditPanel',
-            mdButtons: [ Modal.C.Button.CANCEL, Modal.C.Button.OK ],
-            mdClasses: 'modal-lg',
-            mdClassesContent: AccountsManager.configure().classes,
-            mdTitle: pwixI18n.label( I18N, 'edit.modal_title' ),
-            item: instance.AM.byId( data.item._id )
-        });
+        let label = null;
+        AccountsTools.preferredLabel( data.item )
+            .then(( res ) => {
+                Modal.run({
+                    mdBody: 'AccountEditPanel',
+                    mdButtons: [ Modal.C.Button.CANCEL, Modal.C.Button.OK ],
+                    mdClasses: 'modal-lg',
+                    mdClassesContent: AccountsManager.configure().classes,
+                    mdTitle: pwixI18n.label( I18N, 'edit.modal_title', res.label ),
+                    item: instance.AM.byId( data.item._id )
+                });
+            });
         return false;
     }
 });

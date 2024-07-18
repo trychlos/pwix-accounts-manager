@@ -11,16 +11,14 @@ AccountsManager.server = {};
 
 AccountsManager.server.removeAccount = async function( id, userId ){
     let ret = null;
-    if( !await AccountsManager.checks.canDelete( userId )){
-        throw new Meteor.Error(
-            'AccountsManager.check.canDelete',
-            'Unallowed to remove "'+id+'" account' );
+    if( !await AccountsManager.isAllowed( 'pwix.accounts_manager.fn.removeAccount', userId, id )){
+        return null;
     }
     try {
         ret = await Meteor.users.removeAsync({ _id: id });
     } catch( e ){
         throw new Meteor.Error(
-            'AccountsManager.server.removeAccount',
+            'pwix.accounts_manager.fn.removeAccount',
             'Unable to remove "'+id+'" account' );
     }
     return ret;
@@ -28,10 +26,8 @@ AccountsManager.server.removeAccount = async function( id, userId ){
 
 AccountsManager.server.updateAccount = async function( item, userId ){
     let ret = null;
-    if( !await AccountsManager.checks.canEdit( userId )){
-        throw new Meteor.Error(
-            'AccountsManager.check.canEdit',
-            'Unallowed to edit "'+item._id+'" account' );
+    if( !await AccountsManager.isAllowed( 'pwix.accounts_manager.fn.updateAccount', userId, item )){
+        return null;
     }
     try {
         const orig = await Meteor.users.findOneAsync({ _id: item._id });
@@ -40,7 +36,7 @@ AccountsManager.server.updateAccount = async function( item, userId ){
             ret = await Meteor.users.updateAsync({ _id: item._id }, { $set: item });
             if( !ret ){
                 throw new Meteor.Error(
-                    'pwix_accounts_manager_accounts_update_account',
+                    'pwix.accounts_manager.fn.updateAccount',
                     'Unable to update "'+item._id+'" account' );
             }
         } else {
@@ -49,17 +45,15 @@ AccountsManager.server.updateAccount = async function( item, userId ){
         return ret;
     } catch( e ){
         throw new Meteor.Error(
-            'AccountsManager.server.updateAccount',
+            'pwix.accounts_manager.fn.updateAccount',
             'Unable to update "'+item._id+'" account' );
     }
 };
 
-AccountsManager.server.updateAttribute = async function( id, userId, modifier ){
+AccountsManager.server.updateAttribute = async function( id, modifier, userId ){
     let ret = null;
-    if( !await AccountsManager.checks.canEdit( userId )){
-        throw new Meteor.Error(
-            'AccountsManager.check.canEdit',
-            'Unallowed to edit "'+id+'" account' );
+    if( !await AccountsManager.isAllowed( 'pwix.accounts_manager.fn.updateAttribute', userId, id, modifier )){
+        return null;
     }
     try {
         const orig = await Meteor.users.findOneAsync({ _id: id });
@@ -68,7 +62,7 @@ AccountsManager.server.updateAttribute = async function( id, userId, modifier ){
             ret = await Meteor.users.updateAsync({ _id: id }, { $set: modifier });
             if( !ret ){
                 throw new Meteor.Error(
-                    'pwix_accounts_manager_accounts_update_attribute',
+                    'pwix.accounts_manager.fn.updateAttribute',
                     'Unable to update "'+id+'" account' );
             }
         } else {
@@ -77,7 +71,7 @@ AccountsManager.server.updateAttribute = async function( id, userId, modifier ){
         return ret;
     } catch( e ){
         throw new Meteor.Error(
-            'AccountsManager.server.updateAttribute',
+            'pwix.accounts_manager.fn.updateAttribute',
             'Unable to update "'+id+'" account' );
     }
 };

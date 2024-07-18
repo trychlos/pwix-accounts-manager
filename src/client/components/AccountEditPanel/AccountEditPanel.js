@@ -57,6 +57,14 @@ Template.AccountEditPanel.onCreated( function(){
     self.autorun(() => {
         self.AM.item.set( _.cloneDeep( Template.currentData().item || {} ));
     });
+
+    // (non reactively) setup default value on new item
+    self.autorun(() => {
+        if( self.AM.isNew.get()){
+            let item = self.AM.item.get();
+            item.loginAllowed = true;
+        }
+    });
 });
 
 Template.AccountEditPanel.onRendered( function(){

@@ -101,7 +101,7 @@ const _defaultFieldSet = function(){
         {
             name: 'loginAllowed',
             type: Boolean,
-            defaultValue: false,
+            defaultValue: true,
             dt_title: pwixI18n.label( I18N, 'list.login_allowed_th' ),
             dt_className: 'dt-center',
             dt_template: 'dt_checkbox',
