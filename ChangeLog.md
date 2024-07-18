@@ -6,7 +6,7 @@
 
     Release date: 
 
-    - 
+    - Initial release
 
 ---
 P. Wieser
