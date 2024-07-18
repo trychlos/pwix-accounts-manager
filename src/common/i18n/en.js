@@ -38,6 +38,7 @@ AccountsManager.i18n = {
                 more_title: 'Display more email addresses...',
                 not_allowed: '<p>You are unfortunately not allowed to list the accounts.</p>'
                     +'<p>Please contact the application administrator.</p>',
+                roles_th: 'Roles',
                 user_notes_th: 'User Notes',
                 username_th: 'Username'
             },

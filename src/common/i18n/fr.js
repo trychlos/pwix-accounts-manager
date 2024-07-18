@@ -38,6 +38,7 @@ AccountsManager.i18n = {
                 more_title: 'Afficher davantage d\'adresses email...',
                 not_allowed: '<p>Vous n\'êtes malheureusement pas autorisé à consulter la liste des comptes.</p>'
                     +'<p>Merci de vous rapprocher de l\'administrateur de l\'application.<p>',
+                roles_th: 'Rôles',
                 user_notes_th: 'Notes de l\'utilisateur',
                 username_th: 'Nom d\'utilisateur'
             },

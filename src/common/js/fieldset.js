@@ -124,7 +124,25 @@ const _defaultFieldSet = function(){
             dt_className: 'dt-center',
             form_status: false,
             form_check: false
-        },
+        }
+    );
+    if( Package['pwix:roles'] ){
+        columns.push({
+            name: 'roles',
+            schema: false,
+            dt_title: pwixI18n.label( I18N, 'list.roles_th' ),
+            dt_className: 'ui-ellipsized',
+            async dt_render( data, type, rowData ){
+                console.debug( rowData );
+                console.debug( Package['pwix:roles'].Roles );
+                const direct = await Package['pwix:roles'].Roles.directRolesForUser( rowData, { anyScope: true });
+                console.debug( 'direct', direct );
+                return direct.join( ', ' );
+            },
+            form: false
+        });
+    }
+    columns.push(
         Notes.fieldDef({
             name: 'adminNotes',
             dt_title: pwixI18n.label( I18N, 'list.admin_notes_th' ),
