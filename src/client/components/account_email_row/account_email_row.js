@@ -134,5 +134,5 @@ Template.account_email_row.events({
 });
 
 Template.account_email_row.onDestroyed( function(){
-    console.debug( 'onDestroyed', Template.currentData().it.id );
+    //console.debug( 'onDestroyed', Template.currentData().it.id );
 });

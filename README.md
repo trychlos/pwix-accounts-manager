@@ -214,6 +214,14 @@ Known configuration options are:
 
     Defaults to only manage scopes that are already used in the `Roles` package.
 
+- `tabularActiveCheckboxes`
+
+    Whether the checkboxes rendered in the tabular display are active, i.e. accept a click to switch their state.
+
+    Rationale: even if it would be very more easy to directly click on the tabular display to toggle a checkbox, some administrators may find this way too much easy, if not error prone, and prefer to have to pass through a distinct page/modal/display unit to securize a bit this update.
+
+    Defaults to `false`.
+
 - `verbosity`
 
     The verbosity level as:

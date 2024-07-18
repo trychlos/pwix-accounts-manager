@@ -18,6 +18,7 @@ AccountsManager._defaults = {
     fields: null,
     hideDisabled: true,
     scopesFn: null,
+    tabularActiveCheckboxes: false,
     verbosity: AccountsManager.C.Verbose.CONFIGURE
 };
 
