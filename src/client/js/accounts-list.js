@@ -41,7 +41,7 @@ Tracker.autorun(() => {
         Meteor.users.find().fetchAsync().then(( fetched ) => {
             fetched.forEach(( it ) => {
                 it.DYN = {
-                    roles: new ReactiveVar( null )
+                    roles: new ReactiveVar( [] )
                 };
                 list.push( it );
             });
@@ -55,7 +55,6 @@ Tracker.autorun(() => {
     if( AccountsManager.list.assignments.handle && AccountsManager.list.assignments.handle.ready()){
         AccountsManager.list.array.get().forEach(( it ) => {
             Package['pwix:roles'].Roles.directRolesForUser( it, { anyScope: true }).then(( res ) => {
-            console.debug( it, res );
                 it.DYN.roles.set( res );
             });
         });

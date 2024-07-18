@@ -131,7 +131,8 @@ const _defaultFieldSet = function(){
             name: 'roles',
             schema: false,
             dt_title: pwixI18n.label( I18N, 'list.roles_th' ),
-            dt_className: 'ui-ellipsized',
+            dt_type: 'string',
+            dt_createdCell: cell => $( cell ).addClass( 'ui-ellipsized' ),
             dt_render( data, type, rowData ){
                 const item = AccountsManager.list.byId( rowData._id );
                 return item.DYN.roles.get().join( ', ' );

@@ -100,6 +100,7 @@ AccountsManager.checks.check_email_verified = async function( value, data, opts 
 AccountsManager.checks.check_loginAllowed = async function( value, data, opts ){
     _assert_data_itemrv( 'AccountsManager.checks.check_loginAllowed()', data );
     const item = data.item.get();
+    console.debug( 'value', value );
     if( opts.update !== false ){
         item.loginAllowed = value;
     }
