@@ -37,11 +37,12 @@ Template.AccountNewButton.helpers({
 
 Template.AccountNewButton.events({
     'click .plusButton'( event, instance ){
+        const self = this;
         Modal.run({
+            ...self,
             mdBody: 'AccountEditPanel',
             mdButtons: [ Modal.C.Button.CANCEL, Modal.C.Button.OK ],
             mdClasses: 'modal-lg',
-            mdClassesContent: AccountsManager.configure().classes,
             mdTitle: pwixI18n.label( I18N, 'new.modal_title' ),
             item: null
         });

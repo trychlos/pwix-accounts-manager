@@ -102,7 +102,7 @@ AccountsManager.checks.loginAllowed = async function( value, data, opts ){
     if( opts.update !== false ){
         item.loginAllowed = value;
     }
-    if( Meteor.userId() === item._id ){
+    if( Meteor.userId() === item._id && !value ){
         return new TM.TypedMessage({
             level: TM.MessageLevel.C.WARNING,
             message: pwixI18n.label( I18N, 'check.login_disallow_himself' )

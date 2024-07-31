@@ -40,7 +40,7 @@ Template.account_ident_panel.onCreated( function(){
         checker: new ReactiveVar( null )
     };
 
-    // setup the fields dependin gof the accounts configuration
+    // setup the fields depending of the accounts configuration
     self.autorun(() => {
         if( AccountsConf.configure().haveUsername !== AccountsConf.C.Identifier.NONE ){
             self.AM.fields.username = {

@@ -1,6 +1,6 @@
 Package.describe({
     name: 'pwix:accounts-manager',
-    version: '1.0.1-rc',
+    version: '1.1.0-rc',
     summary: 'Provide the most common parts of a simple accounts management system',
     git: 'https://github.com/trychlos/pwix-accounts-manager',
     documentation: 'README.md'

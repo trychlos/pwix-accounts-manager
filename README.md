@@ -117,6 +117,8 @@ A `PlusButton` component customized to create a new account.
 
 It takes itself care of checking the permissions of the user, and, depending of its runtime parameters, either is disabled, or doesn't display at all if the user is not allowed.
 
+It takes the very same data context than below `AccountsList`.
+
 ##### `AccountsList`
 
 The component list the defined accounts as a `pwix:tabular` table, with standard 'Informations', 'Edit' and 'Delete' buttons.
@@ -125,11 +127,25 @@ It takes itself care of checking the permissions of the user, and, depending of 
 
 Known data context is:
 
-- `classes`: the classes to be added to any display, defaulting to none
+- `allowFn`
 
-- `disableUnallowed`: whether to display the unallowed functions as disabled buttons, defaulting to `true`.
+    An async function which will be called with an action string identifier, and must return whether the current user is allowed to do the specified action, defaulting to the configured value.
 
-    When `false`, the unallowed functions links are not displayed at all.
+- `classes`
+
+    The classes to be added to any display, defaulting to the configured values.
+
+- `fields`
+
+    Let the application extends the default schema by providing additional fields as a `Forms.FieldSet` definition, defaulting to the configured valuee.
+
+- `hideDisabled`
+
+    Whether to hide disabled actions instead of displaying the disabled state, defaulting to the configured value.
+
+- `scopesFn`
+
+    An application-provided function which is expected to return all existing (roles) scopes, defaulting to the configured value.
 
 ## Permissions management
 

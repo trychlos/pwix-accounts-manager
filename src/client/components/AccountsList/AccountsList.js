@@ -10,7 +10,6 @@
 import { AccountsTools } from 'meteor/pwix:accounts-tools';
 import { Modal } from 'meteor/pwix:modal';
 import { pwixI18n } from 'meteor/pwix:i18n';
-import { ReactiveVar } from 'meteor/reactive-var';
 import { Tolert } from 'meteor/pwix:tolert';
 
 import '../AccountEditPanel/AccountEditPanel.js';
@@ -57,13 +56,14 @@ Template.AccountsList.events({
     // edit an account
     'tabular-edit-event .AccountsList'( event, instance, data ){
         let label = null;
+        const self = this;
         AccountsTools.preferredLabel( data.item )
             .then(( res ) => {
                 Modal.run({
+                    ...self,
                     mdBody: 'AccountEditPanel',
                     mdButtons: [ Modal.C.Button.CANCEL, Modal.C.Button.OK ],
                     mdClasses: 'modal-lg',
-                    mdClassesContent: AccountsManager.configure().classes,
                     mdTitle: pwixI18n.label( I18N, 'edit.modal_title', res.label ),
                     item: AccountsManager.list.byId( data.item._id )
                 });

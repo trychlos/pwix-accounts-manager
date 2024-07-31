@@ -2,12 +2,14 @@
 
 ## ChangeLog
 
-### 1.0.1-rc
+### 1.1.0-rc
 
     Release date: 
 
     - Remove pwix:roles dependency, only having roles tab when the package is present
+    - Deny to current user the right to disallow himself
     - Force user logged-out when loginAllowed becomes false
+    - Extends the AccountsList data context to be able to manage several distinct users collections, bumping minor candidate version number
 
 ### 1.0.0
 

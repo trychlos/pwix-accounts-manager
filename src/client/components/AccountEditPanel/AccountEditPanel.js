@@ -8,6 +8,7 @@
  *
  * Parms:
  *  - item: the account's object to be edited, or null
+ *  - tabs: an optional array of tabs provided by the application
  */
 
 import _ from 'lodash';
@@ -29,6 +30,7 @@ import './AccountEditPanel.html';
 
 Template.AccountEditPanel.onCreated( function(){
     const self = this;
+    console.debug( this );
 
     self.AM = {
         // the global Checker for this modal
@@ -130,6 +132,16 @@ Template.AccountEditPanel.helpers({
                 paneData: paneData
             }
         ];
+        if( this.tabs ){
+            if( _.isArray( this.tabs ) && this.tabs.length ){
+                this.tabs.forEach(( tab ) => {
+                    tab.paneData = paneData;
+                    tabs.push( tab );
+                });
+            } else {
+                console.warn( 'expect tabs be an array, got', this.tabs );
+            }
+        }
         if( Package['pwix:roles'] ){
             tabs.push({
                 tabid: 'roles_tab',

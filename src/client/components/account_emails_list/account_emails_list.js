@@ -11,7 +11,6 @@
 
 import _ from 'lodash';
 
-import { Forms } from 'meteor/pwix:forms';
 import { pwixI18n } from 'meteor/pwix:i18n';
 import { Random } from 'meteor/random';
 import { ReactiveVar } from 'meteor/reactive-var';
@@ -33,7 +32,7 @@ Template.account_emails_list.onCreated( function(){
 
     // tracking the count of email addresses
     self.autorun(() => {
-        console.debug( 'emailsCount', self.AM.emailsCount.get());
+        //console.debug( 'emailsCount', self.AM.emailsCount.get());
     });
 });
 
