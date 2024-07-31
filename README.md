@@ -8,9 +8,29 @@ A try to mutualize and factorize the most common part of a simple accounts manag
 
 - provides components to list and edit accounts.
 
-## Schema
+Most of the configuration is done through the provided class which must be insciated in common application code.
 
-`pwix:accounts-manager` is based on Meteor `accounts-base`, and extends its standard schema as:
+## Provides
+
+### `AccountsManager`
+
+The exported `AccountsManager` global object provides following items:
+
+#### Classes
+
+##### `AccountsManager.Accounts`
+
+The `AccountsManager.Accounts` class manages an `AccountsManager`, and notably determines which schema is handled in which collection. All permissions are also managed at this class level.
+
+This class must be instanciated by the application in its common code.
+
+Constructor takes an object as single argument, with following keys:
+
+- `baseFieldset`
+
+    When set, the `baseFieldset` is expected to provide a `Field.Set` definition for schema, tabular and forms handlings.
+
+    It defaults to a standard (though a bit extended) schema from Meteor `accounts-base` as:
 
 ```js
     {
@@ -64,7 +84,46 @@ A try to mutualize and factorize the most common part of a simple accounts manag
     }
 ```
 
-As it also makes the collection timestampable, following fields are added and maintained too:
+    Providing a `baseFieldset` replaces the above default fieldset definition
+
+- `additionalFieldset`
+
+    When set, let the application extends the above default fieldset by providing additional fields as a `Field.Set` definition.
+
+    Defauts to nothing.
+
+    Example:
+
+```js
+    additionalFieldset: [
+        {
+            before: 'createdAt',
+            fields: [
+                {
+                    name: 'apiAllowed',
+                    type: Boolean,
+                    defaultValue: false
+                }
+            ]
+        }
+    ]
+```
+
+- `allowFn`
+
+    An async function which will be called with an action string identifier, and must return whether the current user is allowed to do the specified action.
+
+    If the function is not provided, then the default is to deny all actions (and do you really want that ?).
+
+    `allowFn` prototype is: `async allowFn( action<String> [, ...<Any> ] ): Boolean`
+
+- `collection`
+
+    When set, the name of the collection to be managed.
+
+    Defauts to the standard Meteor `users` collection.
+
+    Each managed collection is made timestampable, and following fields are added (and maintained) to the fieldset definition:
 
 ```js
     createdAt
@@ -73,11 +132,25 @@ As it also makes the collection timestampable, following fields are added and ma
     updatedBy
 ```
 
-## Provides
+- `haveRoles`
 
-### `AccountsManager`
+    Whether to display a Roles panel, defaulting to `true`.
 
-The exported `AccountsManager` global object provides following items:
+    For the Roles panel be actually displayed, this `haveRoles` argument must be `true`, **AND** the `pwix:roles` package must be used by the application (it is not _used_ by this package).
+
+- `withGlobals`
+
+    Whether the Roles panel, when displayed, should include a "Global roles" pane, defaulting to `true`.
+
+- `withScoped`
+
+    Whether the Roles panel, when displayed, should include a "Scoped roles" pane, defaulting to `true`.
+
+- `scopesFn`
+
+    An application-provided async function which is expected to return all existing (roles) scopes.
+
+    Defaults to only manage scopes that are already used in the `Roles` package.
 
 #### Functions
 
@@ -173,14 +246,6 @@ This package's behavior can be configured through a call to the `AccountsManager
 
 Known configuration options are:
 
-- `allowFn`
-
-    An async function which will be called with an action string identifier, and must return whether the current user is allowed to do the specified action.
-
-    If the function is not provided, then the default is to deny all actions.
-
-    `allowFn` prototype is: `async allowFn( action<String> [, ...<Any> ] ): Boolean`
-
 - `classes`
 
     Let the application provides some classes to add to the display.
@@ -193,43 +258,11 @@ Known configuration options are:
 
     Defaults to `%Y-%m-%d %H:%M:%S`.
 
-- `fields`
-
-    Let the application extends the default schema by providing additional fields as a `Forms.FieldSet` definition.
-
-    Defauts to nothing.
-
-    Example:
-
-```js
-    AccountsManager.configure({
-        fields: [
-            {
-                where: Field.C.Insert.BEFORE,
-                name: 'loginAllowed',
-                fields: [
-                    {
-                        name: 'apiAllowed',
-                        type: Boolean,
-                        defaultValue: false
-                    }
-                ]
-            }
-        ]
-    });
-```
-
 - `hideDisabled`
 
     Whether to hide disabled actions instead of displaying the disabled state.
 
     Defaults to `true`: disabled actions are hidden.
-
-- `scopesFn`
-
-    An application-provided function which is expected to return all existing (roles) scopes.
-
-    Defaults to only manage scopes that are already used in the `Roles` package.
 
 - `tabularActiveCheckboxes`
 

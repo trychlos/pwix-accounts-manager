@@ -9,7 +9,7 @@
     - Remove pwix:roles dependency, only having roles tab when the package is present
     - Deny to current user the right to disallow himself
     - Force user logged-out when loginAllowed becomes false
-    - Extends the AccountsList data context to be able to manage several distinct users collections, bumping minor candidate version number
+    - API change to have an Accounts class, bumping minor candidate version number (due to lack of use at the moment)
 
 ### 1.0.0
 

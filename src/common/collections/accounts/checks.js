@@ -8,7 +8,9 @@ import validator from 'email-validator';
 import { pwixI18n } from 'meteor/pwix:i18n';
 import { TM } from 'meteor/pwix:typed-message';
 
-AccountsManager.checks = {};
+import { amCollection } from './index.js';
+
+amCollection.checks = {};
 
 // fields check
 //  - value: mandatory, the value to be tested
@@ -37,8 +39,8 @@ const _id2index = function( array, id ){
     return -1;
 }
 
-AccountsManager.checks.email_address = async function( value, data, opts ){
-    _assert_data_itemrv( 'AccountsManager.checks.email_address()', data );
+amCollection.checks.email_address = async function( value, data, opts ){
+    _assert_data_itemrv( 'amCollection.checks.email_address()', data );
     //console.debug( 'email_address', arguments );
     let item = data.item.get();
     const index = opts.id ? _id2index( item.emails, opts.id ) : -1;
@@ -78,8 +80,8 @@ AccountsManager.checks.email_address = async function( value, data, opts ){
         });
 };
 
-AccountsManager.checks.email_verified = async function( value, data, opts ){
-    _assert_data_itemrv( 'AccountsManager.checks.email_verified()', data );
+amCollection.checks.email_verified = async function( value, data, opts ){
+    _assert_data_itemrv( 'amCollection.checks.email_verified()', data );
     const item = data.item.get();
     const index = opts.id ? _id2index( item.emails, opts.id ) : -1;
     if( opts.update !== false ){
@@ -96,8 +98,8 @@ AccountsManager.checks.email_verified = async function( value, data, opts ){
 // loginAllowed
 //  emit a warning when the user is about to disallow himself
 //  this should nonetheless be prohibited by the UI
-AccountsManager.checks.loginAllowed = async function( value, data, opts ){
-    _assert_data_itemrv( 'AccountsManager.checks.loginAllowed()', data );
+amCollection.checks.loginAllowed = async function( value, data, opts ){
+    _assert_data_itemrv( 'amCollection.checks.loginAllowed()', data );
     const item = data.item.get();
     if( opts.update !== false ){
         item.loginAllowed = value;
@@ -111,8 +113,8 @@ AccountsManager.checks.loginAllowed = async function( value, data, opts ){
     return null;
 };
 
-AccountsManager.checks.username = async function( value, data, opts ){
-    _assert_data_itemrv( 'AccountsManager.checks.username()', data );
+amCollection.checks.username = async function( value, data, opts ){
+    _assert_data_itemrv( 'amCollection.checks.username()', data );
     const item = data.item.get();
     if( opts.update !== false ){
         item.username = value;

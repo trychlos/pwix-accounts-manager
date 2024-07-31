@@ -2,12 +2,14 @@
  * pwix:accounts-manager/src/common/js/index.js
  */
 
+import { amClass } from '../classes/am-class.class.js';
+
 import './global.js';
 import './constants.js';
 import './i18n.js';
 import './configure.js';
 import './trace.js';
 //
-import './fieldset.js';
 import './functions.js';
-import './tabular.js';
+
+AccountsManager.amClass = amClass;

@@ -33,5 +33,6 @@
  * We define here the desired schema.
  */
 
-import './schema.js';
+export { amCollection } from './collection.js';
+
 import './checks.js';
