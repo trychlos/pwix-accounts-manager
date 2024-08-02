@@ -8,6 +8,7 @@
  * - checker: a ReactiveVar which holds the parent Checker
  * - it: the emails row to be managed here
  * - emailsCount: a ReactiveVar which counts the email addresses
+ * - amInstance: a ReactiveVar which holds the amClass instance
  */
 
 import _ from 'lodash';
@@ -79,9 +80,10 @@ Template.account_email_row.onRendered( function(){
 
     // initialize the Checker for this panel as soon as we get the parent Checker
     self.autorun(() => {
+        const amInstance = Template.currentData().amInstance.get();
         const parentChecker = Template.currentData().checker.get();
         const checker = self.AM.checker.get();
-        if( parentChecker && !checker ){
+        if( amInstance && parentChecker && !checker ){
             self.AM.checker.set( new Forms.Checker( self, {
                 parent: parentChecker,
                 panel: new Forms.Panel({
@@ -91,7 +93,7 @@ Template.account_email_row.onRendered( function(){
                     'emails.$.verified': {
                         js: '.js-verified'
                     }
-                }, AccountsManager.fieldSet.get()),
+                }, amInstance.fieldSet()),
                 data: {
                     item: itemRv
                 },

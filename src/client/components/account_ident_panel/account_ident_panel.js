@@ -8,6 +8,7 @@
  * - item: a ReactiveVar which holds the account object to edit (may be empty, but not null)
  * - isNew: true|false
  * - checker: a ReactiveVar which holds the parent Checker
+ * - amInstance: a ReactiveVar which holds the amClass instance
  */
 
 import _ from 'lodash';
@@ -55,12 +56,13 @@ Template.account_ident_panel.onRendered( function(){
 
     // initialize the Checker for this panel as soon as we get the parent Checker
     self.autorun(() => {
+        const amInstance = Template.currentData().amInstance.get();
         const parentChecker = Template.currentData().checker.get();
         const checker = self.AM.checker.get();
-        if( parentChecker && !checker ){
+        if( amInstance && parentChecker && !checker ){
             self.AM.checker.set( new Forms.Checker( self, {
                 parent: parentChecker,
-                panel: new Forms.Panel( self.AM.fields, AccountsManager.fieldSet.get()),
+                panel: new Forms.Panel( self.AM.fields, amInstance.fieldSet()),
                 data: {
                     item: Template.currentData().item
                 },

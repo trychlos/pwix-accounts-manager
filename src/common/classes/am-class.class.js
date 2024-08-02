@@ -16,8 +16,10 @@ import { Field } from 'meteor/pwix:field';
 import { Forms } from 'meteor/pwix:forms';
 import { Notes } from 'meteor/pwix:notes';
 import { pwixI18n } from 'meteor/pwix:i18n';
+import { ReactiveVar } from 'meteor/reactive-var';
 import SimpleSchema from 'meteor/aldeed:simple-schema';
 import { Tabular } from 'meteor/pwix:tabular';
+import { Tracker } from 'meteor/tracker';
 
 import { amCollection } from '../collections/accounts/index.js';
 
@@ -27,11 +29,22 @@ export class amClass {
 
     // private data
 
+    // raw provided arguments
     #args = null;
+
+    // checked arguments with their default values
     #collectionDb = null;
     #collectionName = null;
     #fieldSet = null;
+    #haveRoles = null;
+    #withGlobals = null;
+    #withScoped = null;
+
+    // runtime
     #tabular = null;
+    #usersHandle = null;
+    #rolesHandle = null;
+    #usersList = new ReactiveVar( [] );
 
     // private methods
 
@@ -109,6 +122,7 @@ export class amClass {
      *    }
      */
     _defaultFieldSet(){
+        const self = this;
         let columns = [];
     
         // if have an email address
@@ -145,11 +159,17 @@ export class amClass {
             {
                 name: 'emails.$.verified',
                 type: Boolean,
+                defaultValue: false,
                 dt_data: false,
                 dt_title: pwixI18n.label( I18N, 'list.email_verified_th' ),
                 dt_template: Meteor.isClient && Template.dt_email_verified,
                 dt_className: 'dt-center',
                 form_check: amCollection.checks.email_verified
+            },
+            {
+                name: 'emails.$.label',
+                type: String,
+                optional: true
             },
             {
                 dt_template: Meteor.isClient && Template.dt_email_more,
@@ -221,7 +241,7 @@ export class amClass {
                 dt_type: 'string',
                 dt_createdCell: cell => $( cell ).addClass( 'ui-ellipsized' ),
                 dt_render( data, type, rowData ){
-                    const item = AccountsManager.list.byId( rowData._id );
+                    const item = self.byId( rowData._id );
                     return item.DYN.roles.get().join( ', ' );
                 },
                 form: false
@@ -245,6 +265,110 @@ export class amClass {
     }
 
     /*
+     * @locus: client only
+     * @summary: subscribe and autoload the list of user accounts of the collection
+     */
+    _feedList(){
+        assert( Meteor.isClient, 'pwix:accounts-manager amClass._feedList() must only run on client' );
+        const self = this;
+        // subscription
+        Tracker.autorun(() => {
+            if( Meteor.userId()){
+                self.#usersHandle = Meteor.subscribe( 'pwix_accounts_manager_accounts_list_all', self.collectionName());
+                if( self.haveRoles()){
+                    self.#rolesHandle = Meteor.subscribe( 'pwix_roles_user_assignments' );
+                }
+            } else {
+                self.#usersHandle = null;
+                self.#rolesHandle = null;
+                self.#usersList.set( [] );
+            }
+        });
+        // load users
+        Tracker.autorun(() => {
+            if( self.#usersHandle && self.#usersHandle.ready()){
+                let list = [];
+                self.#collectionDb.find().fetchAsync().then(( fetched ) => {
+                    fetched.forEach(( it ) => {
+                        it.DYN = {
+                            roles: new ReactiveVar( [] )
+                        };
+                        list.push( it );
+                    });
+                    self.#usersList.set( list );
+                });
+            }
+        });
+        // load roles
+        Tracker.autorun(() => {
+            if( self.#rolesHandle && self.#rolesHandle.ready()){
+                self.#usersList.get().forEach(( it ) => {
+                    Package['pwix:roles'].Roles.directRolesForUser( it, { anyScope: true }).then(( res ) => {
+                        it.DYN.roles.set( res );
+                    });
+                });
+            }
+        });
+    }
+
+    /*
+     * @returns {Boolean} whether display a Roles panel
+     *  This method also takes into account the presence or not of the pwix:roles package
+     */
+    _haveRoles(){
+        let have = this.#args.haveRoles;
+        if( have ){
+            assert( have === true || have === false, 'pwix:accounts-manager.amClass._haveRoles() expects a Boolean argument, got '+have );
+        } else {
+            have = true;
+        }
+        have &&= ( Package['pwix:roles'] !== undefined );
+        return have;
+    }
+
+    /*
+     * @locus: client only
+     * @summary: subscribe and autoload the list of user accounts of the collection
+     */
+    _lastConnection(){
+        assert( Meteor.isClient, 'pwix:accounts-manager amClass._lastConnection() must only run on client' );
+        assert( this.collectionName() === 'users', 'pwix:accounts-manager amClass._lastConnection() must only run for \'users\' collection, got '+this.collectionName());
+        const self = this;
+        Tracker.autorun(() => {
+            const id = Meteor.userId();
+            if( id ){
+                Meteor.callAsync( 'pwix_accounts_manager_accounts_update_attribute', id, self.collectionName(), { lastConnection: new Date() });
+            }
+        });
+    }
+
+    /*
+     * @returns {Boolean} whether display a "Global roles" pane
+     */
+    _withGlobals(){
+        let pane = this.#args.withGlobals;
+        if( pane ){
+            assert( pane === true || pane === false, 'pwix:accounts-manager.amClass._withGlobals() expects a Boolean argument, got '+pane );
+        } else {
+            pane = true;
+        }
+        return pane;
+    }
+
+    /*
+     * @returns {Boolean} whether display a "Scoped roles" pane
+     */
+    _withScoped(){
+        let pane = this.#args.withScoped;
+        if( pane ){
+            assert( pane === true || pane === false, 'pwix:accounts-manager.amClass._withScoped() expects a Boolean argument, got '+pane );
+        } else {
+            pane = true;
+        }
+        return pane;
+    }
+
+    /*
      *
      */
     async _tabular_identifier( it ){
@@ -263,17 +387,20 @@ export class amClass {
         assert( o && _.isObject( o ), 'pwix:accounts-manager.amClass() expects an object argument, got '+o );
 
         this.#args = o;
+        const self = this;
 
         // make sure this collection is not already managed by another instance
         this.#collectionName = this._collectionName();
         if( AccountsManager.instances[this.#collectionName] ){
-            console.warn( 'pwix:accounts-manager.amClass() already instanciated for', this.#collectionName, 'collection, cowardly refusing to re-instanciate it' );
+            console.warn( 'pwix:accounts-manager.amClass() already instanciated for \'', this.#collectionName, '\' collection, cowardly refusing to re-instanciate it' );
             return null;
         }
 
-        if( AccountsManager.configure() & AccountsManager.C.Verbose.INSTANCE ){
+        if( AccountsManager.configure().verbosity & AccountsManager.C.Verbose.INSTANCE ){
             console.log( 'pwix:accounts-manager.amClass() instanciated for', this.#collectionName );
         }
+
+        AccountsManager.instances[this.#collectionName] = this;
 
         // define the Mongo collection
         if( this.#collectionName === 'users' ){
@@ -306,28 +433,74 @@ export class amClass {
                 },
                 // display the first email address (if any) instead of the identifier in the button title
                 async deleteButtonTitle( it ){
-                    return pwixI18n.label( I18N, 'buttons.delete_title', await _tabular_identifier( it ));
+                    return pwixI18n.label( I18N, 'buttons.delete_title', await self._tabular_identifier( it ));
                 },
                 async deleteConfirmationText( it ){
-                    return pwixI18n.label( I18N, 'delete.confirmation_text', await _tabular_identifier( it ));
+                    return pwixI18n.label( I18N, 'delete.confirmation_text', await self._tabular_identifier( it ));
                 },
                 async deleteConfirmationTitle( it ){
-                    return pwixI18n.label( I18N, 'delete.confirmation_title', await _tabular_identifier( it ));
+                    return pwixI18n.label( I18N, 'delete.confirmation_title', await self._tabular_identifier( it ));
                 },
                 async editButtonEnabled( it ){
-                    return await AccountsManager.isAllowed( 'pwix.accounts_manager.feat.edit', null, it );
+                    return await AccountsManager.isAllowed( 'pwix.accounts_manager.feat.edit', self, Meteor.userId(), it );
                 },
                 async editButtonTitle( it ){
-                    return pwixI18n.label( I18N, 'buttons.edit_title', await _tabular_identifier( it ));
+                    return pwixI18n.label( I18N, 'buttons.edit_title', await self._tabular_identifier( it ));
                 },
                 async infoButtonTitle( it ){
-                    return pwixI18n.label( I18N, 'buttons.info_title', await _tabular_identifier( it ));
+                    return pwixI18n.label( I18N, 'buttons.info_title', await self._tabular_identifier( it ));
                 }
             },
             destroy: true
         });
     
+        // interpret arguments
+        this.#haveRoles = this._haveRoles();
+        this.#withGlobals = this._withGlobals();
+        this.#withScoped = this._withScoped();
+
+        // get and maintain the accounts list in the client side
+        if( Meteor.isClient ){
+            this._feedList();
+        }
+
+        // update the last connection attribute in the client side for standard Meteor 'users' collection
+        if( Meteor.isClient && this. #collectionName === 'users' ){
+            this._lastConnection();
+        }
+
         return this;
+    }
+
+    /**
+     * @returns {Function} the allowFn configured function
+     */
+    allowFn(){
+        return this.#args.allowFn || null;
+    }
+
+    /**
+     * @locus Client only
+     * @param {String} id
+     * @returns {Object} the identified user object
+     */
+    byId( id ){
+        assert( Meteor.isClient, 'pwix:accounts-manager amClass.byId() is only available on client' );
+        let found = null;
+        this.#usersList.get().every(( doc ) => {
+            if( doc._id === id ){
+                found = doc;
+            }
+            return found === null;
+        });
+        return found;
+    }
+
+    /**
+     * @returns {Mongo.Collection} the addressed collection
+     */
+    collectionDb(){
+        return this.#collectionDb;
     }
 
     /**
@@ -342,39 +515,34 @@ export class amClass {
      *  This method also takes into account the presence or not of the pwix:roles package
      */
     haveRoles(){
-        let have = this.#args.haveRoles;
-        if( have ){
-            assert( have === true || have === false, 'pwix:accounts-manager.amClass.haveRoles() expects a Boolean argument, got '+have );
-        } else {
-            have = true;
-        }
-        have &&= ( Package['pwix:roles'] !== undefined );
-        return have;
+        return this.#haveRoles;
+    }
+
+    /**
+     * @returns {Field.Set} the full field set
+     */
+    fieldSet(){
+        return this.#fieldSet;
+    }
+
+    /**
+     * @returns {String} the Tabular.Table instance name
+     */
+    tabularName(){
+        return this.collectionName();
     }
 
     /**
      * @returns {Boolean} whether display a "Global roles" pane
      */
     withGlobals(){
-        let pane = this.#args.withGlobals;
-        if( pane ){
-            assert( pane === true || pane === false, 'pwix:accounts-manager.amClass.withGlobals() expects a Boolean argument, got '+pane );
-        } else {
-            pane = true;
-        }
-        return pane;
+        return this.#withGlobals;
     }
 
     /**
      * @returns {Boolean} whether display a "Scoped roles" pane
      */
     withScoped(){
-        let pane = this.#args.withScoped;
-        if( pane ){
-            assert( pane === true || pane === false, 'pwix:accounts-manager.amClass.withScoped() expects a Boolean argument, got '+pane );
-        } else {
-            pane = true;
-        }
-        return pane;
+        return this.#withScoped;
     }
 }

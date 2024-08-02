@@ -200,25 +200,9 @@ It takes itself care of checking the permissions of the user, and, depending of 
 
 Known data context is:
 
-- `allowFn`
+- `name`
 
-    An async function which will be called with an action string identifier, and must return whether the current user is allowed to do the specified action, defaulting to the configured value.
-
-- `classes`
-
-    The classes to be added to any display, defaulting to the configured values.
-
-- `fields`
-
-    Let the application extends the default schema by providing additional fields as a `Forms.FieldSet` definition, defaulting to the configured valuee.
-
-- `hideDisabled`
-
-    Whether to hide disabled actions instead of displaying the disabled state, defaulting to the configured value.
-
-- `scopesFn`
-
-    An application-provided function which is expected to return all existing (roles) scopes, defaulting to the configured value.
+    The collection name to list, defaulting to standard MPeteor `users`.
 
 ## Permissions management
 
@@ -231,12 +215,12 @@ It defines following tasks:
     - `pwix.accounts_manager.feat.new`: display a button to create a new account
 
 - at the server level
-    - `pwix.accounts_manager.fn.removeAccount`, with args `user<String|Object>`: remove the `user` account
-    - `pwix.accounts_manager.fn.updateAccount`, with args `user<Object>`: update the `user` account
-    - `pwix.accounts_manager.fn.updateAttribute`, with args `user<String|Object>, modifier<Object>`: apply the `modifier` Mongo modifier to the `user` account
+    - `pwix.accounts_manager.fn.removeAccount`, with args `user<String|Object>, amInstance<Object>`: remove the `user` account
+    - `pwix.accounts_manager.fn.updateAccount`, with args `user<Object>, amInstance<Object>`: update the `user` account
+    - `pwix.accounts_manager.fn.updateAttribute`, with args `user<String|Object>, amInstance<Object>, modifier<Object>`: apply the `modifier` Mongo modifier to the `user` account
 
 - on publications
-    - `pwix.accounts_manager.pub.list_all`: list all accounts and their contents (but the `service` and `profile` objects)
+    - `pwix.accounts_manager.pub.list_all`, with args `user<String|Object>, amInstance<Object>`: list all accounts and their contents (but the `service` and `profile` objects)
 
 ## Configuration
 

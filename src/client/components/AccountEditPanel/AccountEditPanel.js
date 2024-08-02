@@ -7,11 +7,13 @@
  * + have a 'Roles' panel
  *
  * Parms:
+ *  - name: the amClass collection name
  *  - item: the account's object to be edited, or null
  *  - tabs: an optional array of tabs provided by the application
  */
 
 import _ from 'lodash';
+const assert = require( 'assert' ).strict;
 
 import { AccountsTools } from 'meteor/pwix:accounts-tools';
 import { AccountsUI } from 'meteor/pwix:accounts-ui';
@@ -30,9 +32,11 @@ import './AccountEditPanel.html';
 
 Template.AccountEditPanel.onCreated( function(){
     const self = this;
-    console.debug( this );
+    //console.debug( this );
 
     self.AM = {
+        // the amClass instance
+        amInstance: new ReactiveVar( null ),
         // the global Checker for this modal
         checker: new ReactiveVar( null ),
         // the global Message zone for this modal
@@ -48,6 +52,18 @@ Template.AccountEditPanel.onCreated( function(){
         tabbedId: null,
         $tabbed: null
     };
+
+    // get the amClass instance from its name
+    self.autorun(() => {
+        const name = Template.currentData().name;
+        if( name ){
+            const instance = AccountsManager.instances[name];
+            if( instance ){
+                assert( instance instanceof AccountsManager.amClass, 'expect an AccountsManager.amClass, got '+instance );
+                self.AM.amInstance.set( instance );
+            }
+        }
+    });
 
     // keep the initial 'new' state
     self.autorun(() => {
@@ -119,10 +135,11 @@ Template.AccountEditPanel.helpers({
         const paneData = {
             item: Template.instance().AM.item,
             isNew: Template.instance().AM.isNew.get(),
-            checker: Template.instance().AM.checker
+            checker: Template.instance().AM.checker,
+            amInstance: Template.instance().AM.amInstance
         };
-        const adminNotes = AccountsManager.fieldSet.get().byName( 'adminNotes' );
-        const userNotes = AccountsManager.fieldSet.get().byName( 'userNotes' );
+        const adminNotes = Template.instance().AM.amInstance.get().fieldSet().byName( 'adminNotes' );
+        const userNotes = Template.instance().AM.amInstance.get().fieldSet().byName( 'userNotes' );
         let tabs = [
             {
                 tabid: 'ident_tab',
@@ -197,7 +214,7 @@ Template.AccountEditPanel.events({
         //console.debug( event, instance );
         const self = this;
         let item = instance.AM.item.get();
-        console.debug( 'item', item );
+        //console.debug( 'item', item );
         // we cannot call here AccountTools.preferredLabel() as this later requires an id - so compute something not too far of that
         //  must have at least one of these two
         const label = item.emails[0].address || item.username;
@@ -233,7 +250,7 @@ Template.AccountEditPanel.events({
         // on update, then... update and close
         } else {
             // update account
-            Meteor.callAsync( 'pwix_accounts_manager_accounts_update_account', item ).then( async ( res ) => {
+            Meteor.callAsync( 'pwix_accounts_manager_accounts_update_account', item, self.name, self.item ).then( async ( res ) => {
                 if( res ){
                     res = await updateRoles( item );
                 }

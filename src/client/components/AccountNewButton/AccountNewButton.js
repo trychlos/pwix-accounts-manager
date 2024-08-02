@@ -4,7 +4,8 @@
  * Let the accounts manager create a new account.
  *
  * Parms:
- *  - none, though all plusButton parameters will be passed through
+ *  - name: the amClass instance name
+ *  - ... plus all PlusButton parameters
  */
 
 import _ from 'lodash';
@@ -16,10 +17,29 @@ import '../AccountEditPanel/AccountEditPanel.js';
 
 import './AccountNewButton.html';
 
+Template.AccountNewButton.onCreated( function(){
+    const self = this;
+    console.debug( this );
+
+    self.AM = {
+        amInstance: new ReactiveVar( null )
+    };
+
+    self.autorun(() => {
+        const dataContext = Template.currentData();
+        if( dataContext.name ){
+            const amInstance = AccountsManager.instances[dataContext.name];
+            if( amInstance && amInstance instanceof AccountsManager.amClass ){
+                self.AM.amInstance.set( amInstance );
+            }
+        }
+    });
+});
+
 Template.AccountNewButton.helpers({
     // whether the user is allowed to create new account
     canCreate(){
-        return AccountsManager.isAllowed( 'pwix.accounts_manager.feat.new' );
+        return AccountsManager.isAllowed( 'pwix.accounts_manager.feat.new', Template.instance().AM.amInstance.get(), Meteor.userId());
     },
 
     // parms for new account (plusButton)

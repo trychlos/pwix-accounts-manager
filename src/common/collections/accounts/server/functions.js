@@ -9,17 +9,22 @@ import { Random } from 'meteor/random';
 
 AccountsManager.server = {};
 
-AccountsManager.server.removeAccount = async function( id, userId ){
+AccountsManager.server.removeAccount = async function( id, userId, instanceName ){
     let ret = null;
-    if( !await AccountsManager.isAllowed( 'pwix.accounts_manager.fn.removeAccount', userId, id )){
-        return null;
-    }
-    try {
-        ret = await Meteor.users.removeAsync({ _id: id });
-    } catch( e ){
-        throw new Meteor.Error(
-            'pwix.accounts_manager.fn.removeAccount',
-            'Unable to remove "'+id+'" account' );
+    const amInstance = AccountsManager.instances[instanceName];
+    if( amInstance && amInstance instanceof AccountsManager.amClass ){
+        if( !await AccountsManager.isAllowed( 'pwix.accounts_manager.fn.removeAccount', amInstance, userId, id )){
+            return null;
+        }
+        try {
+            ret = await amInstance.collectionDb().removeAsync({ _id: id });
+        } catch( e ){
+            throw new Meteor.Error(
+                'pwix.accounts_manager.fn.removeAccount',
+                'Unable to remove "'+id+'" account' );
+        }
+    } else {
+        console.warn( 'pwix:accounts-manager removeAccount() unknown or invalid instance name', instanceName );
     }
     return ret;
 };
@@ -27,65 +32,83 @@ AccountsManager.server.removeAccount = async function( id, userId ){
 // update the account
 // NB 1: cowardly refuse to disallow login of the current user
 // NB 2: on login no more allowed, make sure login tokens are cleared in the database
-AccountsManager.server.updateAccount = async function( item, userId ){
+AccountsManager.server.updateAccount = async function( item, userId, instanceName, origItem ){
     let ret = null;
-    if( !await AccountsManager.isAllowed( 'pwix.accounts_manager.fn.updateAccount', userId, item )){
-        return null;
-    }
-    try {
-        const orig = await Meteor.users.findOneAsync({ _id: item._id });
-        const origAllowed = orig.loginAllowed;
-        if( item._id === userId && !item.loginAllowed && orig.loginAllowed ){
-            console.warn( 'cowardly refusing to disallow current user login' );
-            item.loginAllowed = true;
+    //console.debug( 'item', item, 'userId', userId, 'instanceName', instanceName );
+    const amInstance = AccountsManager.instances[instanceName];
+    if( amInstance && amInstance instanceof AccountsManager.amClass ){
+        if( !await AccountsManager.isAllowed( 'pwix.accounts_manager.fn.updateAccount', amInstance, userId, item )){
+            return null;
         }
-        let ret = null;
-        if( orig ){
-            const itemId = item._id;
-            ret = await Meteor.users.updateAsync({ _id: item._id }, { $set: item });
-            if( !ret ){
-                throw new Meteor.Error(
-                    'pwix.accounts_manager.fn.updateAccount',
-                    'Unable to update "'+item._id+'" account' );
-            } else if( !item.loginAllowed && orig.loginAllowed ){
-                Meteor.users.updateAsync({ _id: itemId }, { $set: { 'services.resume.loginTokens': [] }}).then(( res ) => {
-                    console.debug( 'forced user logged-out', itemId, 'res', res );
-                });
+        const itemId = item._id;
+        try {
+            const orig = await amInstance.collectionDb().findOneAsync({ _id: itemId });
+            console.debug( 'orig', orig );
+            const origAllowed = orig.loginAllowed;
+            if( itemId === userId && !item.loginAllowed && orig.loginAllowed ){
+                console.warn( 'cowardly refusing to disallow current user login' );
+                item.loginAllowed = true;
             }
-        } else {
-            console.warn( 'user not found', item._id );
+            let ret = null;
+            if( orig ){
+                delete item._id;
+                delete item.DYN;
+                console.debug( 'calling updateAsync', itemId, item );
+                ret = await amInstance.collectionDb().updateAsync({ _id: itemId }, { $set: item });
+                console.debug( 'updateAsync', ret );
+                if( !ret ){
+                    throw new Meteor.Error(
+                        'pwix.accounts_manager.fn.updateAccount',
+                        'Unable to update "'+itemId+'" account' );
+                // force user logout if needed
+                } else if( !item.loginAllowed && orig.loginAllowed ){
+                    amInstance.collectionDb().updateAsync({ _id: itemId }, { $set: { 'services.resume.loginTokens': [] }}).then(( res ) => {
+                        console.log( 'forced user logged-out', itemId, 'res', res );
+                    });
+                }
+            } else {
+                console.warn( 'user not found', itemId );
+            }
+            return ret;
+        } catch( e ){
+            console.debug( e );
+            throw new Meteor.Error(
+                'pwix.accounts_manager.fn.updateAccount',
+                'Unable to update "'+itemId+'" account' );
         }
-        return ret;
-    } catch( e ){
-        throw new Meteor.Error(
-            'pwix.accounts_manager.fn.updateAccount',
-            'Unable to update "'+item._id+'" account' );
+    } else {
+        console.warn( 'pwix:accounts-manager updateAccount() unknown or invalid instance name', instanceName );
     }
 };
 
-AccountsManager.server.updateAttribute = async function( id, modifier, userId ){
+AccountsManager.server.updateAttribute = async function( id, userId, instanceName, modifier ){
     let ret = null;
-    if( !await AccountsManager.isAllowed( 'pwix.accounts_manager.fn.updateAttribute', userId, id, modifier )){
-        return null;
-    }
-    try {
-        const orig = await Meteor.users.findOneAsync({ _id: id });
-        let ret = null;
-        if( orig ){
-            ret = await Meteor.users.updateAsync({ _id: id }, { $set: modifier });
-            if( !ret ){
-                throw new Meteor.Error(
-                    'pwix.accounts_manager.fn.updateAttribute',
-                    'Unable to update "'+id+'" account' );
-            }
-        } else {
-            console.warn( 'user not found', id );
+    const amInstance = AccountsManager.instances[instanceName];
+    if( amInstance && amInstance instanceof AccountsManager.amClass ){
+        if( !await AccountsManager.isAllowed( 'pwix.accounts_manager.fn.updateAttribute', amInstance, userId, id, modifier )){
+            return null;
         }
-        return ret;
-    } catch( e ){
-        throw new Meteor.Error(
-            'pwix.accounts_manager.fn.updateAttribute',
-            'Unable to update "'+id+'" account' );
+        try {
+            const orig = await amInstance.collectionDb().findOneAsync({ _id: id });
+            let ret = null;
+            if( orig ){
+                ret = await amInstance.collectionDb().updateAsync({ _id: id }, { $set: modifier });
+                if( !ret ){
+                    throw new Meteor.Error(
+                        'pwix.accounts_manager.fn.updateAttribute',
+                        'Unable to update "'+id+'" account' );
+                }
+            } else {
+                console.warn( 'user not found', id );
+            }
+            return ret;
+        } catch( e ){
+            throw new Meteor.Error(
+                'pwix.accounts_manager.fn.updateAttribute',
+                'Unable to update "'+id+'" account' );
+        }
+    } else {
+        console.warn( 'pwix:accounts-manager updateAttribute() unknown or invalid instance name', instanceName );
     }
 };
 
