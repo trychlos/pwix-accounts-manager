@@ -13,7 +13,9 @@
 |    3 | 2024- 6-24 | admin notes should not be available to standard user |
 |    4 | 2024- 6-24 | whether to be able to reuse the same input panel when creating an account should be a configurable option |
 |    6 | 2024- 7-18 | honor tabularActiveCheckboxes |
-|    7 |  |  |
+|    7 | 2024- 8- 2 | honor hideDisabled |
+|    8 | 2024- 8 -2 | honor email label |
+|    9 |  |  |
 
 ---
 ## Done

@@ -12,13 +12,8 @@ let _conf = {};
 AccountsManager._conf = new ReactiveVar( _conf );
 
 AccountsManager._defaults = {
-    allowFn: null,
     classes: '',
     datetime: '%Y-%m-%d %H:%M:%S',
-    fields: null,
-    hideDisabled: true,
-    scopesFn: null,
-    tabularActiveCheckboxes: false,
     verbosity: AccountsManager.C.Verbose.CONFIGURE
 };
 

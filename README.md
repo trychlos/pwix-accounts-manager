@@ -18,9 +18,9 @@ The exported `AccountsManager` global object provides following items:
 
 #### Classes
 
-##### `AccountsManager.Accounts`
+##### `AccountsManager.amClass`
 
-The `AccountsManager.Accounts` class manages an `AccountsManager`, and notably determines which schema is handled in which collection. All permissions are also managed at this class level.
+The `AccountsManager.amClass` class notably determines which schema is handled in which collection. All permissions are also managed at this class level.
 
 This class must be instanciated by the application in its common code.
 
@@ -117,6 +117,12 @@ Constructor takes an object as single argument, with following keys:
 
     `allowFn` prototype is: `async allowFn( action<String> [, ...<Any> ] ): Boolean`
 
+- `classes`
+
+    Let the application provides some classes to add to the display. The classes mentionned here are added to the configured values if any.
+
+    Defauts to nothing.
+
 - `collection`
 
     When set, the name of the collection to be managed.
@@ -131,6 +137,12 @@ Constructor takes an object as single argument, with following keys:
     CreatedBy
     updatedBy
 ```
+
+- `hideDisabled`
+
+    Whether to hide disabled actions instead of displaying the disabled state.
+
+    Defaults to `true`: disabled actions are hidden.
 
 - `haveRoles`
 
@@ -151,6 +163,14 @@ Constructor takes an object as single argument, with following keys:
     An application-provided async function which is expected to return all existing (roles) scopes.
 
     Defaults to only manage scopes that are already used in the `Roles` package.
+
+- `tabularActiveCheckboxes`
+
+    Whether the checkboxes rendered in the tabular display are active, i.e. accept a click to switch their state.
+
+    Rationale: even if it would be very more easy to directly click on the tabular display to toggle a checkbox, some administrators may find this way too much easy, if not error prone, and prefer to have to pass through a distinct page/modal/display unit to securize a bit this update.
+
+    Defaults to `false`.
 
 #### Functions
 
@@ -178,12 +198,6 @@ If the `pwix:roles` package is used by the application, a `roles_tab` is inserte
 
 When run from [`AccountsList`](#accountslist), it is run in a modal to edit the current item.
 
-The `AccountEditPanel` component accepts a data context as:
-
-- `item`: the item to be edited, or null (or unset)
-
-- `tabbed`: the item to be edited, or null (or unset)
-
 ##### `AccountNewButton`
 
 A `PlusButton` component customized to create a new account.
@@ -202,7 +216,11 @@ Known data context is:
 
 - `name`
 
-    The collection name to list, defaulting to standard MPeteor `users`.
+    The collection name to list, defaulting to standard Meteor `users`
+
+- `tabs`
+
+    An optional array of tabs to be displayed before the 'roles' tab (if any).
 
 ## Permissions management
 
@@ -215,12 +233,12 @@ It defines following tasks:
     - `pwix.accounts_manager.feat.new`: display a button to create a new account
 
 - at the server level
-    - `pwix.accounts_manager.fn.removeAccount`, with args `user<String|Object>, amInstance<Object>`: remove the `user` account
-    - `pwix.accounts_manager.fn.updateAccount`, with args `user<Object>, amInstance<Object>`: update the `user` account
-    - `pwix.accounts_manager.fn.updateAttribute`, with args `user<String|Object>, amInstance<Object>, modifier<Object>`: apply the `modifier` Mongo modifier to the `user` account
+    - `pwix.accounts_manager.fn.removeAccount`, with args `user<String|Object>, amInstance<amClass>`: remove the `user` account
+    - `pwix.accounts_manager.fn.updateAccount`, with args `user<Object>, amInstance<amClass>`: update the `user` account
+    - `pwix.accounts_manager.fn.updateAttribute`, with args `user<String|Object>, amInstance<amClass>, modifier<Object>`: apply the `modifier` Mongo modifier to the `user` account
 
 - on publications
-    - `pwix.accounts_manager.pub.list_all`, with args `user<String|Object>, amInstance<Object>`: list all accounts and their contents (but the `service` and `profile` objects)
+    - `pwix.accounts_manager.pub.list_all`, with args `user<String|Object>, amInstance<amClass>`: list all accounts and their contents (but the `service` and `profile` objects)
 
 ## Configuration
 
@@ -242,20 +260,6 @@ Known configuration options are:
 
     Defaults to `%Y-%m-%d %H:%M:%S`.
 
-- `hideDisabled`
-
-    Whether to hide disabled actions instead of displaying the disabled state.
-
-    Defaults to `true`: disabled actions are hidden.
-
-- `tabularActiveCheckboxes`
-
-    Whether the checkboxes rendered in the tabular display are active, i.e. accept a click to switch their state.
-
-    Rationale: even if it would be very more easy to directly click on the tabular display to toggle a checkbox, some administrators may find this way too much easy, if not error prone, and prefer to have to pass through a distinct page/modal/display unit to securize a bit this update.
-
-    Defaults to `false`.
-
 - `verbosity`
 
     The verbosity level as:
@@ -267,6 +271,14 @@ Known configuration options are:
     - `AccountsManager.C.Verbose.CONFIGURE`
 
         Trace configuration operations
+
+    - `AccountsManager.C.Verbose.FUNCTIONS`
+
+        Trace functions calls
+
+    - `AccountsManager.C.Verbose.INSTANCE`
+
+        Trace `amClass` instanciation
 
     Defaults to `AccountsManager.C.Verbose.CONFIGURE`.
 

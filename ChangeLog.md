@@ -10,7 +10,7 @@
     - Deny to current user the right to disallow himself
     - Force user logged-out when loginAllowed becomes false
     - API change to have an Accounts class, bumping minor candidate version number (due to lack of use at the moment)
-    - Fix the fieldset definition to have a default verified email address
+    - Fix the fieldset definition to have a default non-verified email address
 
 ### 1.0.0
 

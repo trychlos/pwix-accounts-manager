@@ -423,9 +423,9 @@ export class amClass {
 
         // define the Tabular.Table
         this.#tabular = new Tabular.Table({
-            name: this.#collectionName,
-            collection: this.#collectionDb,
-            columns: this.#fieldSet.toTabular(),
+            name: this.tabularName(),
+            collection: this.collectionDb(),
+            columns: this.fieldSet().toTabular(),
             tabular: {
                 // do not let the user delete himself
                 async deleteButtonEnabled( it ){
@@ -497,6 +497,13 @@ export class amClass {
     }
 
     /**
+     * @returns {String} the classes to be added to the display
+     */
+    classes(){
+        return this.#args.classes || '';
+    }
+
+    /**
      * @returns {Mongo.Collection} the addressed collection
      */
     collectionDb(){
@@ -519,10 +526,32 @@ export class amClass {
     }
 
     /**
+     * @returns {Boolean} whether the disabled links should be hidden
+     */
+    hideDisabled(){
+        let hide = this.#args.hideDisabled;
+        if( hide !== true && hide !== false ){
+            hide = true;
+        }
+        return hide;
+    }
+
+    /**
      * @returns {Field.Set} the full field set
      */
     fieldSet(){
         return this.#fieldSet;
+    }
+
+    /**
+     * @returns {Boolean} whether tabular checkboxes are active
+     */
+    tabularActiveCheckboxes(){
+        let active = this.#args.tabularActiveCheckboxes;
+        if( active !== true && active !== false ){
+            active = false;
+        }
+        return active;
     }
 
     /**
