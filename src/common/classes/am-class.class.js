@@ -226,7 +226,7 @@ export class amClass {
                 optional: true,
                 dt_title: pwixI18n.label( I18N, 'list.last_connection_th' ),
                 dt_render( data, type, rowData ){
-                    return rowData.lastConnection ? strftime( AccountsManager.configure().datetime, rowData.lastConnection ) : '';
+                    return type === 'display' && rowData.lastConnection ? strftime( AccountsManager.configure().datetime, rowData.lastConnection ) : '';
                 },
                 dt_className: 'dt-center',
                 form_status: false,
@@ -241,8 +241,12 @@ export class amClass {
                 dt_type: 'string',
                 dt_createdCell: cell => $( cell ).addClass( 'ui-ellipsized' ),
                 dt_render( data, type, rowData ){
-                    const item = self.byId( rowData._id );
-                    return item.DYN.roles.get().join( ', ' );
+                    if( type === 'display' ){
+                        const item = self.byId( rowData._id );
+                        return item.DYN.roles.get().join( ', ' );
+                    } else {
+                        return '';
+                    }
                 },
                 form: false
             });

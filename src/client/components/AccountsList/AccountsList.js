@@ -93,6 +93,7 @@ Template.AccountsList.events({
                     mdBody: 'AccountEditPanel',
                     mdButtons: [ Modal.C.Button.CANCEL, Modal.C.Button.OK ],
                     mdClasses: 'modal-lg',
+                    mdClassesContent: AccountsManager.configure().classes + ' ' + instance.AM.amInstance.get().classes(),
                     mdTitle: pwixI18n.label( I18N, 'edit.modal_title', res.label ),
                     item: instance.AM.amInstance.get().byId( data.item._id )
                 });

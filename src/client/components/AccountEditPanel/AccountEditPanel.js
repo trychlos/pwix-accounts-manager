@@ -168,30 +168,32 @@ Template.AccountEditPanel.helpers({
                 paneData: paneData
             });
         }
-        tabs.push({
-            tabid: 'admin_notes_tab',
-            paneid: 'admin_notes_pane',
-            navLabel: adminNotes.toForm().title,
-            paneTemplate: 'NotesEdit',
-            paneData(){
-                return {
-                    item: paneData.item,
-                    field: adminNotes
-                };
+        tabs.push(
+            {
+                tabid: 'admin_notes_tab',
+                paneid: 'admin_notes_pane',
+                navLabel: adminNotes.toForm().title,
+                paneTemplate: 'NotesEdit',
+                paneData(){
+                    return {
+                        item: paneData.item,
+                        field: adminNotes
+                    };
+                }
+            },
+            {
+                tabid: 'user_notes_tab',
+                paneid: 'user_notes_pane',
+                navLabel: userNotes.toForm().title,
+                paneTemplate: 'NotesEdit',
+                paneData(){
+                    return {
+                        item: paneData.item,
+                        field: userNotes
+                    };
+                }
             }
-        },
-        {
-            tabid: 'user_notes_tab',
-            paneid: 'user_notes_pane',
-            navLabel: userNotes.toForm().title,
-            paneTemplate: 'NotesEdit',
-            paneData(){
-                return {
-                    item: paneData.item,
-                    field: userNotes
-                };
-            }
-        });
+        );
         return {
             name: ACCOUNT_EDIT_TABBED,
             tabs: tabs

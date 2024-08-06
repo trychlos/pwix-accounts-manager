@@ -19,7 +19,7 @@ import './AccountNewButton.html';
 
 Template.AccountNewButton.onCreated( function(){
     const self = this;
-    console.debug( this );
+    //console.debug( this );
 
     self.AM = {
         amInstance: new ReactiveVar( null )
