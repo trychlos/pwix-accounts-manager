@@ -469,7 +469,7 @@ export class amClass {
         }
 
         // update the last connection attribute in the client side for standard Meteor 'users' collection
-        if( Meteor.isClient && this. #collectionName === 'users' ){
+        if( Meteor.isClient && this.#collectionName === 'users' ){
             this._lastConnection();
         }
 

@@ -2,6 +2,20 @@
     <div class="c-account-ident-panel">
 
         <table class="form-table">
+            <tr>
+                <td class="label"><label class="form-label" for="ident-tab-allowed">{{ i18n key="panel.login_allowed_label" }}</label></td>
+                <td class="ui-w100">
+                    <table>
+                        <tr>
+                            <td class="ui-w33"><input class="form-check-input js-login-allowed" type="checkbox" id="ident-tab-allowed" /></td>
+                            <td class="label ui-w33"><label class="form-label" for="ident-tab-last-login">{{ i18n key="panel.last_login_label" }}</label></td>
+                            <td class="ui-w33"><input class="form-control forms-readonly js-last-login" type="text" id="ident-tab-last-login" readonly /></td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+            <tr class="am-tr-padder am-tr-padder-top"><td colspan="2"></td></tr>
+            <tr class="am-tr-padder am-tr-padder-bottom"><td colspan="2"></td></tr>
             {{#if newAccount }}
                 <tr>
                     <td></td>
@@ -10,30 +24,13 @@
                     </td>
                 </tr>
             {{else}}
-                <tr>
-                    <td class="label"><label class="form-label" for="ident-tab-allowed">{{ i18n key="panel.login_allowed_label" }}</label></td>
-                    <td class="ui-w100">
-                        <table>
-                            <tr>
-                                <td class="ui-w33"><input class="form-check-input js-login-allowed" type="checkbox" id="ident-tab-allowed" /></td>
-
-                                <td class="label ui-w33"><label class="form-label" for="ident-tab-last-login">{{ i18n key="panel.last_login_label" }}</label></td>
-                                <td class="ui-w33"><input class="form-control forms-readonly js-last-login" type="text" id="ident-tab-last-login" readonly /></td>
-                            </tr>
-                        </table>
-                    </td>
-                </tr>
                 {{#if haveUsername}}
-                    <tr class="am-tr-padder am-tr-padder-top"><td colspan="2"></td></tr>
-                    <tr class="am-tr-padder am-tr-padder-bottom"><td colspan="2"></td></tr>
                     <tr>
                         <td class="label"><label class="form-label" for="ident-tab-username">{{ i18n key="panel.username_label" }}</label></td>
                         <td class="ui-w100"><input class="form-control js-username" type="text" id="ident-tab-username" placeholder="{{ i18n key="panel.username_ph" }}" /></td>
                     </tr>
                 {{/if}}
                 {{#if haveEmailAddress }}
-                    <tr class="am-tr-padder am-tr-padder-top"><td colspan="2"></td></tr>
-                    <tr class="am-tr-padder am-tr-padder-bottom"><td colspan="2"></td></tr>
                     <tr>
                         <td></td>
                         <td class="ui-w100">
