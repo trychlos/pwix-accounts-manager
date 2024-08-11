@@ -2,9 +2,9 @@
 
 ## ChangeLog
 
-### 1.1.0-rc
+### 1.1.0
 
-    Release date: 
+    Release date: 2024- 8-11
 
     - Remove pwix:roles dependency, only having roles tab when the package is present
     - Deny to current user the right to disallow himself
@@ -20,4 +20,4 @@
 
 ---
 P. Wieser
-- Last updated on 2024, Jul. 18th
+- Last updated on 2024, Aug. 11th
