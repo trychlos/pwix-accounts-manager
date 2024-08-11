@@ -88,17 +88,33 @@ Template.account_email_row.onRendered( function(){
                 parent: parentChecker,
                 panel: new Forms.Panel({
                     'emails.$.address': {
-                        js: '.js-email'
+                        js: '.js-email',
+                        formFrom( $node ){
+                            return $node.val();
+                        },
+                        formTo( $node, item ){
+                            $node.val( item.address );
+                        }
                     },
                     'emails.$.verified': {
-                        js: '.js-verified'
+                        js: '.js-verified',
+                        formFrom( $node ){
+                            const checked = $node.prop( 'checked' );
+                            console.debug( 'formFrom checked', checked );
+                            return checked;
+                        },
+                        formTo( $node, item ){
+                            console.debug( 'verified', item.verified );
+                            $node.prop( 'checked', item.verified );
+                        }
                     }
                 }, amInstance.fieldSet()),
                 data: {
                     item: itemRv
                 },
                 id: Template.currentData().it.id,
-                checkStatusShow: Forms.C.CheckStatus.NONE
+                checkStatusShow: Forms.C.CheckStatus.NONE,
+                setForm: Template.currentData().it
             }));
         }
     });

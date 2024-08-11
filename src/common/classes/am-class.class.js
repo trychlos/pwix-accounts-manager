@@ -154,7 +154,6 @@ export class amClass {
                 dt_template: Meteor.isClient && Template.dt_email_address,
                 form_check: amCollection.checks.email_address,
                 form_type: Forms.FieldType.C.MANDATORY
-    
             },
             {
                 name: 'emails.$.verified',

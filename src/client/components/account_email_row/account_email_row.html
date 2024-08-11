@@ -1,10 +1,10 @@
 <template name="account_email_row">
 
     <tr class="c-account-email-row" data-item-id="{{ this.it.id }}">
-        <td><input class="form-control js-email" type="email" placeholder="{{ i18n key="panel.email_ph" }}" value="{{ this.it.address }}" /></td>
+        <td><input class="form-control js-email" type="email" placeholder="{{ i18n key="panel.email_ph" }}" /></td>
         <td>
-            <div class="js-verified ui-w100 ui-center">
-                <input class="form-check-input" type="checkbox" value="{{ this.it.verified }}" />
+            <div class="ui-w100">
+                <input class="form-check-input js-verified" type="checkbox" />
             </div>
         </td>
         <td>{{> FormsCheckStatusIndicator (parmsCheckStatus) }}</td>
