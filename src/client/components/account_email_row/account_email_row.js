@@ -99,12 +99,9 @@ Template.account_email_row.onRendered( function(){
                     'emails.$.verified': {
                         js: '.js-verified',
                         formFrom( $node ){
-                            const checked = $node.prop( 'checked' );
-                            console.debug( 'formFrom checked', checked );
-                            return checked;
+                            return $node.prop( 'checked' );
                         },
                         formTo( $node, item ){
-                            console.debug( 'verified', item.verified );
                             $node.prop( 'checked', item.verified );
                         }
                     }

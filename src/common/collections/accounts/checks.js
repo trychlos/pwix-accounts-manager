@@ -84,7 +84,6 @@ amCollection.checks.email_verified = async function( value, data, opts ){
     _assert_data_itemrv( 'amCollection.checks.email_verified()', data );
     const item = data.item.get();
     const index = opts.id ? _id2index( item.emails, opts.id ) : -1;
-    console.debug( 'index', index, 'value', value );
     if( opts.update !== false ){
         if( index < 0 ){
             item.emails = item.emails || [];
