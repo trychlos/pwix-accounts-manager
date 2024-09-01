@@ -1,5 +1,5 @@
 /*
- * pwix:accounts-manager/srv/client/components/account_emails_list/account_emails_list.js
+ * pwix:accounts-manager/src/client/components/account_emails_list/account_emails_list.js
  *
  * On creation, we embed the acUserLogin panel from pwix:accounts-ui package
  * When updating, we rely on the Checker to have same checks.
@@ -49,7 +49,7 @@ Template.account_emails_list.helpers({
         return this.item.get().emails || [];
     },
 
-    // passes the smae data conext, just replacing the parent checker by our own
+    // passes the same data context, just replacing the parent checker by our own
     parmsEmailRow( it ){
         const parms = { ...this };
         parms.emailsCount = Template.instance().AM.emailsCount;

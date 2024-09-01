@@ -1,5 +1,5 @@
 /*
- * pwix:accounts-manager/srv/client/components/account_ident_panel/account_ident_panel.js
+ * pwix:accounts-manager/src/client/components/account_ident_panel/account_ident_panel.js
  *
  * On creation, we embed the acUserLogin panel from pwix:accounts-ui package
  * When updating, we rely on the Checker to have same checks.

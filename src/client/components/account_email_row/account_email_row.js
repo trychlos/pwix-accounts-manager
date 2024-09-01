@@ -1,5 +1,5 @@
 /*
- * pwix:accounts-manager/srv/client/components/account_email_row/account_email_row.js
+ * pwix:accounts-manager/src/client/components/account_email_row/account_email_row.js
  *
  * Manage an email adress, maybe empty but have at least an id.
  *
