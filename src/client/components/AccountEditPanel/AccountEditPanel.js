@@ -142,8 +142,7 @@ Template.AccountEditPanel.helpers({
         const userNotes = Template.instance().AM.amInstance.get().fieldSet().byName( 'userNotes' );
         let tabs = [
             {
-                tabid: 'ident_tab',
-                paneid: 'ident_pane',
+                name: 'account_ident_tab',
                 navLabel: pwixI18n.label( I18N, 'tabs.ident_title' ),
                 paneTemplate: 'account_ident_panel',
                 paneData: paneData
@@ -161,8 +160,7 @@ Template.AccountEditPanel.helpers({
         }
         if( Package['pwix:roles'] ){
             tabs.push({
-                tabid: 'roles_tab',
-                paneid: 'roles_pane',
+                name: 'account_roles_tab',
                 navLabel: pwixI18n.label( I18N, 'tabs.roles_title' ),
                 paneTemplate: 'account_roles_panel',
                 paneData: paneData
@@ -170,8 +168,7 @@ Template.AccountEditPanel.helpers({
         }
         tabs.push(
             {
-                tabid: 'admin_notes_tab',
-                paneid: 'admin_notes_pane',
+                name: 'account_admin_notes_tab',
                 navLabel: adminNotes.toForm().title,
                 paneTemplate: 'NotesEdit',
                 paneData(){
@@ -182,8 +179,7 @@ Template.AccountEditPanel.helpers({
                 }
             },
             {
-                tabid: 'user_notes_tab',
-                paneid: 'user_notes_pane',
+                name: 'account_user_notes_tab',
                 navLabel: userNotes.toForm().title,
                 paneTemplate: 'NotesEdit',
                 paneData(){

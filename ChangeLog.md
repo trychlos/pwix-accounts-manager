@@ -7,6 +7,7 @@
     Release date: 
 
     - Remove debug console lines
+    - Upgrade pwix:tabbed to v 1.3.0
 
 ### 1.1.0
 
