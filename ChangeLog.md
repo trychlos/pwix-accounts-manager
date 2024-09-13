@@ -2,9 +2,9 @@
 
 ## ChangeLog
 
-### 1.1.1-rc
+### 1.1.1
 
-    Release date: 
+    Release date: 2024- 9-13
 
     - Remove debug console lines
     - Upgrade pwix:tabbed to v 1.3.0
@@ -27,4 +27,4 @@
 
 ---
 P. Wieser
-- Last updated on 2024, Aug. 11th
+- Last updated on 2024, Sep. 13th
