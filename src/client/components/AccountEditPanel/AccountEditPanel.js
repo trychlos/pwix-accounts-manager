@@ -82,6 +82,11 @@ Template.AccountEditPanel.onCreated( function(){
             item.loginAllowed = true;
         }
     });
+
+    // track the item notes
+    self.autorun(() => {
+        console.debug( 'adminNotes "'+self.AM.item.get().adminNotes+'"', 'userNotes "'+self.AM.item.get().userNotes+'"' );
+    });
 });
 
 Template.AccountEditPanel.onRendered( function(){
@@ -212,7 +217,7 @@ Template.AccountEditPanel.events({
         //console.debug( event, instance );
         const self = this;
         let item = instance.AM.item.get();
-        //console.debug( 'item', item );
+        console.debug( 'item', item );
         // we cannot call here AccountTools.preferredLabel() as this later requires an id - so compute something not too far of that
         //  must have at least one of these two
         const label = item.emails[0].address || item.username;

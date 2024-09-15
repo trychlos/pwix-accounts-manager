@@ -1,6 +1,6 @@
 Package.describe({
     name: 'pwix:accounts-manager',
-    version: '1.1.2-rc',
+    version: '1.2.0-rc',
     summary: 'Provide the most common parts of a simple accounts management system',
     git: 'https://github.com/trychlos/pwix-accounts-manager',
     documentation: 'README.md'
@@ -25,7 +25,7 @@ Package.onTest( function( api ){
 function configure( api ){
     api.versionsFrom([ '2.9.0', '3.0-rc.0' ]);
     api.use( 'aldeed:collection2@4.0.1' );
-    api.use( 'aldeed:simple-schema@1.13.1' );
+    api.use( 'aldeed:simple-schema@1.13.1 || 2.0.0' );
     api.use( 'blaze-html-templates@2.0.0 || 3.0.0-alpha300.0', 'client' );
     api.use( 'check' );
     api.use( 'ecmascript' );
