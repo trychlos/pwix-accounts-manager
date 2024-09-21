@@ -6,7 +6,7 @@
 
     Release date: 
 
-    - 
+    - Increase AccountNewButton left margin
 
 ### 1.2.0
 
