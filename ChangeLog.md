@@ -9,6 +9,7 @@
     - Increase AccountNewButton left margin
     - Define 'tabsBefore' parameter, thus bumping minor candidate version number
     - Fix the modal detection
+    - Let the caller choose the classes to apply to the modal
 
 ### 1.2.0
 
