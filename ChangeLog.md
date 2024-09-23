@@ -2,11 +2,12 @@
 
 ## ChangeLog
 
-### 1.2.1-rc
+### 1.3.0-rc
 
     Release date: 
 
     - Increase AccountNewButton left margin
+    - Define 'tabsBefore' parameter, thus bumping minor candidate version number
 
 ### 1.2.0
 

@@ -222,6 +222,10 @@ Known data context is:
 
     An optional array of tabs to be displayed before the 'roles' tab (if any).
 
+- `tabsBefore`
+
+    An optional array of tabs to be displayed before the 'ident_tab' tab.
+
 ## Permissions management
 
 This package can take advantage of `pwix:permissions` package to manage the user permissions.

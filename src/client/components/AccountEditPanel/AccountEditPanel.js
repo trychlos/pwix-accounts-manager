@@ -10,6 +10,7 @@
  *  - name: the amClass collection name
  *  - item: the account's object to be edited, or null
  *  - tabs: an optional array of tabs provided by the application
+ *  - tabsBefore: an optional array of tabs provided by the application
  */
 
 import _ from 'lodash';
@@ -145,14 +146,23 @@ Template.AccountEditPanel.helpers({
         };
         const adminNotes = Template.instance().AM.amInstance.get().fieldSet().byName( 'adminNotes' );
         const userNotes = Template.instance().AM.amInstance.get().fieldSet().byName( 'userNotes' );
-        let tabs = [
-            {
-                name: 'account_ident_tab',
-                navLabel: pwixI18n.label( I18N, 'tabs.ident_title' ),
-                paneTemplate: 'account_ident_panel',
-                paneData: paneData
+        let tabs = [];
+        if( this.tabsBefore ){
+            if( _.isArray( this.tabsBefore ) && this.tabsBefore.length ){
+                this.tabsBefore.forEach(( tab ) => {
+                    tab.paneData = paneData;
+                    tabs.push( tab );
+                });
+            } else {
+                console.warn( 'expect tabsBefore be an array, got', this.tabsBefore );
             }
-        ];
+        }
+        tabs.push({
+            name: 'account_ident_tab',
+            navLabel: pwixI18n.label( I18N, 'tabs.ident_title' ),
+            paneTemplate: 'account_ident_panel',
+            paneData: paneData
+        });
         if( this.tabs ){
             if( _.isArray( this.tabs ) && this.tabs.length ){
                 this.tabs.forEach(( tab ) => {
