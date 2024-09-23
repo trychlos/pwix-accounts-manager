@@ -95,7 +95,7 @@ Template.AccountEditPanel.onRendered( function(){
 
     // whether we are running inside of a Modal
     self.autorun(() => {
-        self.AM.isModal.set( self.$( '.AccountEditPanel' ).closest( '.modal-dialog' ).length > 0 );
+        self.AM.isModal.set( self.$( '.AccountEditPanel' ).parent().hasClass( '.modal-body' ));
     });
 
     // set the modal target+title
