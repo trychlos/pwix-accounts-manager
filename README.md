@@ -190,11 +190,11 @@ Available both on the client and the server.
 
 A tabbed editing panel to be run inside of a page or of a modal. Default tabs are named and ordered as:
 
-- `ident_tab`
-- `admin_notes_tab`
-- `user_notes_tab`
+- `account_ident_tab`
+- `account_admin_notes_tab`
+- `account_user_notes_tab`
 
-If the `pwix:roles` package is used by the application, a `roles_tab` is inserted before `admin_notes_tab`.
+If the `pwix:roles` package is used by the application, a `account_roles_tab` is inserted before `admin_notes_tab`.
 
 When run from [`AccountsList`](#accountslist), it is run in a modal to edit the current item.
 
@@ -225,6 +225,22 @@ Known data context is:
 - `tabsBefore`
 
     An optional array of tabs to be displayed before the 'ident_tab' tab.
+
+- `tabsUpdates`
+
+    An optional object where keys are the name of the targeted tab, and the value an object which describes the update.
+
+    E.g.
+
+```js
+    tabsUpdates: {
+        account_ident_tab: {
+            navLabel: 'Email & password'
+        },
+        account_admin_notes_tab: {
+            shown: false
+        }
+```
 
 ## Permissions management
 

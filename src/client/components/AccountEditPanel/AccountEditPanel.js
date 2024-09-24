@@ -11,6 +11,7 @@
  *  - item: the account's object to be edited, or null
  *  - tabs: an optional array of tabs provided by the application
  *  - tabsBefore: an optional array of tabs provided by the application
+ *  - tabsUpdates: an optional updates object
  */
 
 import _ from 'lodash';
@@ -137,7 +138,6 @@ Template.AccountEditPanel.helpers({
 
     // parms for TabbedTemplate
     parmsTabbed(){
-        const dataContext = this;
         const paneData = {
             item: Template.instance().AM.item,
             isNew: Template.instance().AM.isNew.get(),
@@ -205,6 +205,20 @@ Template.AccountEditPanel.helpers({
                 }
             }
         );
+        // update these tabs if asked for
+        if( this.tabsUpdates ){
+            Object.keys( this.tabsUpdates ).forEach(( it ) => {
+                let found = false;
+                tabs.every(( tab ) => {
+                    if( tab.name === it ){
+                        found = true;
+                        _.merge( tab, this.tabsUpdates[it] );
+                    }
+                    return !found;
+                });
+            });
+        }
+        //console.debug( 'tabs', tabs, this );
         return {
             name: ACCOUNT_EDIT_TABBED,
             tabs: tabs

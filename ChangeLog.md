@@ -10,6 +10,7 @@
     - Define 'tabsBefore' parameter, thus bumping minor candidate version number
     - Fix the modal detection
     - Let the caller choose the classes to apply to the modal
+    - Let the caller change the configuration of existing tabs
 
 ### 1.2.0
 

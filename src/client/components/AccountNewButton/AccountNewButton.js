@@ -44,13 +44,9 @@ Template.AccountNewButton.helpers({
 
     // parms for new account (plusButton)
     parmsNewAccount(){
-        const parms = { ...this };
-        if( !parms.label ){
-            parms.label = pwixI18n.label( I18N, 'new.btn_plus_label' );
-        }
-        if( !parms.title ){
-            parms.title = pwixI18n.label( I18N, 'new.btn_plus_title' );
-        };
+        let parms = { ...this };
+        parms.label = parms.label || pwixI18n.label( I18N, 'new.btn_plus_label' );
+        parms.title = parms.title || pwixI18n.label( I18N, 'new.btn_plus_title' );
         return parms;
     }
 });
