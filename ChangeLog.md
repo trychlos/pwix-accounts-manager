@@ -12,6 +12,7 @@
     - Let the caller choose the classes to apply to the modal
     - Let the caller change the configuration of existing tabs
     - Have a messager as soon as we run in a modal
+    - Fix the data context of added tabs
 
 ### 1.2.0
 

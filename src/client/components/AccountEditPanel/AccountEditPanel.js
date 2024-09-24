@@ -154,7 +154,7 @@ Template.AccountEditPanel.helpers({
         if( this.tabsBefore ){
             if( _.isArray( this.tabsBefore ) && this.tabsBefore.length ){
                 this.tabsBefore.forEach(( tab ) => {
-                    tab.paneData = paneData;
+                    tab.paneData = _.merge( {}, tab.paneData, paneData );
                     tabs.push( tab );
                 });
             } else {
@@ -170,7 +170,7 @@ Template.AccountEditPanel.helpers({
         if( this.tabs ){
             if( _.isArray( this.tabs ) && this.tabs.length ){
                 this.tabs.forEach(( tab ) => {
-                    tab.paneData = paneData;
+                    tab.paneData = _.merge( {}, tab.paneData, paneData );
                     tabs.push( tab );
                 });
             } else {
