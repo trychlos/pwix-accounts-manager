@@ -87,7 +87,7 @@ Template.AccountEditPanel.onCreated( function(){
 
     // track the item notes
     self.autorun(() => {
-        console.debug( 'adminNotes "'+self.AM.item.get().adminNotes+'"', 'userNotes "'+self.AM.item.get().userNotes+'"' );
+        //console.debug( 'adminNotes "'+self.AM.item.get().adminNotes+'"', 'userNotes "'+self.AM.item.get().userNotes+'"' );
     });
 });
 
@@ -96,7 +96,7 @@ Template.AccountEditPanel.onRendered( function(){
 
     // whether we are running inside of a Modal
     self.autorun(() => {
-        self.AM.isModal.set( self.$( '.AccountEditPanel' ).parent().hasClass( '.modal-body' ));
+        self.AM.isModal.set( self.$( '.AccountEditPanel' ).parent().hasClass( 'modal-body' ));
     });
 
     // set the modal target+title
@@ -125,8 +125,12 @@ Template.AccountEditPanel.helpers({
     // see below when building tabs:
     //  when defining a new account, the panel will make use of acUserLogin component which provides itself its message zone
     //  do not display in this case
+    // pwi 2024- 9-24 rather have a messager for all modals (as usual)
     haveMessager(){
         return this.item !== null;
+    },
+    isModal(){
+        return Template.instance().AM.isModal.get() === true;
     },
 
     // parms to Forms.Messager
