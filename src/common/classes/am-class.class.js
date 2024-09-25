@@ -372,7 +372,7 @@ export class amClass extends AccountsHub.ahClass {
      *
      */
     async _tabular_identifier( it ){
-        const res = await AccountsTools.preferredLabel( it );
+        const res = await AccountsHub.preferredLabel( it );
         return res.label;
     }
     

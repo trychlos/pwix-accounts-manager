@@ -5,6 +5,7 @@
 const assert = require( 'assert' ).strict;
 import validator from 'email-validator';
 
+import { AccountsHub } from 'meteor/pwix:accounts-hub';
 import { pwixI18n } from 'meteor/pwix:i18n';
 import { TM } from 'meteor/pwix:typed-message';
 
@@ -64,7 +65,7 @@ amCollection.checks.email_address = async function( value, data, opts ){
             message: pwixI18n.label( I18N, 'check.email_invalid' )
         });
     }
-    return AccountsTools.byEmail( value )
+    return AccountsHub.byEmail( value )
         .then(( user ) => {
             let ok = false;
             if( user ){
@@ -125,7 +126,7 @@ amCollection.checks.username = async function( value, data, opts ){
             message: pwixI18n.label( I18N, 'check.username_unset' )
         });
     }
-    return AccountsTools.byUsername( value )
+    return AccountsHub.byUsername( value )
         .then(( user ) => {
             let ok = false;
             if( user ){

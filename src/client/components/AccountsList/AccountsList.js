@@ -10,7 +10,6 @@
 const assert = require( 'assert' ).strict;
 
 import { AccountsHub } from 'meteor/pwix:accounts-hub';
-import { AccountsTools } from 'meteor/pwix:accounts-tools';
 import { Modal } from 'meteor/pwix:modal';
 import { pwixI18n } from 'meteor/pwix:i18n';
 import { ReactiveVar } from 'meteor/reactive-var';
@@ -69,7 +68,7 @@ Template.AccountsList.events({
     // delete an account
     'tabular-delete-event .AccountsList'( event, instance, data ){
         let label = null;
-        AccountsTools.preferredLabel( data.item )
+        AccountsHub.preferredLabel( data.item )
             .then(( res ) => {
                 label = res.label;
                 Meteor.callAsync( 'pwix_accounts_manager_accounts_remove', data.item._id, instance.name )
@@ -87,7 +86,7 @@ Template.AccountsList.events({
     'tabular-edit-event .AccountsList'( event, instance, data ){
         let label = null;
         const self = this;
-        AccountsTools.preferredLabel( data.item )
+        AccountsHub.preferredLabel( data.item )
             .then(( res ) => {
                 Modal.run({
                     ...self,

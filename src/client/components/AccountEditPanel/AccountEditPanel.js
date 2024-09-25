@@ -18,7 +18,6 @@ import _ from 'lodash';
 const assert = require( 'assert' ).strict;
 
 import { AccountsHub } from 'meteor/pwix:accounts-hub';
-import { AccountsTools } from 'meteor/pwix:accounts-tools';
 import { AccountsUI } from 'meteor/pwix:accounts-ui';
 import { Forms } from 'meteor/pwix:forms';
 import { Modal } from 'meteor/pwix:modal';
@@ -265,7 +264,7 @@ Template.AccountEditPanel.events({
             }, {
                 name: ACCOUNTS_UI_SIGNUP_PANEL,
                 successFn(){
-                    AccountsTools.byEmail( item.emails[0].address ).then( async ( user ) => {
+                    AccountsHub.byEmail( item.emails[0].address ).then( async ( user ) => {
                         if( user ){
                             item._id = user._id;
                             instance.$( '.c-account-ident-panel .ac-signup' ).trigger( 'ac-clear-panel' );
