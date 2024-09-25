@@ -14,7 +14,7 @@
 import _ from 'lodash';
 import strftime from 'strftime';
 
-import { AccountsConf } from 'meteor/pwix:accounts-conf';
+import { AccountsHub } from 'meteor/pwix:accounts-hub';
 import { AccountsUI } from 'meteor/pwix:accounts-ui';
 import { Forms } from 'meteor/pwix:forms';
 import { pwixI18n } from 'meteor/pwix:i18n';
@@ -43,7 +43,8 @@ Template.account_ident_panel.onCreated( function(){
 
     // setup the fields depending of the accounts configuration
     self.autorun(() => {
-        if( AccountsConf.configure().haveUsername !== AccountsConf.C.Identifier.NONE ){
+        const amInstance = Template.currentData().amInstance;
+        if( amInstance && amInstance.opts().haveUsername() !== AccountsHub.C.Identifier.NONE ){
             self.AM.fields.username = {
                 js: '.js-username'
             };
@@ -75,12 +76,12 @@ Template.account_ident_panel.onRendered( function(){
 Template.account_ident_panel.helpers({
     // whether we want an email address
     haveEmailAddress(){
-        return AccountsConf.configure().haveEmailAddress() !== AccountsConf.C.Identifier.NONE;
+        return this.amInstance ? this.amInstance.opts().haveEmailAddress() !== AccountsHub.C.Identifier.NONE : false;
     },
 
     // whether we want a username
     haveUsername(){
-        return AccountsConf.configure().haveUsername() !== AccountsConf.C.Identifier.NONE;
+        return this.amInstance ? this.amInstance.opts().haveUsername() !== AccountsHub.C.Identifier.NONE : false;
     },
 
     // string translation
@@ -107,7 +108,9 @@ Template.account_ident_panel.helpers({
             signupAutoClose: false,
             signupAutoConnect: false,
             signupSubmit: false,
-            name: ACCOUNTS_UI_SIGNUP_PANEL
+            name: ACCOUNTS_UI_SIGNUP_PANEL,
+            withExternalMessager: true,
+            checker: Template.instance().AM.checker
         };
     }
 });
@@ -122,10 +125,10 @@ Template.account_ident_panel.events({
             const item = this.item.get();
             item.emails = item.emails || [];
             item.emails[0] = item.emails[0] || {};
-            if( AccountsConf.configure().haveEmailAddress() !== AccountsConf.C.Identifier.NONE ){
+            if( this.amInstance.opts().haveEmailAddress() !== AccountsHub.C.Identifier.NONE ){
                 item.emails[0].address = data.email;
             }
-            if( AccountsConf.configure().haveUsername() !== AccountsConf.C.Identifier.NONE ){
+            if( this.amInstance.opts().haveUsername() !== AccountsHub.C.Identifier.NONE ){
                 item.username = data.username;
             }
             item.password = data.password;

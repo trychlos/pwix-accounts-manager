@@ -10,8 +10,7 @@ const assert = require( 'assert' ).strict;
 
 import strftime from 'strftime';
 
-import { AccountsConf } from 'meteor/pwix:accounts-conf';
-import { AccountsTools } from 'meteor/pwix:accounts-tools';
+import { AccountsHub } from 'meteor/pwix:accounts-hub';
 import { Field } from 'meteor/pwix:field';
 import { Forms } from 'meteor/pwix:forms';
 import { Notes } from 'meteor/pwix:notes';
@@ -23,7 +22,7 @@ import { Tracker } from 'meteor/tracker';
 
 import { amCollection } from '../collections/accounts/index.js';
 
-export class amClass {
+export class amClass extends AccountsHub.ahClass {
 
     // static data
 
@@ -33,8 +32,6 @@ export class amClass {
     #args = null;
 
     // checked arguments with their default values
-    #collectionDb = null;
-    #collectionName = null;
     #fieldSet = null;
     #haveRoles = null;
     #withGlobals = null;
@@ -126,7 +123,7 @@ export class amClass {
         let columns = [];
     
         // if have an email address
-        if( AccountsConf.configure().haveEmailAddress() !== AccountsConf.C.Identifier.NONE ){
+        if( this.opts().haveEmailAddress() !== AccountsHub.C.Identifier.NONE ){
             columns.push({
                 name: 'emails',
                 type: Array,
@@ -177,7 +174,7 @@ export class amClass {
         }
     
         // if have a username
-        if( AccountsConf.configure().haveUsername() !== AccountsConf.C.Identifier.NONE ){
+        if( this.opts().haveUsername() !== AccountsHub.C.Identifier.NONE ){
             columns.push({
                 name: 'username',
                 type: String,
@@ -291,7 +288,7 @@ export class amClass {
         Tracker.autorun(() => {
             if( self.#usersHandle && self.#usersHandle.ready()){
                 let list = [];
-                self.#collectionDb.find().fetchAsync().then(( fetched ) => {
+                self.collection().find().fetchAsync().then(( fetched ) => {
                     fetched.forEach(( it ) => {
                         it.DYN = {
                             roles: new ReactiveVar( [] )
@@ -384,32 +381,17 @@ export class amClass {
      *  All needed parameters must be specified at instanciation time, as this class doesn't provide any application-level setter.
      *  The collection is entirely defined here.
      * @constructor
-     * @returns {Accounts} this instance
+     * @returns {amClass} this instance
      */
     constructor( o ){
         assert( o && _.isObject( o ), 'pwix:accounts-manager.amClass() expects an object argument, got '+o );
+        super( ...arguments );
 
         this.#args = o;
         const self = this;
 
-        // make sure this collection is not already managed by another instance
-        this.#collectionName = this._collectionName();
-        if( AccountsManager.instances[this.#collectionName] ){
-            console.warn( 'pwix:accounts-manager.amClass() already instanciated for \'', this.#collectionName, '\' collection, cowardly refusing to re-instanciate it' );
-            return null;
-        }
-
         if( AccountsManager.configure().verbosity & AccountsManager.C.Verbose.INSTANCE ){
-            console.log( 'pwix:accounts-manager.amClass() instanciated for', this.#collectionName );
-        }
-
-        AccountsManager.instances[this.#collectionName] = this;
-
-        // define the Mongo collection
-        if( this.#collectionName === 'users' ){
-            this.#collectionDb = Meteor.users;
-        } else {
-            this.#collectionDb = new Mongo.Collection( this.#collectionName );
+            console.log( 'pwix:accounts-manager.amClass() instanciated for', this.opts().collection());
         }
 
         // define the Field.Set
@@ -421,8 +403,8 @@ export class amClass {
         this.#fieldSet = set;
 
         // attach the defined fieldset as a schema to the collection
-        this.#collectionDb.attachSchema( new SimpleSchema( this.#fieldSet.toSchema()), { replace: true });
-        this.#collectionDb.attachBehaviour( 'timestampable' );
+        this.collection().attachSchema( new SimpleSchema( this.#fieldSet.toSchema()), { replace: true });
+        this.collection().attachBehaviour( 'timestampable' );
 
         // define the Tabular.Table
         this.#tabular = new Tabular.Table({
@@ -468,7 +450,7 @@ export class amClass {
         }
 
         // update the last connection attribute in the client side for standard Meteor 'users' collection
-        if( Meteor.isClient && this.#collectionName === 'users' ){
+        if( Meteor.isClient && this.opts().collection() === 'users' ){
             this._lastConnection();
         }
 
@@ -510,14 +492,14 @@ export class amClass {
      * @returns {Mongo.Collection} the addressed collection
      */
     collectionDb(){
-        return this.#collectionDb;
+        return this.collection();
     }
 
     /**
      * @returns {String} the name of the collection
      */
     collectionName(){
-        return this.#collectionName;
+        return this.opts().collection();
     }
 
     /**

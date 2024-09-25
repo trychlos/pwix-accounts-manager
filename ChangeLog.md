@@ -2,12 +2,13 @@
 
 ## ChangeLog
 
-### 1.3.0-rc
+### 2.0.0-rc
 
     Release date: 
 
+    - Replace pwix:accounts-conf and pwix:accounts-tools dependencies with pwix:accounts-hub, thus bumping major candidate version numner
     - Increase AccountNewButton left margin
-    - Define 'tabsBefore' parameter, thus bumping minor candidate version number
+    - Define 'tabsBefore' parameter
     - Fix the modal detection
     - Let the caller choose the classes to apply to the modal
     - Let the caller change the configuration of existing tabs

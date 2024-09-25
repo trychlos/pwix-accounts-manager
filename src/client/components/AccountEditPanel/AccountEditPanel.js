@@ -7,7 +7,7 @@
  * + have a 'Roles' panel
  *
  * Parms:
- *  - name: the amClass collection name
+ *  - name: the amClass instance name
  *  - item: the account's object to be edited, or null
  *  - tabs: an optional array of tabs provided by the application
  *  - tabsBefore: an optional array of tabs provided by the application
@@ -17,6 +17,7 @@
 import _ from 'lodash';
 const assert = require( 'assert' ).strict;
 
+import { AccountsHub } from 'meteor/pwix:accounts-hub';
 import { AccountsTools } from 'meteor/pwix:accounts-tools';
 import { AccountsUI } from 'meteor/pwix:accounts-ui';
 import { Forms } from 'meteor/pwix:forms';
@@ -59,7 +60,7 @@ Template.AccountEditPanel.onCreated( function(){
     self.autorun(() => {
         const name = Template.currentData().name;
         if( name ){
-            const instance = AccountsManager.instances[name];
+            const instance = AccountsHub.instances[name];
             if( instance ){
                 assert( instance instanceof AccountsManager.amClass, 'expect an AccountsManager.amClass, got '+instance );
                 self.AM.amInstance.set( instance );

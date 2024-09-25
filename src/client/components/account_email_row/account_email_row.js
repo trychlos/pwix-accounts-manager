@@ -13,6 +13,7 @@
 
 import _ from 'lodash';
 
+import { AccountsHub } from 'meteor/pwix:accounts-hub';
 import { Forms } from 'meteor/pwix:forms';
 import { pwixI18n } from 'meteor/pwix:i18n';
 
@@ -126,7 +127,7 @@ Template.account_email_row.helpers({
     // rule: doesn't remove last connection way, i.e. keep at least one username or one email address
     // note: weird things happen when inserting/deleting rows, unless we delete only last row..
     minusEnabled(){
-        const haveUseableUsername = AccountsConf.configure().haveUsername !== AccountsConf.C.Identifier.NONE && this.item.get().username;
+        const haveUseableUsername = this.amInstance?.opts().haveUsername() !== AccountsHub.C.Identifier.NONE && this.item.get().username;
         return Template.instance().AM.isLast.get() && ( haveUseableUsername || this.emailsCount.get() > 1 ) ? '' : 'disabled';
     },
 

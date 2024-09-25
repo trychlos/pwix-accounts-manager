@@ -3,6 +3,4 @@
  */
 
 AccountsManager = {
-    // keep the instances keyed by the collection name
-    instances: {}
 };

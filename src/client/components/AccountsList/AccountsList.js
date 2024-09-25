@@ -9,6 +9,7 @@
 
 const assert = require( 'assert' ).strict;
 
+import { AccountsHub } from 'meteor/pwix:accounts-hub';
 import { AccountsTools } from 'meteor/pwix:accounts-tools';
 import { Modal } from 'meteor/pwix:modal';
 import { pwixI18n } from 'meteor/pwix:i18n';
@@ -30,7 +31,7 @@ Template.AccountsList.onCreated( function(){
     self.autorun(() => {
         const name = Template.currentData().name;
         if( name ){
-            const instance = AccountsManager.instances[name];
+            const instance = AccountsHub.instances[name];
             if( instance ){
                 assert( instance instanceof AccountsManager.amClass, 'expect an AccountsManager.amClass, got '+instance );
                 self.AM.amInstance.set( instance );

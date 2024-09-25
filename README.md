@@ -22,7 +22,7 @@ The exported `AccountsManager` global object provides following items:
 
 The `AccountsManager.amClass` class notably determines which schema is handled in which collection. All permissions are also managed at this class level.
 
-This class must be instanciated by the application in its common code.
+The `AccountsManager.amClass` class extends the `AccountsHub.ahClass` and so takes all its instanciation arguments. Like this later, it must be instanciated by the application in its common code.
 
 Constructor takes an object as single argument, with following keys:
 
@@ -123,21 +123,6 @@ Constructor takes an object as single argument, with following keys:
 
     Defauts to nothing.
 
-- `collection`
-
-    When set, the name of the collection to be managed.
-
-    Defauts to the standard Meteor `users` collection.
-
-    Each managed collection is made timestampable, and following fields are added (and maintained) to the fieldset definition:
-
-```js
-    createdAt
-    updatedAt
-    CreatedBy
-    updatedBy
-```
-
 - `hideDisabled`
 
     Whether to hide disabled actions instead of displaying the disabled state.
@@ -171,6 +156,15 @@ Constructor takes an object as single argument, with following keys:
     Rationale: even if it would be very more easy to directly click on the tabular display to toggle a checkbox, some administrators may find this way too much easy, if not error prone, and prefer to have to pass through a distinct page/modal/display unit to securize a bit this update.
 
     Defaults to `false`.
+
+Each managed collection is made timestampable, and following fields are added (and maintained) to the fieldset definition:
+
+```js
+    createdAt
+    updatedAt
+    CreatedBy
+    updatedBy
+```
 
 #### Functions
 

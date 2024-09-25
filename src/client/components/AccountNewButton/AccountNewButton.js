@@ -10,6 +10,7 @@
 
 import _ from 'lodash';
 
+import { AccountsHub } from 'meteor/pwix:accounts-hub';
 import { Modal } from 'meteor/pwix:modal';
 import { pwixI18n } from 'meteor/pwix:i18n';
 
@@ -28,7 +29,7 @@ Template.AccountNewButton.onCreated( function(){
     self.autorun(() => {
         const dataContext = Template.currentData();
         if( dataContext.name ){
-            const amInstance = AccountsManager.instances[dataContext.name];
+            const amInstance = AccountsHub.instances[dataContext.name];
             if( amInstance && amInstance instanceof AccountsManager.amClass ){
                 self.AM.amInstance.set( amInstance );
             }

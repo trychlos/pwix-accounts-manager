@@ -1,6 +1,6 @@
 Package.describe({
     name: 'pwix:accounts-manager',
-    version: '1.3.0-rc',
+    version: '2.0.0-rc',
     summary: 'Provide the most common parts of a simple accounts management system',
     git: 'https://github.com/trychlos/pwix-accounts-manager',
     documentation: 'README.md'
@@ -31,9 +31,8 @@ function configure( api ){
     api.use( 'ecmascript' );
     api.use( 'less@4.0.0', 'client' );
     api.use( 'mongo' );
-    api.use( 'pwix:accounts-conf@1.0.0-rc' );
-    api.use( 'pwix:accounts-tools@2.1.0-rc' );
-    api.use( 'pwix:accounts-ui@1.5.0' );
+    api.use( 'pwix:accounts-hub@1.0.0-rc' );
+    api.use( 'pwix:accounts-ui@2.0.0-rc' );
     api.use( 'pwix:collection-timestampable@2.0.0' );
     api.use( 'pwix:field@1.0.0-rc' );
     api.use( 'pwix:forms@1.0.0-rc' );
