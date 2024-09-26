@@ -108,10 +108,11 @@ Template.account_email_row.onRendered( function(){
                     }
                 }, amInstance.fieldSet()),
                 data: {
-                    item: itemRv
+                    item: itemRv,
+                    amInstance: amInstance
                 },
                 id: Template.currentData().it.id,
-                checkStatusShow: Forms.C.CheckStatus.NONE,
+                fieldStatusShow: Forms.C.ShowStatus.NONE,
                 setForm: Template.currentData().it
             }));
         }
@@ -127,11 +128,11 @@ Template.account_email_row.helpers({
     // rule: doesn't remove last connection way, i.e. keep at least one username or one email address
     // note: weird things happen when inserting/deleting rows, unless we delete only last row..
     minusEnabled(){
-        const haveUseableUsername = this.amInstance?.opts().haveUsername() !== AccountsHub.C.Identifier.NONE && this.item.get().username;
+        const haveUseableUsername = this.amInstance?.get().opts().haveUsername() !== AccountsHub.C.Identifier.NONE && this.item.get().username;
         return Template.instance().AM.isLast.get() && ( haveUseableUsername || this.emailsCount.get() > 1 ) ? '' : 'disabled';
     },
 
-    // provide params to FormsCheckStatusIndicator template
+    // provide params to FormsStatusIndicator template
     //  we are using here the CheckStatus value of the Checker itself
     parmsCheckStatus(){
         return {

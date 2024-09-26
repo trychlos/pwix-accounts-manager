@@ -5,13 +5,14 @@
  */
 
 import { Accounts } from 'meteor/accounts-base';
+import { AccountsHub } from 'meteor/pwix:accounts-hub';
 import { Random } from 'meteor/random';
 
 AccountsManager.server = {};
 
 AccountsManager.server.removeAccount = async function( id, userId, instanceName ){
     let ret = null;
-    const amInstance = AccountsManager.instances[instanceName];
+    const amInstance = AccountsHub.instances[instanceName];
     if( amInstance && amInstance instanceof AccountsManager.amClass ){
         if( !await AccountsManager.isAllowed( 'pwix.accounts_manager.fn.removeAccount', amInstance, userId, id )){
             return null;
@@ -35,7 +36,7 @@ AccountsManager.server.removeAccount = async function( id, userId, instanceName 
 AccountsManager.server.updateAccount = async function( item, userId, instanceName, origItem ){
     let ret = null;
     //console.debug( 'item', item, 'userId', userId, 'instanceName', instanceName );
-    const amInstance = AccountsManager.instances[instanceName];
+    const amInstance = AccountsHub.instances[instanceName];
     if( amInstance && amInstance instanceof AccountsManager.amClass ){
         if( !await AccountsManager.isAllowed( 'pwix.accounts_manager.fn.updateAccount', amInstance, userId, item )){
             return null;
@@ -83,7 +84,7 @@ AccountsManager.server.updateAccount = async function( item, userId, instanceNam
 
 AccountsManager.server.updateAttribute = async function( id, userId, instanceName, modifier ){
     let ret = null;
-    const amInstance = AccountsManager.instances[instanceName];
+    const amInstance = AccountsHub.instances[instanceName];
     if( amInstance && amInstance instanceof AccountsManager.amClass ){
         if( !await AccountsManager.isAllowed( 'pwix.accounts_manager.fn.updateAttribute', amInstance, userId, id, modifier )){
             return null;

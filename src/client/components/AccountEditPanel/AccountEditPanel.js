@@ -246,7 +246,7 @@ Template.AccountEditPanel.events({
         const self = this;
         let item = instance.AM.item.get();
         console.debug( 'item', item );
-        // we cannot call here AccountTools.preferredLabel() as this later requires an id - so compute something not too far of that
+        // we cannot call here AccountHub.ahClass.preferredLabel() as this later requires an id - so compute something not too far of that
         //  must have at least one of these two
         const label = item.emails[0].address || item.username;
         // when creating a new account, we let the user create several by reusing the same modal
@@ -257,27 +257,32 @@ Template.AccountEditPanel.events({
             }
         };
         if( instance.AM.isNew.get()){
-            AccountsUI.Account.createUser({
-                username: item.username,
-                password: item.password,
-                email: item.emails[0].address
-            }, {
-                name: ACCOUNTS_UI_SIGNUP_PANEL,
-                successFn(){
-                    AccountsHub.byEmail( item.emails[0].address ).then( async ( user ) => {
-                        if( user ){
-                            item._id = user._id;
-                            instance.$( '.c-account-ident-panel .ac-signup' ).trigger( 'ac-clear-panel' );
-                            instance.$( '.c-account-roles-panel' ).trigger( 'clear-panel' );
-                            instance.$( '.notes-edit' ).trigger( 'clear-panel' );
-                            instance.AM.$tabbed.trigger( 'tabbed-do-activate', { tabbedId: instance.AM.tabbedId, index: 0 });
-                            const res = await updateRoles( item );
-                        } else {
-                            console.warn( 'unable to retrieve the user account', label );
-                        }
-                    });
-                }
-            });
+            if( instance.AM.amInstance.get().name() === AccountsHub.ahOptions._defaults.name ){
+                AccountsUI.Features.createUser({
+                    username: item.username,
+                    password: item.password,
+                    email: item.emails[0].address
+                }, {
+                    name: ACCOUNTS_UI_SIGNUP_PANEL,
+                    successFn(){
+                        instance.AM.amInstance.get().byEmail( item.emails[0].address ).then( async ( user ) => {
+                            if( user ){
+                                item._id = user._id;
+                                instance.$( '.c-account-ident-panel .ac-signup' ).trigger( 'ac-clear-panel' );
+                                instance.$( '.c-account-roles-panel' ).trigger( 'clear-panel' );
+                                instance.$( '.notes-edit' ).trigger( 'clear-panel' );
+                                instance.AM.$tabbed.trigger( 'tabbed-do-activate', { tabbedId: instance.AM.tabbedId, index: 0 });
+                                const res = await updateRoles( item );
+                            } else {
+                                console.warn( 'unable to retrieve the user account', label );
+                            }
+                        });
+                    }
+                });
+            } else {
+                console.warn( 'refusing to call AccountsUI.Features.createUser() on amInstance', instance.AM.amInstance.get());
+            }
+
         // on update, then... update and close
         } else {
             // update account

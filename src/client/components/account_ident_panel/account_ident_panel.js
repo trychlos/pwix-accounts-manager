@@ -28,7 +28,8 @@ Template.account_ident_panel.onCreated( function(){
     self.AM = {
         fields: {
             loginAllowed: {
-                js: '.js-login-allowed'
+                js: '.js-login-allowed',
+                form_status: Forms.C.ShowStatus.NONE
             },
             lastConnection: {
                 js: '.js-last-login',
@@ -44,7 +45,7 @@ Template.account_ident_panel.onCreated( function(){
     // setup the fields depending of the accounts configuration
     self.autorun(() => {
         const amInstance = Template.currentData().amInstance;
-        if( amInstance && amInstance.opts().haveUsername() !== AccountsHub.C.Identifier.NONE ){
+        if( amInstance && amInstance.get().opts().haveUsername() !== AccountsHub.C.Identifier.NONE ){
             self.AM.fields.username = {
                 js: '.js-username'
             };
@@ -65,7 +66,8 @@ Template.account_ident_panel.onRendered( function(){
                 parent: parentChecker,
                 panel: new Forms.Panel( self.AM.fields, amInstance.fieldSet()),
                 data: {
-                    item: Template.currentData().item
+                    item: Template.currentData().item,
+                    amInstance: amInstance
                 },
                 setForm: Template.currentData().item.get()
             }));
@@ -76,12 +78,12 @@ Template.account_ident_panel.onRendered( function(){
 Template.account_ident_panel.helpers({
     // whether we want an email address
     haveEmailAddress(){
-        return this.amInstance ? this.amInstance.opts().haveEmailAddress() !== AccountsHub.C.Identifier.NONE : false;
+        return this.amInstance ? this.amInstance.get().opts().haveEmailAddress() !== AccountsHub.C.Identifier.NONE : false;
     },
 
     // whether we want a username
     haveUsername(){
-        return this.amInstance ? this.amInstance.opts().haveUsername() !== AccountsHub.C.Identifier.NONE : false;
+        return this.amInstance ? this.amInstance.get().opts().haveUsername() !== AccountsHub.C.Identifier.NONE : false;
     },
 
     // string translation
@@ -125,10 +127,10 @@ Template.account_ident_panel.events({
             const item = this.item.get();
             item.emails = item.emails || [];
             item.emails[0] = item.emails[0] || {};
-            if( this.amInstance.opts().haveEmailAddress() !== AccountsHub.C.Identifier.NONE ){
+            if( this.amInstance.get().opts().haveEmailAddress() !== AccountsHub.C.Identifier.NONE ){
                 item.emails[0].address = data.email;
             }
-            if( this.amInstance.opts().haveUsername() !== AccountsHub.C.Identifier.NONE ){
+            if( this.amInstance.get().opts().haveUsername() !== AccountsHub.C.Identifier.NONE ){
                 item.username = data.username;
             }
             item.password = data.password;

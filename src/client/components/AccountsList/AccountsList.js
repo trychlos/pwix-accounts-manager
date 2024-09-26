@@ -68,7 +68,7 @@ Template.AccountsList.events({
     // delete an account
     'tabular-delete-event .AccountsList'( event, instance, data ){
         let label = null;
-        AccountsHub.preferredLabel( data.item )
+        instance.AM.amInstance.get().preferredLabel( data.item )
             .then(( res ) => {
                 label = res.label;
                 Meteor.callAsync( 'pwix_accounts_manager_accounts_remove', data.item._id, instance.name )
@@ -86,7 +86,7 @@ Template.AccountsList.events({
     'tabular-edit-event .AccountsList'( event, instance, data ){
         let label = null;
         const self = this;
-        AccountsHub.preferredLabel( data.item )
+        instance.AM.amInstance.get().preferredLabel( data.item )
             .then(( res ) => {
                 Modal.run({
                     ...self,
@@ -95,7 +95,7 @@ Template.AccountsList.events({
                     mdClasses: this.mdClasses || 'modal-lg',
                     mdClassesContent: AccountsManager.configure().classes + ' ' + instance.AM.amInstance.get().classes(),
                     mdTitle: pwixI18n.label( I18N, 'edit.modal_title', res.label ),
-                    item: instance.AM.amInstance.get().byId( data.item._id )
+                    item: instance.AM.amInstance.get().amById( data.item._id )
                 });
             });
         return false;

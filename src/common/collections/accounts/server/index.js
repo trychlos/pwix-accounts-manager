@@ -2,8 +2,6 @@
  * pwix:accounts-manager/src/common/collections/accounts/server/index.js
  */
 
-import '../index.js';
-//
 import './deny.js';
 import './functions.js';
 import './methods.js';

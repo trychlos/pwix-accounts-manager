@@ -6,7 +6,7 @@ import { AccountsHub } from 'meteor/pwix:accounts-hub';
 
 // returns a cursor of all accounts
 Meteor.publish( 'pwix_accounts_manager_accounts_list_all', async function( instanceName ){
-    const amInstance = AccountsManager.instances[instanceName];
+    const amInstance = AccountsHub.instances[instanceName];
     if( amInstance && amInstance instanceof AccountsManager.amClass ){
         if( !await AccountsManager.isAllowed( 'pwix.accounts_manager.pub.list_all', amInstance, this.userId )){
             return false;
