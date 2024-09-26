@@ -1,5 +1,5 @@
 /*
- * pwix:accounts-manager/src/common/collections/accounts/server/publish.js
+ * pwix:accounts-manager/src/server/js/publish.js
  */
 
 import { AccountsHub } from 'meteor/pwix:accounts-hub';
