@@ -247,7 +247,7 @@ It defines following tasks:
     - `pwix.accounts_manager.feat.new`: display a button to create a new account
 
 - at the server level
-    - `pwix.accounts_manager.fn.removeAccount`, with args `user<String|Object>, amInstance<amClass>`: remove the `user` account
+    - `pwix.accounts_manager.fn.removeById`, with args `user<String|Object>, amInstance<amClass>`: remove the `user` account
     - `pwix.accounts_manager.fn.updateAccount`, with args `user<Object>, amInstance<amClass>`: update the `user` account
     - `pwix.accounts_manager.fn.updateAttribute`, with args `user<String|Object>, amInstance<amClass>, modifier<Object>`: apply the `modifier` Mongo modifier to the `user` account
 

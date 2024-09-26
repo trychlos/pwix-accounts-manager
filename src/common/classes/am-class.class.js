@@ -154,7 +154,7 @@ export class amClass extends AccountsHub.ahClass {
         Tracker.autorun(() => {
             const id = Meteor.userId();
             if( id ){
-                Meteor.callAsync( 'pwix_accounts_manager_accounts_update_attribute', id, self.collectionName(), { lastConnection: new Date() });
+                Meteor.callAsync( 'pwix_accounts_manager_accounts_update_byid', self.collectionName(), id, { lastConnection: new Date() });
             }
         });
     }

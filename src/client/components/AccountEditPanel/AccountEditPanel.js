@@ -286,7 +286,7 @@ Template.AccountEditPanel.events({
         // on update, then... update and close
         } else {
             // update account
-            Meteor.callAsync( 'pwix_accounts_manager_accounts_update_account', item, self.name, self.item ).then( async ( res ) => {
+            Meteor.callAsync( 'pwix_accounts_manager_accounts_update_account', self.name, item, self.item ).then( async ( res ) => {
                 if( res ){
                     res = await updateRoles( item );
                 }
