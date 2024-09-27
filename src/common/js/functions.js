@@ -8,7 +8,7 @@
  * @param {String} userId
  * @returns {Boolean} true if the current user is allowed to do the action
  */
-AccountsManager.isAllowed = async function( action, amInstance, userId=null ){
+AccountsManager.isAllowed = async function( action, userId=null, amInstance ){
     let allowed = false;
     const fn = amInstance.allowFn();
     if( fn ){

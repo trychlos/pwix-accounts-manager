@@ -12,7 +12,7 @@ AccountsManager.s.removeById = async function( instanceName, id, userId ){
     let ret = null;
     const amInstance = AccountsHub.instances[instanceName];
     if( amInstance && amInstance instanceof AccountsManager.amClass ){
-        if( !await AccountsManager.isAllowed( 'pwix.accounts_manager.fn.removeById', amInstance, userId, id )){
+        if( !await AccountsManager.isAllowed( 'pwix.accounts_manager.fn.removeById', userId, amInstance, id )){
             return null;
         }
         try {
@@ -36,7 +36,7 @@ AccountsManager.s.updateAccount = async function( instanceName, item, userId, or
     //console.debug( 'item', item, 'userId', userId, 'instanceName', instanceName );
     const amInstance = AccountsHub.instances[instanceName];
     if( amInstance && amInstance instanceof AccountsManager.amClass ){
-        if( !await AccountsManager.isAllowed( 'pwix.accounts_manager.fn.updateAccount', amInstance, userId, item )){
+        if( !await AccountsManager.isAllowed( 'pwix.accounts_manager.fn.updateAccount', userId, amInstance, item )){
             return null;
         }
         const itemId = item._id;
@@ -84,7 +84,7 @@ AccountsManager.s.updateById = async function( instanceName, id, userId, modifie
     let ret = null;
     const amInstance = AccountsHub.instances[instanceName];
     if( amInstance && amInstance instanceof AccountsManager.amClass ){
-        if( !await AccountsManager.isAllowed( 'pwix.accounts_manager.fn.updateById', amInstance, userId, id, modifier )){
+        if( !await AccountsManager.isAllowed( 'pwix.accounts_manager.fn.updateById', userId, amInstance, id, modifier )){
             return null;
         }
         try {

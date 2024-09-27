@@ -8,7 +8,7 @@ import { AccountsHub } from 'meteor/pwix:accounts-hub';
 Meteor.publish( 'pwix_accounts_manager_accounts_list_all', async function( instanceName ){
     const amInstance = AccountsHub.instances[instanceName];
     if( amInstance && amInstance instanceof AccountsManager.amClass ){
-        if( !await AccountsManager.isAllowed( 'pwix.accounts_manager.pub.list_all', amInstance, this.userId )){
+        if( !await AccountsManager.isAllowed( 'pwix.accounts_manager.pub.list_all', this.userId ), amInstance ){
             return false;
         }
         return amInstance.collection().find({}, { transform: AccountsHub.cleanupUserDocument });

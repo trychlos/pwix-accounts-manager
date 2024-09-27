@@ -42,7 +42,7 @@ Template.AccountsList.onCreated( function(){
 Template.AccountsList.helpers({
     // whether the current user has the permission to see the list of accounts
     canList(){
-        const res = AccountsManager.isAllowed( 'pwix.accounts_manager.pub.list_all', Template.instance().AM.amInstance.get(), Meteor.userId());
+        const res = AccountsManager.isAllowed( 'pwix.accounts_manager.pub.list_all', Meteor.userId(), Template.instance().AM.amInstance.get());
         //console.debug( 'res', res );
         return res;
     },

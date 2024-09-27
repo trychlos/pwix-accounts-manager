@@ -40,7 +40,7 @@ Template.AccountNewButton.onCreated( function(){
 Template.AccountNewButton.helpers({
     // whether the user is allowed to create new account
     canCreate(){
-        return AccountsManager.isAllowed( 'pwix.accounts_manager.feat.new', Template.instance().AM.amInstance.get(), Meteor.userId());
+        return AccountsManager.isAllowed( 'pwix.accounts_manager.feat.new', Meteor.userId(), Template.instance().AM.amInstance.get());
     },
 
     // parms for new account (plusButton)
