@@ -14,6 +14,7 @@
     - Let the caller change the configuration of existing tabs
     - Have a messager as soon as we run in a modal
     - Fix the data context of added tabs
+    - Review the requested permissions to better suit CRUD standards
 
 ### 1.2.0
 

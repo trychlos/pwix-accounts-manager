@@ -115,7 +115,7 @@ Constructor takes an object as single argument, with following keys:
 
     If the function is not provided, then the default is to deny all actions (and do you really want that ?).
 
-    `allowFn` prototype is: `async allowFn( action<String> [, ...<Any> ] ): Boolean`
+    `allowFn` prototype is: `async allowFn( action<String>, userId<String> [, ...<Any> ] ): Boolean`
 
 - `classes`
 
@@ -241,18 +241,19 @@ Known data context is:
 This package can take advantage of `pwix:permissions` package to manage the user permissions.
 
 It defines following tasks:
+- `pwix.accounts_manager.feat.list`: list all accounts, with additional arguments as an object with following keys:
+    - amInstance: the `amClass` instance
 
-- at the user interface level
-    - `pwix.accounts_manager.feat.edit`, with args `user<String|Object>`: edit the `user` account
-    - `pwix.accounts_manager.feat.new`: display a button to create a new account
+- `pwix.accounts_manager.feat.create`: create a new account, with additional arguments as an object with following keys:
+    - amInstance: the `amClass` instance
 
-- at the server level
-    - `pwix.accounts_manager.fn.removeById`, with args `user<String|Object>, amInstance<amClass>`: remove the `user` account
-    - `pwix.accounts_manager.fn.updateAccount`, with args `user<Object>, amInstance<amClass>`: update the `user` account
-    - `pwix.accounts_manager.fn.updateAttribute`, with args `user<String|Object>, amInstance<amClass>, modifier<Object>`: apply the `modifier` Mongo modifier to the `user` account
+- `pwix.accounts_manager.feat.edit`: update the user account, with additional arguments as an object with following keys:
+    - amInstance: the `amClass` instance
+    - id: the account identifier
 
-- on publications
-    - `pwix.accounts_manager.pub.list_all`, with args `user<String|Object>, amInstance<amClass>`: list all accounts and their contents (but the `service` and `profile` objects)
+- `pwix.accounts_manager.fn.delete`: remove the identified account, with additional arguments as an object with following keys:
+    - amInstance: the `amClass` instance
+    - id: the account identifier
 
 ## Configuration
 
