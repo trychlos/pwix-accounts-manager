@@ -119,6 +119,14 @@ Template.AccountEditPanel.onRendered( function(){
             }
         }));
     });
+
+    // track the checker
+    self.autorun(() => {
+        const checker = self.AM.checker.get();
+        if( checker ){
+            //console.debug( 'checker', checker.status(), checker.validity());
+        }
+    });
 });
 
 Template.AccountEditPanel.helpers({
@@ -245,7 +253,7 @@ Template.AccountEditPanel.events({
         //console.debug( event, instance );
         const self = this;
         let item = instance.AM.item.get();
-        console.debug( 'item', item );
+        //console.debug( 'item', item );
         // we cannot call here AccountHub.ahClass.preferredLabel() as this later requires an id - so compute something not too far of that
         //  must have at least one of these two
         const label = item.emails[0].address || item.username;
@@ -265,7 +273,7 @@ Template.AccountEditPanel.events({
                 }, {
                     name: ACCOUNTS_UI_SIGNUP_PANEL,
                     successFn(){
-                        instance.AM.amInstance.get().byEmail( item.emails[0].address ).then( async ( user ) => {
+                        instance.AM.amInstance.get().byEmailAddress( item.emails[0].address ).then( async ( user ) => {
                             if( user ){
                                 item._id = user._id;
                                 instance.$( '.c-account-ident-panel .ac-signup' ).trigger( 'ac-clear-panel' );

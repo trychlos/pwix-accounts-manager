@@ -43,7 +43,6 @@ const _id2index = function( array, id ){
 export const amClassChecks = {
 
     async email_address( value, data, opts ){
-        console.debug( 'email_address', arguments );
         _assert_data_itemrv( 'amClassChecks.email_address()', data );
         let item = data.item.get();
         const index = opts.id ? _id2index( item.emails, opts.id ) : -1;

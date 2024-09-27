@@ -84,7 +84,7 @@ export const amClassFielddef = {
                 dt_title: pwixI18n.label( I18N, 'list.email_address_th' ),
                 dt_template: Meteor.isClient && Template.dt_email_address,
                 form_check: amClassChecks.email_address,
-                form_type: instance.opts().haveEmailAddress() !== AccountsHub.C.Identifier.MANDATORY ? Forms.FieldType.C.MANDATORY : Forms.FieldType.C.OPTIONAL
+                form_type: instance.opts().haveEmailAddress() === AccountsHub.C.Identifier.MANDATORY ? Forms.FieldType.C.MANDATORY : Forms.FieldType.C.OPTIONAL
             },
             {
                 name: 'emails.$.verified',
@@ -117,7 +117,7 @@ export const amClassFielddef = {
                 optional: true,
                 dt_title: pwixI18n.label( I18N, 'list.username_th' ),
                 form_check: amClassChecks.username,
-                form_type: instance.opts().haveUsername() !== AccountsHub.C.Identifier.MANDATORY ? Forms.FieldType.C.MANDATORY : Forms.FieldType.C.OPTIONAL
+                form_type: instance.opts().haveUsername() === AccountsHub.C.Identifier.MANDATORY ? Forms.FieldType.C.MANDATORY : Forms.FieldType.C.OPTIONAL
             });
         }
 
