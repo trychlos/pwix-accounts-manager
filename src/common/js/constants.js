@@ -7,8 +7,7 @@ AccountsManager.C = {
     Verbose: {
         NONE: 0,
         CONFIGURE:      0x01 <<  0,
-        FUNCTIONS:      0x01 <<  1,
-        INSTANCE:       0x01 <<  2
+        FUNCTIONS:      0x01 <<  1
     }
 };
 

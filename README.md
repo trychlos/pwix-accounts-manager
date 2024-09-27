@@ -291,10 +291,6 @@ Known configuration options are:
 
         Trace functions calls
 
-    - `AccountsManager.C.Verbose.INSTANCE`
-
-        Trace `amClass` instanciation
-
     Defaults to `AccountsManager.C.Verbose.CONFIGURE`.
 
 A function can be provided by the application for each of these parameters. The function will be called without argument and must return a suitable value.

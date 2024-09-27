@@ -199,10 +199,6 @@ export class amClass extends AccountsHub.ahClass {
         this.#args = o;
         const self = this;
 
-        if( AccountsManager.configure().verbosity & AccountsManager.C.Verbose.INSTANCE ){
-            console.log( 'pwix:accounts-manager.amClass() instanciated for', this.opts().collection());
-        }
-
         // define the Field.Set
         let set = this._baseFieldset();
         let adds = this._additionalFieldset();
