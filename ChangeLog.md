@@ -15,6 +15,7 @@
     - Have a messager as soon as we run in a modal
     - Fix the data context of added tabs
     - Review the requested permissions to better suit CRUD standards
+    - Simplify AccountsList component
 
 ### 1.2.0
 

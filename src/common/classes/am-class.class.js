@@ -195,6 +195,7 @@ export class amClass extends AccountsHub.ahClass {
     constructor( o ){
         assert( o && _.isObject( o ), 'pwix:accounts-manager.amClass() expects an object argument, got '+o );
         super( ...arguments );
+        //console.debug( 'instanciating', this.name());
 
         this.#args = o;
         const self = this;

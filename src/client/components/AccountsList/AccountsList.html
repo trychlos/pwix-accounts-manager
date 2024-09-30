@@ -2,7 +2,7 @@
     <div class="AccountsList">
 
         {{#if canList }}
-            {{> tabular_ext table=tabularName id=tabularId class="table table-striped table-bordered table-condensed" }}
+            {{> tabular_ext table=tabularName class="table table-striped table-bordered table-condensed" }}
         {{else}}
             <div class="not-allowed">
                 {{{ i18n key="list.not_allowed" }}}

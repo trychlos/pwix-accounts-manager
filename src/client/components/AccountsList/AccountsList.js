@@ -4,7 +4,7 @@
  * Display here a table whith a row per account (the 'item'), whatever be the count of email addresses and if the account has a username.
  *
  * Parms:
- * - see README
+ * - name: the amClass instance name
  */
 
 const assert = require( 'assert' ).strict;
@@ -12,7 +12,6 @@ const assert = require( 'assert' ).strict;
 import { AccountsHub } from 'meteor/pwix:accounts-hub';
 import { Modal } from 'meteor/pwix:modal';
 import { pwixI18n } from 'meteor/pwix:i18n';
-import { ReactiveVar } from 'meteor/reactive-var';
 import { Tolert } from 'meteor/pwix:tolert';
 
 import '../AccountEditPanel/AccountEditPanel.js';
@@ -23,28 +22,23 @@ Template.AccountsList.onCreated( function(){
     const self = this;
 
     self.AM = {
-        amInstance: new ReactiveVar( null )
-    };
-
-    // get the amClass instance from its name
-    self.autorun(() => {
-        const name = Template.currentData().name;
-        if( name ){
-            const instance = AccountsHub.instances[name];
+        // get the amClass instance from its name
+        amInstance( name ){
+            let instance = name ? AccountsHub.instances[name] : null;
             if( instance ){
                 assert( instance instanceof AccountsManager.amClass, 'expect an AccountsManager.amClass, got '+instance );
-                self.AM.amInstance.set( instance );
             }
+            return instance;
         }
-    });
+    };
 });
 
 Template.AccountsList.helpers({
     // whether the current user has the permission to see the list of accounts
     canList(){
-        const res = AccountsManager.isAllowed( 'pwix.accounts_manager.feat.list', Meteor.userId(), { amInstance: Template.instance().AM.amInstance.get() });
-        //console.debug( 'res', res );
-        return res;
+        const instance = Template.instance().AM.amInstance( this.name );
+        const allowed = instance ? AccountsManager.isAllowed( 'pwix.accounts_manager.feat.list', Meteor.userId(), { amInstance: instance }) : false;
+        return allowed;
     },
 
     // string translation
@@ -52,15 +46,10 @@ Template.AccountsList.helpers({
         return pwixI18n.label( I18N, arg.hash.key );
     },
 
-    // tabular identifier
-   tabularId(){
-        return TABULAR_ID;
-    },
-
     // the Tabular.Table instance
    tabularName(){
-        const name = Template.instance().AM.amInstance.get().tabularName();
-        return Package['aldeed:tabular'].default.tablesByName[name];  
+        const name = Template.instance().AM.amInstance( this.name )?.tabularName();
+        return Package['aldeed:tabular'].default.tablesByName[name];
     }
 });
 
@@ -68,7 +57,7 @@ Template.AccountsList.events({
     // delete an account
     'tabular-delete-event .AccountsList'( event, instance, data ){
         let label = null;
-        instance.AM.amInstance.get().preferredLabel( data.item )
+        instance.AM.amInstance( this.name )?.preferredLabel( data.item )
             .then(( res ) => {
                 label = res.label;
                 Meteor.callAsync( 'pwix_accounts_manager_accounts_remove', instance.name, data.item._id )
@@ -86,16 +75,17 @@ Template.AccountsList.events({
     'tabular-edit-event .AccountsList'( event, instance, data ){
         let label = null;
         const self = this;
-        instance.AM.amInstance.get().preferredLabel( data.item )
+        const amInstance = instance.AM.amInstance( this.name );
+        amInstance.preferredLabel( data.item )
             .then(( res ) => {
                 Modal.run({
                     ...self,
                     mdBody: 'AccountEditPanel',
                     mdButtons: [ Modal.C.Button.CANCEL, Modal.C.Button.OK ],
                     mdClasses: this.mdClasses || 'modal-lg',
-                    mdClassesContent: AccountsManager.configure().classes + ' ' + instance.AM.amInstance.get().classes(),
+                    mdClassesContent: AccountsManager.configure().classes + ' ' + amInstance.classes(),
                     mdTitle: pwixI18n.label( I18N, 'edit.modal_title', res.label ),
-                    item: instance.AM.amInstance.get().amById( data.item._id )
+                    item: amInstance.amById( data.item._id )
                 });
             });
         return false;
