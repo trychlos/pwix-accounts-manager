@@ -84,7 +84,7 @@ Constructor takes an object as single argument, with following keys:
     }
 ```
 
-    Providing a `baseFieldset` replaces the above default fieldset definition
+    Providing a `baseFieldset` replaces the above default fieldset definition.
 
 - `additionalFieldset`
 
