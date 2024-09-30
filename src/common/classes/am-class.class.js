@@ -63,7 +63,7 @@ export class amClass extends AccountsHub.ahClass {
         if( set ){
             assert( set instanceof Field.Set, 'pwix:accounts-manager.amClass.baseFieldset() expects a Field.Set argument, got '+set );
         } else {
-            let columns = amClassFielddef.default( this );
+            let columns = this.defaultFieldDef();
             set = new Field.Set( columns );
         }
         return set;
@@ -277,6 +277,13 @@ export class amClass extends AccountsHub.ahClass {
      */
     collectionName(){
         return this.opts().collection();
+    }
+
+    /**
+     * @returns {Array} the default columns definitions for this instance
+     */
+    defaultFieldDef(){
+        return amClassFielddef.default( this );
     }
 
     /**

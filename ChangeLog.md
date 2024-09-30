@@ -16,7 +16,8 @@
     - Fix the data context of added tabs
     - Review the requested permissions to better suit CRUD standards
     - Simplify AccountsList component
-    - Introduce tabularFieldsDef tabular display definition
+    - Define tabularFieldsDef tabular display definition
+    - Define new amClass.defaultFieldDef() method
 
 ### 1.2.0
 
