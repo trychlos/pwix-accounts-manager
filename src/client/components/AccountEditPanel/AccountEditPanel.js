@@ -233,7 +233,8 @@ Template.AccountEditPanel.helpers({
         //console.debug( 'tabs', tabs, this );
         return {
             name: ACCOUNT_EDIT_TABBED,
-            tabs: tabs
+            tabs: tabs,
+            activateTab: paneData.isNew ? 0 : undefined
         };
     }
 });

@@ -18,6 +18,7 @@
     - Simplify AccountsList component
     - Define tabularFieldsDef tabular display definition
     - Define new amClass.defaultFieldDef() method
+    - Always open new account dialog on the first pane
 
 ### 1.2.0
 
