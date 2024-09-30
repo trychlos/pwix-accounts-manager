@@ -22,7 +22,7 @@ export const amClassTabular = {
         const tabular = new Tabular.Table({
             name: amInstance.tabularName(),
             collection: amInstance.collectionDb(),
-            columns: amInstance.fieldSet().toTabular(),
+            columns: amInstance.tabularFieldset().toTabular(),
             tabular: {
                 // do not let the user delete himself
                 async deleteButtonEnabled( it ){

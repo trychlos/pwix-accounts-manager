@@ -157,6 +157,12 @@ Constructor takes an object as single argument, with following keys:
 
     Defaults to `false`.
 
+- `tabularFieldsDef`
+
+    An optional array of columns definitions to replace the default tabular display.
+
+    Defaults to none.
+
 Each managed collection is made timestampable, and following fields are added (and maintained) to the fieldset definition:
 
 ```js

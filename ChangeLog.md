@@ -16,6 +16,7 @@
     - Fix the data context of added tabs
     - Review the requested permissions to better suit CRUD standards
     - Simplify AccountsList component
+    - Introduce tabularFieldsDef tabular display definition
 
 ### 1.2.0
 

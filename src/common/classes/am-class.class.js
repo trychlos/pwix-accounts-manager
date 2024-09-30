@@ -34,6 +34,7 @@ export class amClass extends AccountsHub.ahClass {
 
     // runtime
     #tabular = null;
+    #tabularFieldset = null;
     #usersHandle = null;
     #rolesHandle = null;
     #usersList = new ReactiveVar( [] );
@@ -305,7 +306,8 @@ export class amClass extends AccountsHub.ahClass {
     }
 
     /**
-     * @returns {Boolean} whether tabular checkboxes are active
+     * Getter
+     * @returns {Boolean} whether tabular checkboxes are active, defaulting to false
      */
     tabularActiveCheckboxes(){
         let active = this.#args.tabularActiveCheckboxes;
@@ -313,6 +315,17 @@ export class amClass extends AccountsHub.ahClass {
             active = false;
         }
         return active;
+    }
+
+    /**
+     * @returns {String} the Tabular.Table instance name
+     */
+    tabularFieldset(){
+        if( !this.#tabularFieldset ){
+            const def = this.#args.tabularFieldsDef || null;
+            this.#tabularFieldset = def ? new Field.Set( def ) : this.fieldSet();
+        }
+        return this.#tabularFieldset;
     }
 
     /**
