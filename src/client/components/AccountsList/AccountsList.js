@@ -84,7 +84,7 @@ Template.AccountsList.events({
                     mdButtons: [ Modal.C.Button.CANCEL, Modal.C.Button.OK ],
                     mdClasses: this.mdClasses || 'modal-lg',
                     mdClassesContent: AccountsManager.configure().classes + ' ' + amInstance.classes(),
-                    mdTitle: pwixI18n.label( I18N, 'edit.modal_title', res.label ),
+                    mdTitle: this.mdTitle || pwixI18n.label( I18N, 'edit.modal_title', res.label ),
                     item: amInstance.amById( data.item._id )
                 });
             });

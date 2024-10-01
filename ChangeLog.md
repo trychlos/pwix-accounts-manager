@@ -20,6 +20,7 @@
     - Define new amClass.defaultFieldDef() method
     - Always open new account dialog on the first pane
     - Define 'haveIdent' parameter
+    - Consider the mdTitle passed by the caller
 
 ### 1.2.0
 

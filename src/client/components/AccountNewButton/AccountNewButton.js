@@ -61,7 +61,7 @@ Template.AccountNewButton.events({
             mdButtons: [ Modal.C.Button.CANCEL, Modal.C.Button.OK ],
             mdClasses: this.mdClasses || 'modal-lg',
             mdClassesContent: AccountsManager.configure().classes + ' ' + instance.AM.amInstance.get().classes(),
-            mdTitle: pwixI18n.label( I18N, 'new.modal_title' ),
+            mdTitle: this.mdTitle || pwixI18n.label( I18N, 'new.modal_title' ),
             item: null
         });
         return false;
