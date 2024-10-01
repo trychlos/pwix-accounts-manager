@@ -171,7 +171,7 @@ export const amClassFielddef = {
             }
         );
         // if the application uses the pwix:roles package, then add a column which summarizes the main roles of the account
-        if( Package['pwix:roles'] ){
+        if( instance.haveRoles()){
             columns.push({
                 name: 'roles',
                 schema: false,
