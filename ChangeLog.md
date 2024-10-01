@@ -22,6 +22,7 @@
     - Define 'haveIdent' parameter
     - Consider the mdTitle passed by the caller
     - Define new clientNewFn() function to define a new account
+    - Fix configuration overrides
 
 ### 1.2.0
 

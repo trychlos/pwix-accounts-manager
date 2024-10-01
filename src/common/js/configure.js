@@ -25,8 +25,7 @@ AccountsManager._defaults = {
  */
 AccountsManager.configure = function( o ){
     if( o && _.isObject( o )){
-        _conf = AccountsManager._conf.get();
-        _.merge( _conf, AccountsManager._defaults, o );
+        _conf = _.merge( AccountsManager._defaults, _conf, o );
         AccountsManager._conf.set( _conf );
         // be verbose if asked for
         if( _conf.verbosity & AccountsManager.C.Verbose.CONFIGURE ){
@@ -38,5 +37,5 @@ AccountsManager.configure = function( o ){
     return AccountsManager._conf.get();
 }
 
-_.merge( _conf, AccountsManager._defaults );
+_conf = _.merge( {}, AccountsManager._defaults );
 AccountsManager._conf.set( _conf );
