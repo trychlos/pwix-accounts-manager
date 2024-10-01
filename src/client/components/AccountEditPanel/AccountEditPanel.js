@@ -150,14 +150,13 @@ Template.AccountEditPanel.helpers({
 
     // parms for TabbedTemplate
     parmsTabbed(){
+        const amInstance = Template.instance().AM.amInstance.get();
         const paneData = {
             item: Template.instance().AM.item,
             isNew: Template.instance().AM.isNew.get(),
             checker: Template.instance().AM.checker,
             amInstance: Template.instance().AM.amInstance
         };
-        const adminNotes = Template.instance().AM.amInstance.get().fieldSet().byName( 'adminNotes' );
-        const userNotes = Template.instance().AM.amInstance.get().fieldSet().byName( 'userNotes' );
         let tabs = [];
         if( this.tabsBefore ){
             if( _.isArray( this.tabsBefore ) && this.tabsBefore.length ){
@@ -169,12 +168,14 @@ Template.AccountEditPanel.helpers({
                 console.warn( 'expect tabsBefore be an array, got', this.tabsBefore );
             }
         }
-        tabs.push({
-            name: 'account_ident_tab',
-            navLabel: pwixI18n.label( I18N, 'tabs.ident_title' ),
-            paneTemplate: 'account_ident_panel',
-            paneData: paneData
-        });
+        if( amInstance.haveIdent()){
+            tabs.push({
+                name: 'account_ident_tab',
+                navLabel: pwixI18n.label( I18N, 'tabs.ident_title' ),
+                paneTemplate: 'account_ident_panel',
+                paneData: paneData
+            });
+        }
         if( this.tabs ){
             if( _.isArray( this.tabs ) && this.tabs.length ){
                 this.tabs.forEach(( tab ) => {
@@ -185,7 +186,7 @@ Template.AccountEditPanel.helpers({
                 console.warn( 'expect tabs be an array, got', this.tabs );
             }
         }
-        if( Package['pwix:roles'] ){
+        if( amInstance.haveRoles()){
             tabs.push({
                 name: 'account_roles_tab',
                 navLabel: pwixI18n.label( I18N, 'tabs.roles_title' ),
@@ -193,8 +194,9 @@ Template.AccountEditPanel.helpers({
                 paneData: paneData
             });
         }
-        tabs.push(
-            {
+        const adminNotes = amInstance.fieldSet().byName( 'adminNotes' );
+        if( adminNotes ){
+            tabs.push({
                 name: 'account_admin_notes_tab',
                 navLabel: adminNotes.toForm().title,
                 paneTemplate: 'NotesEdit',
@@ -204,8 +206,11 @@ Template.AccountEditPanel.helpers({
                         field: adminNotes
                     };
                 }
-            },
-            {
+            });
+        }
+        const userNotes = amInstance.fieldSet().byName( 'userNotes' );
+        if( userNotes ){
+            tabs.push({
                 name: 'account_user_notes_tab',
                 navLabel: userNotes.toForm().title,
                 paneTemplate: 'NotesEdit',
@@ -215,8 +220,8 @@ Template.AccountEditPanel.helpers({
                         field: userNotes
                     };
                 }
-            }
-        );
+            });
+        }
         // update these tabs if asked for
         if( this.tabsUpdates ){
             Object.keys( this.tabsUpdates ).forEach(( it ) => {

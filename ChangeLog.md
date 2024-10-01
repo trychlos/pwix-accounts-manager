@@ -19,6 +19,7 @@
     - Define tabularFieldsDef tabular display definition
     - Define new amClass.defaultFieldDef() method
     - Always open new account dialog on the first pane
+    - Define 'haveIdent' parameter
 
 ### 1.2.0
 

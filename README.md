@@ -129,6 +129,10 @@ Constructor takes an object as single argument, with following keys:
 
     Defaults to `true`: disabled actions are hidden.
 
+- `haveIdent`
+
+    Whether to display the 'ident' panel, defaulting to `true`.
+
 - `haveRoles`
 
     Whether to display a Roles panel, defaulting to `true`.

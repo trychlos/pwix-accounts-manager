@@ -28,6 +28,7 @@ export class amClass extends AccountsHub.ahClass {
 
     // checked arguments with their default values
     #fieldSet = null;
+    #haveIdent = null;
     #haveRoles = null;
     #withGlobals = null;
     #withScoped = null;
@@ -130,12 +131,25 @@ export class amClass extends AccountsHub.ahClass {
     }
 
     /*
+     * @returns {Boolean} whether display the 'ident' panel
+     */
+    _haveIdent(){
+        let have = this.#args.haveIdent;
+        if( have !== undefined ){
+            assert( have === true || have === false, 'pwix:accounts-manager.amClass._haveIdent() expects a Boolean argument, got '+have );
+        } else {
+            have = true;
+        }
+        return have;
+    }
+
+    /*
      * @returns {Boolean} whether display a Roles panel
      *  This method also takes into account the presence or not of the pwix:roles package
      */
     _haveRoles(){
         let have = this.#args.haveRoles;
-        if( have ){
+        if( have !== undefined ){
             assert( have === true || have === false, 'pwix:accounts-manager.amClass._haveRoles() expects a Boolean argument, got '+have );
         } else {
             have = true;
@@ -217,6 +231,7 @@ export class amClass extends AccountsHub.ahClass {
         this.#tabular = amClassTabular.new( this );
     
         // interpret arguments
+        this.#haveIdent = this._haveIdent();
         this.#haveRoles = this._haveRoles();
         this.#withGlobals = this._withGlobals();
         this.#withScoped = this._withScoped();
@@ -284,6 +299,13 @@ export class amClass extends AccountsHub.ahClass {
      */
     defaultFieldDef(){
         return amClassFielddef.default( this );
+    }
+
+    /**
+     * @returns {Boolean} whether display the 'ident' panel
+     */
+    haveIdent(){
+        return this.#haveIdent;
     }
 
     /**
