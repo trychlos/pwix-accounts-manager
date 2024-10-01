@@ -294,7 +294,19 @@ Template.AccountEditPanel.events({
                     }
                 });
             } else {
-                console.warn( 'refusing to call AccountsUI.Features.createUser() on amInstance', instance.AM.amInstance.get());
+                const fn = instance.AM.amInstance.get().clientNewFn();
+                if( fn ){
+                    fn( item, instance.AM.amInstance.get().clientNewArgs()).then(( res ) => {
+                        if( res ){
+                            Tolert.success( pwixI18n.label( I18N, 'edit.new_success', label ));
+                        } else {
+                            Tolert.error( pwixI18n.label( I18N, 'edit.new_error', label ));
+                        }
+                        Modal.close();
+                    });
+                } else {
+                    console.warn( 'refusing to call AccountsUI.Features.createUser() on amInstance', instance.AM.amInstance.get());
+                }
             }
 
         // on update, then... update and close

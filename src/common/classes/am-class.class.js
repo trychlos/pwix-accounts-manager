@@ -281,6 +281,20 @@ export class amClass extends AccountsHub.ahClass {
     }
 
     /**
+     * @returns {Any} arguments to the client-side function to create a new account
+     */
+    clientNewArgs(){
+        return this.#args.clientNewArgs || null;
+    }
+
+    /**
+     * @returns {Function} a client-side function to create a new account
+     */
+    clientNewFn(){
+        return this.#args.clientNewFn || null;
+    }
+
+    /**
      * @returns {Mongo.Collection} the addressed collection
      */
     collectionDb(){

@@ -27,7 +27,9 @@ AccountsManager.i18n = {
             edit: {
                 edit_error: 'We are unfortunately unable to update the "%s" account. Please retry later',
                 edit_success: 'The account "%s" has been successfully updated',
-                modal_title: 'Editing "%s" account'
+                modal_title: 'Editing "%s" account',
+                new_error: 'We are unfortunately unable to create the "%s" identity. Please retry later',
+                new_success: 'The identity "%s" has been successfully created',
             },
             list: {
                 admin_notes_th: 'Admin Notes',

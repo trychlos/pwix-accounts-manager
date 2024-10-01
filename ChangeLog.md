@@ -21,6 +21,7 @@
     - Always open new account dialog on the first pane
     - Define 'haveIdent' parameter
     - Consider the mdTitle passed by the caller
+    - Define new clientNewFn() function to define a new account
 
 ### 1.2.0
 

@@ -123,6 +123,18 @@ Constructor takes an object as single argument, with following keys:
 
     Defauts to nothing.
 
+- `clientNewFn`
+
+    A client-side function to insert a new account.
+
+    Defaults to `AccountsUI.Features.createUser` for the `users` collection, or a warning message else.
+
+    Prototype must be `async clientNewFn( item<Object> [, clientNewArgs ]): Boolean`.
+
+- `clientNewArgs`
+
+    Arguments to be passed to above `clientNewFn`, defaulting to none.
+
 - `hideDisabled`
 
     Whether to hide disabled actions instead of displaying the disabled state.
