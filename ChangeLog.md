@@ -25,6 +25,7 @@
     - Fix configuration overrides
     - Remove amClass.collectionDb() method (rather use ahClass.collection())
     - Define 'serverTabularExtend' amClass parameter
+    - Fix default ordering by ascending email address
 
 ### 1.2.0
 

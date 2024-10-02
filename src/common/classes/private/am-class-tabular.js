@@ -49,6 +49,7 @@ export const amClassTabular = {
                     return pwixI18n.label( I18N, 'buttons.info_title', await _tabular_identifier( amInstance, it ));
                 }
             },
+            order: [[ 0, 'asc' ]],
             destroy: true
         });
         return tabular;
