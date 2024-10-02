@@ -21,7 +21,7 @@ export const amClassTabular = {
         // define the Tabular.Table
         const tabular = new Tabular.Table({
             name: amInstance.tabularName(),
-            collection: amInstance.collectionDb(),
+            collection: amInstance.collection(),
             columns: amInstance.tabularFieldset().toTabular(),
             tabular: {
                 // do not let the user delete himself

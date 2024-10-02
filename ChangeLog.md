@@ -23,6 +23,7 @@
     - Consider the mdTitle passed by the caller
     - Define new clientNewFn() function to define a new account
     - Fix configuration overrides
+    - Remove amClass.collectionDb() method (rather use ahClass.collection())
 
 ### 1.2.0
 

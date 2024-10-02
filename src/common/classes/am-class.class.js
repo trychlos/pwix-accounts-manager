@@ -295,13 +295,6 @@ export class amClass extends AccountsHub.ahClass {
     }
 
     /**
-     * @returns {Mongo.Collection} the addressed collection
-     */
-    collectionDb(){
-        return this.collection();
-    }
-
-    /**
      * @returns {String} the name of the collection
      */
     collectionName(){

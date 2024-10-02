@@ -16,7 +16,7 @@ AccountsManager.s.removeById = async function( instanceName, id, userId ){
             return null;
         }
         try {
-            ret = await amInstance.collectionDb().removeAsync({ _id: id });
+            ret = await amInstance.collection().removeAsync({ _id: id });
         } catch( e ){
             throw new Meteor.Error(
                 'pwix.accounts_manager.fn.removeById',
@@ -41,7 +41,7 @@ AccountsManager.s.updateAccount = async function( instanceName, item, userId, or
         }
         const itemId = item._id;
         try {
-            const orig = await amInstance.collectionDb().findOneAsync({ _id: itemId });
+            const orig = await amInstance.collection().findOneAsync({ _id: itemId });
             console.debug( 'orig', orig );
             const origAllowed = orig.loginAllowed;
             if( itemId === userId && !item.loginAllowed && orig.loginAllowed ){
@@ -53,7 +53,7 @@ AccountsManager.s.updateAccount = async function( instanceName, item, userId, or
                 delete item._id;
                 delete item.DYN;
                 console.debug( 'calling updateAsync', itemId, item );
-                ret = await amInstance.collectionDb().updateAsync({ _id: itemId }, { $set: item });
+                ret = await amInstance.collection().updateAsync({ _id: itemId }, { $set: item });
                 console.debug( 'updateAsync', ret );
                 if( !ret ){
                     throw new Meteor.Error(
@@ -61,7 +61,7 @@ AccountsManager.s.updateAccount = async function( instanceName, item, userId, or
                         'Unable to update "'+itemId+'" account' );
                 // force user logout if needed
                 } else if( !item.loginAllowed && orig.loginAllowed ){
-                    amInstance.collectionDb().updateAsync({ _id: itemId }, { $set: { 'services.resume.loginTokens': [] }}).then(( res ) => {
+                    amInstance.collection().updateAsync({ _id: itemId }, { $set: { 'services.resume.loginTokens': [] }}).then(( res ) => {
                         console.log( 'forced user logged-out', itemId, 'res', res );
                     });
                 }
@@ -88,10 +88,10 @@ AccountsManager.s.updateById = async function( instanceName, id, userId, modifie
             return null;
         }
         try {
-            const orig = await amInstance.collectionDb().findOneAsync({ _id: id });
+            const orig = await amInstance.collection().findOneAsync({ _id: id });
             let ret = null;
             if( orig ){
-                ret = await amInstance.collectionDb().updateAsync({ _id: id }, { $set: modifier });
+                ret = await amInstance.collection().updateAsync({ _id: id }, { $set: modifier });
                 if( !ret ){
                     throw new Meteor.Error(
                         'pwix.accounts_manager.fn.updateById',
