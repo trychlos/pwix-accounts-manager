@@ -284,7 +284,7 @@ Template.AccountEditPanel.events({
                                 item._id = user._id;
                                 instance.$( '.c-account-ident-panel .ac-signup' ).trigger( 'ac-clear-panel' );
                                 instance.$( '.c-account-roles-panel' ).trigger( 'clear-panel' );
-                                instance.$( '.notes-edit' ).trigger( 'clear-panel' );
+                                instance.$( '.NotesEdit' ).trigger( 'clear-panel' );
                                 instance.AM.$tabbed.trigger( 'tabbed-do-activate', { tabbedId: instance.AM.tabbedId, index: 0 });
                                 const res = await updateRoles( item );
                             } else {
