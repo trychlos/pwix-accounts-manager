@@ -151,6 +151,14 @@ Constructor takes an object as single argument, with following keys:
 
     For the Roles panel be actually displayed, this `haveRoles` argument must be `true`, **AND** the `pwix:roles` package must be used by the application (it is not _used_ by this package).
 
+- `serverTabularExtend`
+
+    A server-side function which comes to extend the content of the dataset published for the tabular display.
+
+    The function get the current entity item as its unique argument and returns a Promise when finished with its job.
+
+    Defaults to `null`.
+
 - `withGlobals`
 
     Whether the Roles panel, when displayed, should include a "Global roles" pane, defaulting to `true`.

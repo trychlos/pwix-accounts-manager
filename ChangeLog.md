@@ -24,6 +24,7 @@
     - Define new clientNewFn() function to define a new account
     - Fix configuration overrides
     - Remove amClass.collectionDb() method (rather use ahClass.collection())
+    - Define 'serverTabularExtend' amClass parameter
 
 ### 1.2.0
 

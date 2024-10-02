@@ -21,6 +21,23 @@ export class amClass extends AccountsHub.ahClass {
 
     // static data
 
+    // static methods
+
+    /**
+     * @param {String} name a tabular name
+     * @returns {amClass} the corresponding amClass instance
+     */
+    static instanceByTabularName( name ){
+        let found = null;
+        Object.values( AccountsHub.instances ).every(( it ) => {
+            if( it.tabularName() === name ){
+                found = it;
+            }
+            return !found;
+        });
+        return found;
+    }
+
     // private data
 
     // raw provided arguments
@@ -339,6 +356,14 @@ export class amClass extends AccountsHub.ahClass {
      */
     fieldSet(){
         return this.#fieldSet;
+    }
+
+    /**
+     * @summary 'serverTabularExtend' function let the application extends the content of the published tabular record
+     * @returns {Function} the provided function or null
+     */
+    serverTabularExtend(){
+        return this.#args.serverTabularExtend || null;
     }
 
     /**
