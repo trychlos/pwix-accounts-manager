@@ -84,11 +84,6 @@ Template.AccountEditPanel.onCreated( function(){
             item.loginAllowed = true;
         }
     });
-
-    // track the item notes
-    self.autorun(() => {
-        //console.debug( 'adminNotes "'+self.AM.item.get().adminNotes+'"', 'userNotes "'+self.AM.item.get().userNotes+'"' );
-    });
 });
 
 Template.AccountEditPanel.onRendered( function(){
@@ -124,7 +119,7 @@ Template.AccountEditPanel.onRendered( function(){
     self.autorun(() => {
         const checker = self.AM.checker.get();
         if( checker ){
-            //console.debug( 'checker', checker.status(), checker.validity());
+            //console.debug( 'checker', checker.iCheckableId(), checker.status(), checker.validity());
         }
     });
 });
