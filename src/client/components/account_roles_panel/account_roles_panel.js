@@ -8,8 +8,6 @@
  * - amInstance: a ReactiveVar which holds the amClass instance
  */
 
-import { Roles } from 'meteor/pwix:roles';
-
 import './account_roles_panel.html';
 
 Template.account_roles_panel.helpers({
