@@ -26,6 +26,7 @@
     - Remove amClass.collectionDb() method (rather use ahClass.collection())
     - Define 'serverTabularExtend' amClass parameter
     - Fix default ordering by ascending email address
+    - AccountsManager is now an EventEmitter and sends a server-side event on create, update and delete operations
 
 ### 1.2.0
 

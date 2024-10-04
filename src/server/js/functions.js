@@ -6,7 +6,7 @@
 
 import { AccountsHub } from 'meteor/pwix:accounts-hub';
 
-AccountsManager.s = {};
+AccountsManager.s = AccountsManager.s || {};
 
 AccountsManager.s.removeById = async function( instanceName, id, userId ){
     let ret = null;
@@ -17,6 +17,7 @@ AccountsManager.s.removeById = async function( instanceName, id, userId ){
         }
         try {
             ret = await amInstance.collection().removeAsync({ _id: id });
+            AccountsManager.s.eventEmitter.emit( 'delete', { amInstance: instanceName, id: id });
         } catch( e ){
             throw new Meteor.Error(
                 'pwix.accounts_manager.fn.removeById',
@@ -42,7 +43,7 @@ AccountsManager.s.updateAccount = async function( instanceName, item, userId, or
         const itemId = item._id;
         try {
             const orig = await amInstance.collection().findOneAsync({ _id: itemId });
-            console.debug( 'orig', orig );
+            //console.debug( 'orig', orig );
             const origAllowed = orig.loginAllowed;
             if( itemId === userId && !item.loginAllowed && orig.loginAllowed ){
                 console.warn( 'cowardly refusing to disallow current user login' );
@@ -52,9 +53,8 @@ AccountsManager.s.updateAccount = async function( instanceName, item, userId, or
             if( orig ){
                 delete item._id;
                 delete item.DYN;
-                console.debug( 'calling updateAsync', itemId, item );
                 ret = await amInstance.collection().updateAsync({ _id: itemId }, { $set: item });
-                console.debug( 'updateAsync', ret );
+                AccountsManager.s.eventEmitter.emit( 'update', { amInstance: instanceName, item: item });
                 if( !ret ){
                     throw new Meteor.Error(
                         'pwix.accounts_manager.fn.updateAccount',
@@ -92,6 +92,7 @@ AccountsManager.s.updateById = async function( instanceName, id, userId, modifie
             let ret = null;
             if( orig ){
                 ret = await amInstance.collection().updateAsync({ _id: id }, { $set: modifier });
+                AccountsManager.s.eventEmitter.emit( 'update', { amInstance: instanceName, item: item });
                 if( !ret ){
                     throw new Meteor.Error(
                         'pwix.accounts_manager.fn.updateById',

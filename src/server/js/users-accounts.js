@@ -11,6 +11,7 @@ import { Random } from 'meteor/random';
 // Server-side: this is a pre-create user on Meteor.users standard collection, though an _id is already defined
 Accounts.onCreateUser(( opts, user ) => {
     console.log( 'Accounts.onCreateUser: opts=%o, user=%o', opts, user );
+    AccountsManager.s.eventEmitter.emit( 'create', { amInstance: 'users', item: user });
     // make sure each email has its own identifier
     ( user.emails || [] ).forEach(( it ) => {
         if( !it.id ){

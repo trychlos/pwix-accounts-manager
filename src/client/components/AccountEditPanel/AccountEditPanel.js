@@ -256,14 +256,15 @@ Template.AccountEditPanel.events({
         let item = instance.AM.item.get();
         //console.debug( 'item', item );
         // we cannot call here AccountHub.ahClass.preferredLabel() as this later requires an id - so compute something not too far of that
-        //  must have at least one of these two
+        //  must have at least one of these
         const label = item.emails[0]?.address || item.username || item.usernames[0]?.username || item._id;
         // when creating a new account, we let the user create several by reusing the same modal
         const updateRoles = async function( user ){
-            if( Package['pwix:roles'] ){
+            if( instance.AM.amInstance.get().haveRoles()){
                 const roles = Package['pwix:roles'].Roles.EditPanel.roles();
                 return await Package['pwix:roles'].Roles.setUserRoles( user, roles );
             }
+            return true;
         };
         if( instance.AM.isNew.get()){
             if( instance.AM.amInstance.get().name() === AccountsHub.ahOptions._defaults.name ){
