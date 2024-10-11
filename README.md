@@ -208,9 +208,28 @@ Returns the i18n namespace used by the package. Used to add translations at runt
 
 Available both on the client and the server.
 
-#### Blaze components
+#### Events
 
-##### `AccountEditPanel`
+On server side, `AccountsManager.s.eventEmitter` is an event emitter, and emits:
+
+- `create`, when a new account is about to be created, only on the `users` collection, with an object as argument containing:
+
+    - `amInstance`: the instance name
+    - `item`: the account to be created.
+
+- `update`, after an item has been updated, on any collection, with an object as argument containing:
+
+    - `amInstance`: the instance name
+    - `item`: the account to be created.
+
+- `delete`, after an item has been deleted, on any collection, with an object as argument containing:
+
+    - `amInstance`: the instance name
+    - `id`: the identifier of the deleted item.
+
+### Blaze components
+
+#### `AccountEditPanel`
 
 A tabbed editing panel to be run inside of a page or of a modal. Default tabs are named and ordered as:
 
@@ -222,7 +241,7 @@ If the `pwix:roles` package is used by the application, a `account_roles_tab` is
 
 When run from [`AccountsList`](#accountslist), it is run in a modal to edit the current item.
 
-##### `AccountNewButton`
+#### `AccountNewButton`
 
 A `PlusButton` component customized to create a new account.
 
@@ -230,7 +249,7 @@ It takes itself care of checking the permissions of the user, and, depending of 
 
 It takes the very same data context than below `AccountsList`.
 
-##### `AccountsList`
+#### `AccountsList`
 
 The component list the defined accounts as a `pwix:tabular` table, with standard 'Informations', 'Edit' and 'Delete' buttons.
 
