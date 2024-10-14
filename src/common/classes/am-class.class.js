@@ -359,6 +359,14 @@ export class amClass extends AccountsHub.ahClass {
     }
 
     /**
+     * @summary 'serverAllExtend' function let the application extends the content of the All publication
+     * @returns {Function} the provided function or null
+     */
+    serverAllExtend(){
+        return this.#args.serverAllExtend || null;
+    }
+
+    /**
      * @summary 'serverTabularExtend' function let the application extends the content of the published tabular record
      * @returns {Function} the provided function or null
      */

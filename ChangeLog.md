@@ -8,6 +8,8 @@
 
     - Improve README
     - Define new AccountsManager.s.getBy() function, thus bumping minor candidate version number
+    - Define new 'serverAllExtend' configuration parameter
+      NB: the two extend function now hold the pubklication userId
 
 ### 2.0.0
 
