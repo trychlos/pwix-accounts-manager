@@ -9,7 +9,8 @@
     - Improve README
     - Define new AccountsManager.s.getBy() function, thus bumping minor candidate version number
     - Define new 'serverAllExtend' configuration parameter
-      NB: the two extend function now hold the pubklication userId
+      NB: the two extend function now hold the publication userId
+    - Fix the DYN sub-object provided by pwix_accounts_manager_accounts_list_all publication
 
 ### 2.0.0
 

@@ -126,9 +126,8 @@ export class amClass extends AccountsHub.ahClass {
                 let list = [];
                 self.collection().find().fetchAsync().then(( fetched ) => {
                     fetched.forEach(( it ) => {
-                        it.DYN = {
-                            roles: new ReactiveVar( [] )
-                        };
+                        it.DYN = it.DYN || {};
+                        it.DYN.roles = new ReactiveVar( [] );
                         list.push( it );
                     });
                     self.#usersList.set( list );
