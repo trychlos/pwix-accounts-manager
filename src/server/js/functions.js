@@ -8,6 +8,25 @@ import { AccountsHub } from 'meteor/pwix:accounts-hub';
 
 AccountsManager.s = AccountsManager.s || {};
 
+AccountsManager.s.getBy = async function( instanceName, query, userId ){
+    let ret = null;
+    const amInstance = AccountsHub.instances[instanceName];
+    if( amInstance && amInstance instanceof AccountsManager.amClass ){
+        if( !await AccountsManager.isAllowed( 'pwix.accounts_manager.feat.list', userId, { amInstance: amInstance })){
+            return null;
+        }
+        try {
+            ret = await amInstance.collection().find( query ).fetchAsync();
+        } catch( e ){
+            throw new Meteor.Error(
+                'pwix.accounts_manager.fn.getBy' );
+        }
+    } else {
+        console.warn( 'pwix:accounts-manager getBy() unknown or invalid instance name', instanceName );
+    }
+    return ret;
+};
+
 AccountsManager.s.removeById = async function( instanceName, id, userId ){
     let ret = null;
     const amInstance = AccountsHub.instances[instanceName];
