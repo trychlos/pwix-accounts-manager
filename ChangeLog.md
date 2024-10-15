@@ -11,6 +11,7 @@
     - Define new 'serverAllExtend' configuration parameter
       NB: the two extend function now hold the publication userId
     - Fix the DYN sub-object provided by pwix_accounts_manager_accounts_list_all publication
+    - Define new 'editTitle' AccountsList component parameter
 
 ### 2.0.0
 

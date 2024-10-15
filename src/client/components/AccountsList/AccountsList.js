@@ -78,13 +78,17 @@ Template.AccountsList.events({
         const amInstance = instance.AM.amInstance( this.name );
         amInstance.preferredLabel( data.item )
             .then(( res ) => {
+                let title = this.mdTitle || pwixI18n.label( I18N, 'edit.modal_title', res.label );
+                if( self.editTitle && typeof self.editTitle === 'function' ){
+                    title = self.editTitle( data.item );
+                }
                 Modal.run({
                     ...self,
                     mdBody: 'AccountEditPanel',
                     mdButtons: [ Modal.C.Button.CANCEL, Modal.C.Button.OK ],
                     mdClasses: this.mdClasses || 'modal-lg',
                     mdClassesContent: AccountsManager.configure().classes + ' ' + amInstance.classes(),
-                    mdTitle: this.mdTitle || pwixI18n.label( I18N, 'edit.modal_title', res.label ),
+                    mdTitle: title,
                     item: amInstance.amById( data.item._id )
                 });
             });

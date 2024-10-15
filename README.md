@@ -293,6 +293,10 @@ Known data context is:
         }
 ```
 
+- `editTitle`
+
+    An optional function to be called with the to-be-edited item as an argument, expected to return the dialog title.
+
 ## Permissions management
 
 This package can take advantage of `pwix:permissions` package to manage the user permissions.
