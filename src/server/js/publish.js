@@ -17,7 +17,7 @@ Meteor.publish( 'pwix_accounts_manager_accounts_list_all', async function( insta
         item.DYN = {};
         const fn = amInstance.serverAllExtend();
         if( fn ){
-            await fn( item, self.userId );
+            await fn( instanceName, item, self.userId );
         }
         return item;
     };
@@ -114,7 +114,7 @@ Meteor.publish( 'pwix_accounts_manager_accounts_tabular', async function( tableN
             item.DYN = {};
             const fn = amInstance.serverTabularExtend();
             if( fn ){
-                await fn( item, self.userId );
+                await fn( amInstance.name(), item, self.userId );
             }
             return item;
         };

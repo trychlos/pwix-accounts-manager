@@ -59,6 +59,7 @@ AccountsManager.s.updateAccount = async function( instanceName, item, userId, or
         if( !await AccountsManager.isAllowed( 'pwix.accounts_manager.feat.edit', userId, { amInstance: amInstance, id: item._id })){
             return null;
         }
+        // item._id is lost during update !?
         const itemId = item._id;
         try {
             const orig = await amInstance.collection().findOneAsync({ _id: itemId });
@@ -71,9 +72,12 @@ AccountsManager.s.updateAccount = async function( instanceName, item, userId, or
             let ret = null;
             if( orig ){
                 delete item._id;
+                const DYN = item.DYN;
                 delete item.DYN;
                 ret = await amInstance.collection().updateAsync({ _id: itemId }, { $set: item });
-                AccountsManager.s.eventEmitter.emit( 'update', { amInstance: instanceName, item: item });
+                item.DYN = DYN;
+                item._id = itemId;
+                AccountsManager.s.eventEmitter.emit( 'update', { amInstance: instanceName, item: item, userId: userId });
                 if( !ret ){
                     throw new Meteor.Error(
                         'pwix.accounts_manager.fn.updateAccount',

@@ -12,6 +12,7 @@
       NB: the two extend function now hold the publication userId
     - Fix the DYN sub-object provided by pwix_accounts_manager_accounts_list_all publication
     - Define new 'editTitle' AccountsList component parameter
+    - Fix the event emission, re-adding the DYN sub-object
 
 ### 2.0.0
 
