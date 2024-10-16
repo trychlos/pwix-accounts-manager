@@ -49,7 +49,7 @@ export const amClassChecks = {
         if( opts.update !== false ){
             if( index < 0 ){
                 item.emails = item.emails || [];
-                item.emails.push({ id: opts.id });
+                item.emails.push({ _id: opts.id });
                 index = 0;
             }
             item.emails[index].address = value;
@@ -89,7 +89,7 @@ export const amClassChecks = {
         if( opts.update !== false ){
             if( index < 0 ){
                 item.emails = item.emails || [];
-                item.emails.push({ id: opts.id });
+                item.emails.push({ _id: opts.id });
                 index = 0;
             }
             item.emails[index].label = value;
@@ -104,7 +104,7 @@ export const amClassChecks = {
         if( opts.update !== false ){
             if( index < 0 ){
                 item.emails = item.emails || [];
-                item.emails.push({ id: opts.id });
+                item.emails.push({ _id: opts.id });
                 index = 0;
             }
             item.emails[index].verified = value;

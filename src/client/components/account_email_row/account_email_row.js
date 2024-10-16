@@ -25,8 +25,6 @@ Template.account_email_row.onCreated( function(){
     self.AM = {
         // the Form.Checker instance for this panel
         checker: new ReactiveVar( null ),
-        // whether this row is the last of the array ?
-        isLast: new ReactiveVar( false ),
 
         // remove the email item
         removeById( id ){
@@ -52,22 +50,6 @@ Template.account_email_row.onCreated( function(){
             }
         }
     };
-
-    // whether this row is the last of the array ?
-    self.autorun(() => {
-        const myId = Template.currentData().it.id;
-        const emails = Template.currentData().item.get().emails || [];
-        let found = -1;
-        for( let i=0 ; i<emails.length ; ++i ){
-            if( emails[i].id === myId ){
-                found = i;
-                break;
-            }
-        }
-        const last = ( found === emails.length-1 );
-        //console.debug( 'isLast', myId, last );
-        self.AM.isLast.set( last );
-    });
 });
 
 Template.account_email_row.onRendered( function(){
@@ -126,10 +108,13 @@ Template.account_email_row.helpers({
     },
 
     // rule: doesn't remove last connection way, i.e. keep at least one username or one email address
-    // note: weird things happen when inserting/deleting rows, unless we delete only last row..
-    minusEnabled(){
+    minusEnabled( it ){
         const haveUseableUsername = this.amInstance?.get().opts().haveUsername() !== AccountsHub.C.Identifier.NONE && this.item.get().username;
-        return Template.instance().AM.isLast.get() && ( haveUseableUsername || this.emailsCount.get() > 1 ) ? '' : 'disabled';
+        return ( haveUseableUsername || this.emailsCount.get() > 1 ) ? '' : 'disabled';
+    },
+
+    minusTitle( it ){
+        return pwixI18n.label( I18N, 'panel.remove_title', it.address );
     },
 
     // provide params to FormsStatusIndicator template

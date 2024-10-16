@@ -56,7 +56,7 @@ AccountsManager.i18n = {
                 last_login_label: 'Last connection :',
                 line_valid: 'Whether this line is valid',
                 login_allowed_label: 'Is connection allowed :',
-                remove_title: 'Remove this email address',
+                remove_title: 'Remove this "%s" email address',
                 username_label: 'Username :',
                 username_ph: 'John42',
                 verified_label: 'Is email verified :'

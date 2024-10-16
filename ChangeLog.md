@@ -14,6 +14,7 @@
     - Define new 'editTitle' AccountsList component parameter
     - Fix the event emission, re-adding the DYN sub-object
     - Define new preferredLabel() amClass argument
+    - Change the internal email identifier 'id' to '_id', thus removing the limitation when removing emails rows
 
 ### 2.0.0
 

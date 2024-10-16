@@ -1,6 +1,6 @@
 <template name="account_email_row">
 
-    <tr class="c-account-email-row" data-item-id="{{ this.it.id }}">
+    <tr class="c-account-email-row" data-item-id="{{ this.it._id }}">
         <td><input class="form-control js-email" type="email" placeholder="{{ i18n key="panel.email_ph" }}" /></td>
         <td>
             <div class="ui-w100">
@@ -9,9 +9,9 @@
         </td>
         <td>{{> FormsStatusIndicator (parmsCheckStatus) }}</td>
         <td>
-            <button class="btn btn-sm btn-outline-primary js-minus" title="{{ i18n key="panel.remove_title" }}" {{ minusEnabled }} >
-                <span class="fa-solid fa-fw fa-minus"></span>
-            </button>
+        <button class="btn btn-sm btn-outline-primary js-minus" title="{{ minusTitle this.it }}" {{ minusEnabled this.it }} >
+            <span class="fa-solid fa-fw fa-minus"></span>
+        </button>
         </td>
     </tr>
 

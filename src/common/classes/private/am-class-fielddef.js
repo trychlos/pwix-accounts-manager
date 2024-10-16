@@ -71,7 +71,7 @@ export const amClassFielddef = {
                 dt_tabular: false
             },
             {
-                name: 'emails.$.id',
+                name: 'emails.$._id',
                 type: String,
                 dt_data: false,
                 dt_visible: false
