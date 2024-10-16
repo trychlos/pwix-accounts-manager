@@ -358,6 +358,21 @@ export class amClass extends AccountsHub.ahClass {
     }
 
     /**
+     * @summary Returns the preferred label for the user
+     * @locus Anywhere
+     * @param {String|Object} user the user identifier or the user document
+     * @param {String} preferred the optional caller preference, either AccountsHub.C.PreferredLabel.USERNAME or AccountsHub.C.PreferredLabel.EMAIL_ADDRESS,
+     *  defaulting to the value configured at instanciation time
+     * @returns {Promise} a Promise which eventually will resolve to an object with following keys:
+     *  - label: the computed preferred label
+     *  - origin: the origin, which may be 'ID' or AccountsHub.C.PreferredLabel.USERNAME or AccountsHub.C.PreferredLabel.EMAIL_ADDRESS
+     */
+    async preferredLabel( user, preferred=null ){
+        const res = await( this.#args.preferredLabel ? this.#args.preferredLabel( user, preferred ) : super.preferredLabel( user, preferred ));
+        return res;
+    }
+
+    /**
      * @summary 'serverAllExtend' function let the application extends the content of the All publication
      * @returns {Function} the provided function or null
      */

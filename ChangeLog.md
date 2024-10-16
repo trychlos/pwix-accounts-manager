@@ -13,6 +13,7 @@
     - Fix the DYN sub-object provided by pwix_accounts_manager_accounts_list_all publication
     - Define new 'editTitle' AccountsList component parameter
     - Fix the event emission, re-adding the DYN sub-object
+    - Define new preferredLabel() amClass argument
 
 ### 2.0.0
 

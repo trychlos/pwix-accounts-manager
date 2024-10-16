@@ -151,6 +151,24 @@ Constructor takes an object as single argument, with following keys:
 
     For the Roles panel be actually displayed, this `haveRoles` argument must be `true`, **AND** the `pwix:roles` package must be used by the application (it is not _used_ by this package).
 
+- `preferredLabel`
+
+    Overrides the default `AccountsHub.preferredLabel()`.
+
+    If provided, the function must have the same prootype than the default:
+
+```js
+    /**
+     * @locus Anywhere
+     * @param {String|Object} arg the user identifier or the user document
+     * @param {String} preferred the optional caller preference, either AccountsHub.C.PreferredLabel.USERNAME or AccountsHub.C.PreferredLabel.EMAIL_ADDRESS,
+     *  defaulting to the value configured at instanciation time
+     * @returns {Promise} a Promise which eventually will resolve to an object with following keys:
+     *  - label: the computed preferred label
+     *  - origin: the origin, which may be 'ID' or AccountsHub.C.PreferredLabel.USERNAME or AccountsHub.C.PreferredLabel.EMAIL_ADDRESS
+     */
+```
+
 - `serverAllExtend`
 
     A server-side function which comes to extend the content of the dataset published for the whiole list.
