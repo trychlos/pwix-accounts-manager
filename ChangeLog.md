@@ -15,6 +15,7 @@
     - Fix the event emission, re-adding the DYN sub-object
     - Define new preferredLabel() amClass argument
     - Change the internal email identifier 'id' to '_id', thus removing the limitation when removing emails rows
+    - Fix the label computation when saving an item
 
 ### 2.0.0
 
