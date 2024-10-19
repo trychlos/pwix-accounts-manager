@@ -68,7 +68,7 @@ export const amClassFielddef = {
                 name: 'emails.$',
                 type: Object,
                 optional: true,
-                dt_tabular: false
+                tabular: false
             },
             {
                 name: 'emails.$._id',
@@ -129,7 +129,7 @@ export const amClassFielddef = {
                 type: Object,
                 optional: true,
                 blackbox: true,
-                dt_tabular: false
+                tabular: false
             },
             // for Meteor.users compatibility
             {
@@ -137,7 +137,7 @@ export const amClassFielddef = {
                 type: Object,
                 optional: true,
                 blackbox: true,
-                dt_tabular: false
+                tabular: false
             },
             // AccountsManager specifics
             {
