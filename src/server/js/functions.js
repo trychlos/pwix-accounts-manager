@@ -12,7 +12,7 @@ AccountsManager.s.getBy = async function( instanceName, query, userId ){
     let ret = null;
     const amInstance = AccountsHub.instances[instanceName];
     if( amInstance && amInstance instanceof AccountsManager.amClass ){
-        if( !await AccountsManager.isAllowed( 'pwix.accounts_manager.feat.list', userId, { amInstance: amInstance })){
+        if( !await AccountsManager.isAllowed( 'pwix.accounts_manager.feat.getBy', userId, { amInstance: amInstance })){
             return null;
         }
         try {

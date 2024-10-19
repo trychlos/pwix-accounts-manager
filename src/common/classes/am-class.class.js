@@ -325,6 +325,13 @@ export class amClass extends AccountsHub.ahClass {
     }
 
     /**
+     * @returns {Field.Set} the full field set
+     */
+    fieldSet(){
+        return this.#fieldSet;
+    }
+
+    /**
      * @returns {Boolean} whether display the 'ident' panel
      */
     haveIdent(){
@@ -348,13 +355,6 @@ export class amClass extends AccountsHub.ahClass {
             hide = true;
         }
         return hide;
-    }
-
-    /**
-     * @returns {Field.Set} the full field set
-     */
-    fieldSet(){
-        return this.#fieldSet;
     }
 
     /**
