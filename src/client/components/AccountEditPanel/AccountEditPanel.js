@@ -107,6 +107,7 @@ Template.AccountEditPanel.onRendered( function(){
     self.autorun(() => {
         self.AM.checker.set( new Forms.Checker( self, {
             messager: self.AM.messager,
+            name: 'AccountEditPanel',
             okFn( valid ){
                 if( self.AM.isModal.get()){
                     Modal.set({ buttons: { id: Modal.C.Button.OK, enabled: valid }});

@@ -17,6 +17,7 @@
     - Change the internal email identifier 'id' to '_id', thus removing the limitation when removing emails rows
     - Fix the label computation when saving an item
     - AccountsManager.s.getBy() now use the special 'getBy' permission to handle cases where we do not have any userId
+    - Name the AccountEditPanel checker to make the debug easier
 
 ### 2.0.0
 
