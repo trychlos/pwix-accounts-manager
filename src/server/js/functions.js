@@ -62,21 +62,22 @@ AccountsManager.s.updateAccount = async function( instanceName, item, userId, or
         // item._id is lost during update !?
         const itemId = item._id;
         try {
-            const orig = await amInstance.collection().findOneAsync({ _id: itemId });
+            let orig = await amInstance.collection().findOneAsync({ _id: itemId });
             //console.debug( 'orig', orig );
-            const origAllowed = orig.loginAllowed;
-            if( itemId === userId && !item.loginAllowed && orig.loginAllowed ){
+            if( itemId === userId && !item.loginAllowed && orig?.loginAllowed ){
                 console.warn( 'cowardly refusing to disallow current user login' );
                 item.loginAllowed = true;
             }
             let ret = null;
             if( orig ){
+                await amInstance.preUpdateFn( item );
                 delete item._id;
                 const DYN = item.DYN;
                 delete item.DYN;
                 ret = await amInstance.collection().updateAsync({ _id: itemId }, { $set: item });
                 item.DYN = DYN;
                 item._id = itemId;
+                await amInstance.postUpdateFn( item );
                 AccountsManager.s.eventEmitter.emit( 'update', { amInstance: instanceName, item: item, userId: userId });
                 if( !ret ){
                     throw new Meteor.Error(
@@ -85,7 +86,7 @@ AccountsManager.s.updateAccount = async function( instanceName, item, userId, or
                 // force user logout if needed
                 } else if( !item.loginAllowed && orig.loginAllowed ){
                     amInstance.collection().updateAsync({ _id: itemId }, { $set: { 'services.resume.loginTokens': [] }}).then(( res ) => {
-                        console.log( 'forced user logged-out', itemId, 'res', res );
+                        console.log( 'forced user logout', itemId, 'res', res );
                     });
                 }
             } else {
@@ -103,6 +104,9 @@ AccountsManager.s.updateAccount = async function( instanceName, item, userId, or
     }
 };
 
+// this is called when only some attributes need to be updated
+// always in an already existing item
+// doesn't participate to preUpdateFn/postUpdateFn
 AccountsManager.s.updateById = async function( instanceName, id, userId, modifier ){
     let ret = null;
     const amInstance = AccountsHub.instances[instanceName];

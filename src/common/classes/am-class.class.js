@@ -311,6 +311,20 @@ export class amClass extends AccountsHub.ahClass {
     }
 
     /**
+     * @returns {Any} arguments to the client-side function to update an account
+     */
+    clientUpdateArgs(){
+        return this.#args.clientUpdateArgs || null;
+    }
+
+    /**
+     * @returns {Function} a client-side function to update an account
+     */
+    clientUpdateFn(){
+        return this.#args.clientUpdateFn || null;
+    }
+
+    /**
      * @returns {String} the name of the collection
      */
     collectionName(){
@@ -370,6 +384,54 @@ export class amClass extends AccountsHub.ahClass {
     async preferredLabel( user, preferred=null ){
         const res = await( this.#args.preferredLabel ? this.#args.preferredLabel( user, preferred ) : super.preferredLabel( user, preferred ));
         return res;
+    }
+
+    /**
+     * @summary Calls the preNewfn function if any
+     * @locus Server
+     * @param {Object} item the item to be inserted
+     */
+    async preNewFn( item ){
+        const fn = this.#args.preNewFn;
+        if( fn && typeof fn === 'function' ){
+            await fn( item );
+        }
+    }
+
+    /**
+     * @summary Calls the postNewFn function if any
+     * @locus Server
+     * @param {Object} item the item to be inserted
+     */
+    async postNewFn( item ){
+        const fn = this.#args.postNewFn;
+        if( fn && typeof fn === 'function' ){
+            await fn( item );
+        }
+    }
+
+    /**
+     * @summary Calls the preUpdateFn function if any
+     * @locus Server
+     * @param {Object} item the item to be inserted
+     */
+    async preUpdateFn( item ){
+        const fn = this.#args.preUpdateFn;
+        if( fn && typeof fn === 'function' ){
+            await fn( item );
+        }
+    }
+
+    /**
+     * @summary Calls the postUpdateFn function if any
+     * @locus Server
+     * @param {Object} item the item to be inserted
+     */
+    async postUpdateFn( item ){
+        const fn = this.#args.postUpdateFn;
+        if( fn && typeof fn === 'function' ){
+            await fn( item );
+        }
     }
 
     /**

@@ -135,6 +135,18 @@ Constructor takes an object as single argument, with following keys:
 
     Arguments to be passed to above `clientNewFn`, defaulting to none.
 
+- `clientUpdateFn`
+
+    A client-side function to update an account.
+
+    Defaults to none.
+
+    Prototype must be `async clientUpdateFn( item<Object> [, clientUpdateArgs ]): Boolean`.
+
+- `clientUpdateArgs`
+
+    Arguments to be passed to above `clientUpdateFn`, defaulting to none.
+
 - `hideDisabled`
 
     Whether to hide disabled actions instead of displaying the disabled state.
@@ -150,6 +162,20 @@ Constructor takes an object as single argument, with following keys:
     Whether to display a Roles panel, defaulting to `true`.
 
     For the Roles panel be actually displayed, this `haveRoles` argument must be `true`, **AND** the `pwix:roles` package must be used by the application (it is not _used_ by this package).
+
+- `preNewFn`
+
+- `postNewFn`
+
+- `preUpdateFn`
+
+- `postUpdateFn`
+
+    Async functions which are called for the relative event.
+
+    Prototype is: `async preNewFn( item<Object>)`.
+
+    These let the caller a chance to modify the item before/after the database insert/update.
 
 - `preferredLabel`
 
