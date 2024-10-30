@@ -19,6 +19,7 @@
     - AccountsManager.s.getBy() now use the special 'getBy' permission to handle cases where we do not have any userId
     - Name the AccountEditPanel checker to make the debug easier
     - Define preNewFn(), postNewFn(), preUpdateFn(), postUpdateFn(), clientUpdateFn() and clientUpdateArgs() functions
+    - Define onCreateUser() server-side function
 
 ### 2.0.0
 

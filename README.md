@@ -260,6 +260,12 @@ Returns the i18n namespace used by the package. Used to add translations at runt
 
 Available both on the client and the server.
 
+##### `AccountsManager.onCreateUser( f<Function> )`
+
+On server-side, push a new function on the stack of `Accounts.onCreateUser()` calls.
+
+This only applies to `users` Meteor standard collection.
+
 #### Events
 
 On server side, `AccountsManager.s.eventEmitter` is an event emitter, and emits:

@@ -8,14 +8,16 @@
 import { Accounts } from 'meteor/accounts-base';
 import { Random } from 'meteor/random';
 
+_fns = [];
+
 // Server-side: this is a pre-create user on Meteor.users standard collection, though an _id is already defined
-Accounts.onCreateUser(( opts, user ) => {
-    console.log( 'Accounts.onCreateUser: opts=%o, user=%o', opts, user );
+const _onCreateUser = function( opts, user ){
+    //console.log( 'AccountsManager.onCreateUser: opts=%o, user=%o', opts, user );
     AccountsManager.s.eventEmitter.emit( 'create', { amInstance: 'users', item: user });
-    // make sure each email has its own identifier
+    // make sure each email has its own identifier (required by Blaze)
     ( user.emails || [] ).forEach(( it ) => {
-        if( !it.id ){
-            it.id = Random.id();
+        if( !it._id ){
+            it._id = Random.id();
         }
     });
     // pwi 2024-10-11 have a default true loginAllowed to let iziam identities connect to application
@@ -23,7 +25,24 @@ Accounts.onCreateUser(( opts, user ) => {
     // that this helps for tests at least
     user.loginAllowed = true;
     return user;
+};
+
+// Server-side: this is a pre-create user on Meteor.users standard collection, though an _id is already defined
+// NB: this function can only be called once
+Accounts.onCreateUser(( opts, user ) => {
+    let custom = user;
+    _fns.forEach(( fn ) => {
+        custom = fn( opts, custom );
+    });
+    return custom;
 });
+
+AccountsManager.onCreateUser = function( f ){
+    check( f, Function );
+    _fns.push( f );
+};
+
+AccountsManager.onCreateUser( _onCreateUser );
 
 /*
 // Server-side: validating the new user creation in Accounts collection
