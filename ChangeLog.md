@@ -20,6 +20,7 @@
     - Name the AccountEditPanel checker to make the debug easier
     - Define preNewFn(), postNewFn(), preUpdateFn(), postUpdateFn(), clientUpdateFn() and clientUpdateArgs() functions
     - Define onCreateUser() server-side function
+    - Improve the new account toaster label
 
 ### 2.0.0
 

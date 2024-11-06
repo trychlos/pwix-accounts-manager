@@ -27,7 +27,10 @@ AccountsManager.i18n = {
             edit: {
                 edit_error: 'Nous sommes malheureusement dans l\'impossibilité de mettre à jour le compte "%s". Merci de réessayer ultérieurement',
                 edit_success: 'Le compte "%s" a été mis à jour avec succès',
-                modal_title: 'Editer le compte "%s"'
+                modal_title: 'Editer le compte "%s"',
+                new_error: 'Nous sommes malheureusement dans l\'impossibilité de créer le compte "%s". Merci de réessayer ultérieurement',
+                new_label: '(nouveau)',
+                new_success: 'Le compte "%s" a été créé avec succès'
             },
             list: {
                 admin_notes_th: 'Notes de l\'administrateur',

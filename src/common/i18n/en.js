@@ -29,6 +29,7 @@ AccountsManager.i18n = {
                 edit_success: 'The account "%s" has been successfully updated',
                 modal_title: 'Editing "%s" account',
                 new_error: 'We are unfortunately unable to create the "%s" identity. Please retry later',
+                new_label: '(new)',
                 new_success: 'The identity "%s" has been successfully created',
             },
             list: {
