@@ -56,11 +56,12 @@ Template.AccountsList.helpers({
 Template.AccountsList.events({
     // delete an account
     'tabular-delete-event .AccountsList'( event, instance, data ){
+        const dc = this;
         let label = null;
         instance.AM.amInstance( this.name )?.preferredLabel( data.item )
             .then(( res ) => {
                 label = res.label;
-                Meteor.callAsync( 'pwix_accounts_manager_accounts_remove_byid', instance.name, data.item._id )
+                Meteor.callAsync( 'pwix_accounts_manager_accounts_remove_byid', dc.name, data.item._id )
             })
             .then(() => {
                 Tolert.success( pwixI18n.label( I18N, 'delete.success', label ));

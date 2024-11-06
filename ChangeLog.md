@@ -22,6 +22,7 @@
     - Define onCreateUser() server-side function
     - Improve the new account toaster label
     - Fix call to missing remove method
+    - Fix instance name usage from data context
 
 ### 2.0.0
 
