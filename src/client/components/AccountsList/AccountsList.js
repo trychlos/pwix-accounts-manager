@@ -60,7 +60,7 @@ Template.AccountsList.events({
         instance.AM.amInstance( this.name )?.preferredLabel( data.item )
             .then(( res ) => {
                 label = res.label;
-                Meteor.callAsync( 'pwix_accounts_manager_accounts_remove', instance.name, data.item._id )
+                Meteor.callAsync( 'pwix_accounts_manager_accounts_remove_byid', instance.name, data.item._id )
             })
             .then(() => {
                 Tolert.success( pwixI18n.label( I18N, 'delete.success', label ));
