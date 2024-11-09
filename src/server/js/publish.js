@@ -10,6 +10,7 @@ import { AccountsHub } from 'meteor/pwix:accounts-hub';
 Meteor.publish( 'pwix_accounts_manager_accounts_list_all', async function( instanceName ){
     const amInstance = AccountsHub.instances[instanceName];
     const self = this;
+    //console.debug( 'subscribing to', instanceName );
 
     // @param {Object} item the Record item
     // @returns {Object} item the transformed item
@@ -19,6 +20,7 @@ Meteor.publish( 'pwix_accounts_manager_accounts_list_all', async function( insta
         if( fn ){
             await fn( instanceName, item, self.userId );
         }
+        AccountsManager.s.addUndef( instanceName, item );
         return item;
     };
 
@@ -47,6 +49,7 @@ Meteor.publish( 'pwix_accounts_manager_accounts_list_all', async function( insta
         initializing = false;
 
         self.onStop( function(){
+            //console.debug( 'stopping', instanceName );
             observer.then(( handle ) => { handle.stop(); });
         });
 
@@ -61,7 +64,7 @@ Meteor.publish( 'pwix_accounts_manager_accounts_list_all', async function( insta
 /*
  * the publication for the tabular display
  * @param {String} tableName
- * @param {Array} ids: all id's of the Records collection - will be filtered by TenantsList component
+ * @param {Array} ids: all id's of the collection
  * @param {Object} fields the Mongo mmodifier which select the output fields
  * 
  *  [Arguments] {
@@ -90,9 +93,6 @@ Meteor.publish( 'pwix_accounts_manager_accounts_list_all', async function( insta
  *      updatedBy: 1
  *    }
  *  }
- * 
- * These are the fields from the closest record, plus the entity_notes from the entity,
- *  and with effectStart and effectEnd being from the first and last records.
  */
 Meteor.publish( 'pwix_accounts_manager_accounts_tabular', async function( tableName, ids, fields ){
     const amInstance = AccountsManager.amClass.instanceByTabularName( tableName );
@@ -110,12 +110,12 @@ Meteor.publish( 'pwix_accounts_manager_accounts_tabular', async function( tableN
         // @param {Object} item the Record item
         // @returns {Object} item the transformed item
         const f_transform = async function( item ){
-            let promises = [];
             item.DYN = {};
             const fn = amInstance.serverTabularExtend();
             if( fn ){
                 await fn( amInstance.name(), item, self.userId );
             }
+            AccountsManager.s.addUndef( amInstance.name(), item );
             return item;
         };
 

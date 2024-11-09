@@ -147,6 +147,12 @@ Constructor takes an object as single argument, with following keys:
 
     Arguments to be passed to above `clientUpdateFn`, defaulting to none.
 
+- `feedNow`
+
+    Whether the class should subscribe to the `all` publication to feed its internal list as soon as it is instanciated, defaulting to `true`.
+
+    Note that this will run a `Meteor.subscribe()` function from inside a `Tracker.autorun()` computation code and is so subject to the usual limitations and caveats of Meteor computations.
+
 - `hideDisabled`
 
     Whether to hide disabled actions instead of displaying the disabled state.
@@ -171,7 +177,7 @@ Constructor takes an object as single argument, with following keys:
 
 - `postUpdateFn`
 
-    Async functions which are called for the relative event.
+    Async functions which are called for the relative operation.
 
     Prototype is: `async preNewFn( item<Object>)`.
 

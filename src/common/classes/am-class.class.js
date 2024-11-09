@@ -101,55 +101,6 @@ export class amClass extends AccountsHub.ahClass {
     }
 
     /*
-     * @locus: client only
-     * @summary: subscribe and autoload the list of user accounts of the collection
-     */
-    _feedList(){
-        assert( Meteor.isClient, 'pwix:accounts-manager amClass._feedList() must only run on client' );
-        const self = this;
-        // subscription
-        Tracker.autorun(() => {
-            if( Meteor.userId()){
-                self.#usersHandle.set( Meteor.subscribe( 'pwix_accounts_manager_accounts_list_all', self.collectionName()));
-                if( self.haveRoles()){
-                    self.#rolesHandle.set( Meteor.subscribe( 'pwix_roles_user_assignments' ));
-                }
-            } else {
-                self.#usersHandle.set( null );
-                self.#rolesHandle.set( null );
-                self.#usersList.set( [] );
-            }
-        });
-        // load users
-        Tracker.autorun(() => {
-            const handle = self.#usersHandle.get();
-            if( handle && handle.ready()){
-                let list = [];
-                self.collection().find().fetchAsync().then(( fetched ) => {
-                    fetched.forEach(( it ) => {
-                        it.DYN = it.DYN || {};
-                        it.DYN.roles = new ReactiveVar( [] );
-                        list.push( it );
-                    });
-                    console.debug( 'list', list );
-                    self.#usersList.set( list );
-                });
-            }
-        });
-        // load roles
-        Tracker.autorun(() => {
-            const handle = self.#rolesHandle.get();
-            if( handle && handle.ready()){
-                self.#usersList.get().forEach(( it ) => {
-                    Package['pwix:roles'].Roles.directRolesForUser( it, { anyScope: true }).then(( res ) => {
-                        it.DYN.roles.set( res );
-                    });
-                });
-            }
-        });
-    }
-
-    /*
      * @returns {Boolean} whether display the 'ident' panel
      */
     _haveIdent(){
@@ -256,8 +207,8 @@ export class amClass extends AccountsHub.ahClass {
         this.#withScoped = this._withScoped();
 
         // get and maintain the accounts list in the client side
-        if( Meteor.isClient ){
-            this._feedList();
+        if( Meteor.isClient && this.#args.feedNow !== false ){
+            this.feedList();
         }
 
         // update the last connection attribute in the client side for standard Meteor 'users' collection
@@ -339,6 +290,55 @@ export class amClass extends AccountsHub.ahClass {
      */
     defaultFieldDef(){
         return amClassFielddef.default( this );
+    }
+
+    /**
+     * @locus: client only
+     * @summary: subscribe and autoload the list of user accounts of the collection
+     */
+    feedList(){
+        assert( Meteor.isClient, 'pwix:accounts-manager amClass.feedList() must only run on client' );
+        const self = this;
+        // subscription
+        Tracker.autorun(() => {
+            if( Meteor.userId()){
+                self.#usersHandle.set( Meteor.subscribe( 'pwix_accounts_manager_accounts_list_all', self.collectionName()));
+                if( self.haveRoles()){
+                    self.#rolesHandle.set( Meteor.subscribe( 'pwix_roles_user_assignments' ));
+                }
+            } else {
+                self.#usersHandle.set( null );
+                self.#rolesHandle.set( null );
+                self.#usersList.set( [] );
+            }
+        });
+        // load users
+        Tracker.autorun(() => {
+            const handle = self.#usersHandle.get();
+            if( handle && handle.ready()){
+                let list = [];
+                self.collection().find().fetchAsync().then(( fetched ) => {
+                    fetched.forEach(( it ) => {
+                        it.DYN = it.DYN || {};
+                        it.DYN.roles = new ReactiveVar( [] );
+                        list.push( it );
+                    });
+                    console.debug( 'list', self.collectionName(), list );
+                    self.#usersList.set( list );
+                });
+            }
+        });
+        // load roles
+        Tracker.autorun(() => {
+            const handle = self.#rolesHandle.get();
+            if( handle && handle.ready()){
+                self.#usersList.get().forEach(( it ) => {
+                    Package['pwix:roles'].Roles.directRolesForUser( it, { anyScope: true }).then(( res ) => {
+                        it.DYN.roles.set( res );
+                    });
+                });
+            }
+        });
     }
 
     /**

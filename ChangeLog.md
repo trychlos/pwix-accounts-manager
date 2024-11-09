@@ -24,6 +24,7 @@
     - Fix call to missing remove method
     - Fix instance name usage from data context
     - Define new amClass.get() reactive data source
+    - Let the subscription be delayed after the amClass instanciation
 
 ### 2.0.0
 
