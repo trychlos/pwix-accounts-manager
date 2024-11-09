@@ -23,6 +23,7 @@
     - Improve the new account toaster label
     - Fix call to missing remove method
     - Fix instance name usage from data context
+    - Define new amClass.get() reactive data source
 
 ### 2.0.0
 

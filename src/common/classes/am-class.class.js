@@ -53,8 +53,8 @@ export class amClass extends AccountsHub.ahClass {
     // runtime
     #tabular = null;
     #tabularFieldset = null;
-    #usersHandle = null;
-    #rolesHandle = null;
+    #usersHandle = new ReactiveVar( null );
+    #rolesHandle = new ReactiveVar( null );
     #usersList = new ReactiveVar( [] );
 
     // private methods
@@ -110,19 +110,20 @@ export class amClass extends AccountsHub.ahClass {
         // subscription
         Tracker.autorun(() => {
             if( Meteor.userId()){
-                self.#usersHandle = Meteor.subscribe( 'pwix_accounts_manager_accounts_list_all', self.collectionName());
+                self.#usersHandle.set( Meteor.subscribe( 'pwix_accounts_manager_accounts_list_all', self.collectionName()));
                 if( self.haveRoles()){
-                    self.#rolesHandle = Meteor.subscribe( 'pwix_roles_user_assignments' );
+                    self.#rolesHandle.set( Meteor.subscribe( 'pwix_roles_user_assignments' ));
                 }
             } else {
-                self.#usersHandle = null;
-                self.#rolesHandle = null;
+                self.#usersHandle.set( null );
+                self.#rolesHandle.set( null );
                 self.#usersList.set( [] );
             }
         });
         // load users
         Tracker.autorun(() => {
-            if( self.#usersHandle && self.#usersHandle.ready()){
+            const handle = self.#usersHandle.get();
+            if( handle && handle.ready()){
                 let list = [];
                 self.collection().find().fetchAsync().then(( fetched ) => {
                     fetched.forEach(( it ) => {
@@ -130,13 +131,15 @@ export class amClass extends AccountsHub.ahClass {
                         it.DYN.roles = new ReactiveVar( [] );
                         list.push( it );
                     });
+                    console.debug( 'list', list );
                     self.#usersList.set( list );
                 });
             }
         });
         // load roles
         Tracker.autorun(() => {
-            if( self.#rolesHandle && self.#rolesHandle.ready()){
+            const handle = self.#rolesHandle.get();
+            if( handle && handle.ready()){
                 self.#usersList.get().forEach(( it ) => {
                     Package['pwix:roles'].Roles.directRolesForUser( it, { anyScope: true }).then(( res ) => {
                         it.DYN.roles.set( res );
@@ -343,6 +346,14 @@ export class amClass extends AccountsHub.ahClass {
      */
     fieldSet(){
         return this.#fieldSet;
+    }
+
+    /**
+     * @returns {Array} the list of accounts
+     *  A reactive data source
+     */
+    get(){
+        return this.#usersList.get();
     }
 
     /**
