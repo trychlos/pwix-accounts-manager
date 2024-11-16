@@ -107,7 +107,7 @@ Template.account_ident_panel.helpers({
             signupLink: false,
             resetLink: false,
             signupPasswordTwice: true,
-            signupAutoClose: false,
+            //signupAutoClose: false, // ignored as DIV-rendered
             signupAutoConnect: false,
             signupSubmit: false,
             name: ACCOUNTS_UI_SIGNUP_PANEL,

@@ -70,7 +70,7 @@ Template.account_emails_list.events({
         const id = Random.id();
         //console.debug( 'adding', id );
         item.emails.push({
-            id: id
+            _id: id
         });
         this.item.set( item );
     }

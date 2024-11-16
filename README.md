@@ -147,6 +147,12 @@ Constructor takes an object as single argument, with following keys:
 
     Arguments to be passed to above `clientUpdateFn`, defaulting to none.
 
+- `closeAfterNew`
+
+    Whether the 'new account' dialog should be closed after having successfully created a new account, defaulting to `true`.
+
+    When `false`, the 'new account' dialog is cleared after successful creation, and can be reused to define other new accounts.
+
 - `feedNow`
 
     Whether the class should subscribe to the `all` publication to feed its internal list as soon as it is instanciated, defaulting to `true`.

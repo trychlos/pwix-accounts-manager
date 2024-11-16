@@ -268,6 +268,7 @@ Template.AccountEditPanel.events({
             return true;
         };
         if( instance.AM.isNew.get()){
+            const closeAfterNew = instance.AM.amInstance.get().closeAfterNew();
             if( instance.AM.amInstance.get().name() === AccountsHub.ahOptions._defaults.name ){
                 AccountsUI.Features.createUser({
                     username: item.username,
@@ -288,6 +289,9 @@ Template.AccountEditPanel.events({
                                 console.warn( 'unable to retrieve the user account', label );
                             }
                         });
+                        if( closeAfterNew ){
+                            Modal.close();
+                        }
                     }
                 });
             } else {
@@ -299,7 +303,9 @@ Template.AccountEditPanel.events({
                         } else {
                             Tolert.error( pwixI18n.label( I18N, 'edit.new_error', label ));
                         }
-                        Modal.close();
+                        if( closeAfterNew ){
+                            Modal.close();
+                        }
                     });
                 } else {
                     console.warn( 'refusing to call AccountsUI.Features.createUser() on amInstance', instance.AM.amInstance.get());

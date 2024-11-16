@@ -45,6 +45,7 @@ export class amClass extends AccountsHub.ahClass {
 
     // checked arguments with their default values
     #fieldSet = null;
+    #closeAfterNew = null;
     #haveIdent = null;
     #haveRoles = null;
     #withGlobals = null;
@@ -85,6 +86,19 @@ export class amClass extends AccountsHub.ahClass {
             set = new Field.Set( columns );
         }
         return set;
+    }
+
+    /*
+     * @returns {Boolean} whether close the 'new account' dialog after successful creation
+     */
+    _closeAfterNew(){
+        let close = this.#args.closeAfterNew;
+        if( close !== undefined ){
+            assert( close === true || close === false, 'pwix:accounts-manager.amClass._closeAfterNew() expects a Boolean argument, got '+close );
+        } else {
+            close = true;
+        }
+        return close;
     }
 
     /*
@@ -186,6 +200,7 @@ export class amClass extends AccountsHub.ahClass {
         const self = this;
 
         // interpret arguments
+        this.#closeAfterNew = this._closeAfterNew();
         this.#haveIdent = this._haveIdent();
         this.#haveRoles = this._haveRoles();
         this.#withGlobals = this._withGlobals();
@@ -279,6 +294,13 @@ export class amClass extends AccountsHub.ahClass {
     }
 
     /**
+     * @returns {Boolean} whether to close the 'new account' dialog after successful creation
+     */
+    closeAfterNew(){
+        return this.#closeAfterNew;
+    }
+
+    /**
      * @returns {String} the name of the collection
      */
     collectionName(){
@@ -323,7 +345,7 @@ export class amClass extends AccountsHub.ahClass {
                         it.DYN.roles = new ReactiveVar( [] );
                         list.push( it );
                     });
-                    console.debug( 'list', self.collectionName(), list );
+                    //console.debug( 'list', self.collectionName(), list );
                     self.#usersList.set( list );
                 });
             }
