@@ -32,7 +32,7 @@ const _assert_data_itemrv = function( caller, data ){
 // returns the index of the identified row in the array
 const _id2index = function( array, id ){
     for( let i=0 ; i<array.length ; ++i ){
-        if( array[i].id === id ){
+        if( array[i]._id === id ){
             return i;
         }
     }
@@ -45,7 +45,7 @@ export const amClassChecks = {
     async email_address( value, data, opts ){
         _assert_data_itemrv( 'amClassChecks.email_address()', data );
         let item = data.item.get();
-        const index = opts.id ? _id2index( item.emails, opts.id ) : -1;
+        let index = opts.id ? _id2index( item.emails, opts.id ) : -1;
         if( opts.update !== false ){
             if( index < 0 ){
                 item.emails = item.emails || [];
@@ -85,7 +85,7 @@ export const amClassChecks = {
     async email_label( value, data, opts ){
         _assert_data_itemrv( 'amClassChecks.email_label()', data );
         const item = data.item.get();
-        const index = opts.id ? _id2index( item.emails, opts.id ) : -1;
+        let index = opts.id ? _id2index( item.emails, opts.id ) : -1;
         if( opts.update !== false ){
             if( index < 0 ){
                 item.emails = item.emails || [];
@@ -100,7 +100,7 @@ export const amClassChecks = {
     async email_verified( value, data, opts ){
         _assert_data_itemrv( 'amClassChecks.email_verified()', data );
         const item = data.item.get();
-        const index = opts.id ? _id2index( item.emails, opts.id ) : -1;
+        let index = opts.id ? _id2index( item.emails, opts.id ) : -1;
         if( opts.update !== false ){
             if( index < 0 ){
                 item.emails = item.emails || [];

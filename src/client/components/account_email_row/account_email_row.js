@@ -32,7 +32,7 @@ Template.account_email_row.onCreated( function(){
             let emails = item.emails || [];
             let found = -1;
             for( let i=0 ; i<emails.length ; ++i ){
-                if( emails[i].id === id ){
+                if( emails[i]._id === id ){
                     found = i;
                     break;
                 }
@@ -93,7 +93,7 @@ Template.account_email_row.onRendered( function(){
                     item: itemRv,
                     amInstance: amInstance
                 },
-                id: Template.currentData().it.id,
+                id: Template.currentData().it._id,
                 fieldStatusShow: Forms.C.ShowStatus.NONE,
                 setForm: Template.currentData().it
             }));
@@ -128,10 +128,7 @@ Template.account_email_row.helpers({
 
 Template.account_email_row.events({
     'click .c-account-email-row .js-minus'( event, instance ){
-        //console.debug( 'click.js-minus', event );
-        const id = this.it.id;
-        //console.debug( 'removing', id );
-        instance.AM.removeById( id );
+        instance.AM.removeById( this.it._id );
     },
 });
 

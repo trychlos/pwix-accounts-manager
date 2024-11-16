@@ -64,13 +64,10 @@ Template.account_emails_list.helpers({
 
 Template.account_emails_list.events({
     'click .c-account-emails-list .js-plus'( event, instance ){
-        //console.debug( 'click.js-plus' );
         const item = this.item.get();
         item.emails = item.emails || [];
-        const id = Random.id();
-        //console.debug( 'adding', id );
         item.emails.push({
-            _id: id
+            _id: Random.id()
         });
         this.item.set( item );
     }

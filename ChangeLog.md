@@ -27,6 +27,7 @@
     - Let the subscription be delayed after the amClass instanciation
     - Fix the display of account roles in tabular list
     - Let the caller choose whether auto close the 'new account' dialog after successful creation (todo #4)
+    - Fix new email creation
 
 ### 2.0.0
 

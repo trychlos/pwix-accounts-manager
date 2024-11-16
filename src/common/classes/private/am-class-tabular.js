@@ -19,10 +19,11 @@ _tabular_identifier = async function( amInstance, it ){
 export const amClassTabular = {
     new( amInstance ){
         // define the Tabular.Table
+        const fieldSet = amInstance.tabularFieldset();
         const tabular = new Tabular.Table({
             name: amInstance.tabularName(),
             collection: amInstance.collection(),
-            columns: amInstance.tabularFieldset().toTabular(),
+            columns: fieldSet.toTabular(),
             pub: 'pwix_accounts_manager_accounts_tabular',
             tabular: {
                 // do not let the user delete himself
@@ -49,7 +50,7 @@ export const amClassTabular = {
                     return pwixI18n.label( I18N, 'buttons.info_title', await _tabular_identifier( amInstance, it ));
                 }
             },
-            order: [[ 0, 'asc' ]],
+            order: [[ fieldSet.indexByName( 'emails.$.address' ), 'asc' ]],
             destroy: true
         });
         return tabular;
