@@ -25,6 +25,7 @@
     - Fix instance name usage from data context
     - Define new amClass.get() reactive data source
     - Let the subscription be delayed after the amClass instanciation
+    - Fix the display of account roles in tabular list
 
 ### 2.0.0
 

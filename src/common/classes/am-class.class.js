@@ -185,6 +185,12 @@ export class amClass extends AccountsHub.ahClass {
         this.#args = o;
         const self = this;
 
+        // interpret arguments
+        this.#haveIdent = this._haveIdent();
+        this.#haveRoles = this._haveRoles();
+        this.#withGlobals = this._withGlobals();
+        this.#withScoped = this._withScoped();
+
         // define the Field.Set
         let set = this._baseFieldset();
         let adds = this._additionalFieldset();
@@ -199,12 +205,6 @@ export class amClass extends AccountsHub.ahClass {
 
         // define the Tabular.Table
         this.#tabular = amClassTabular.new( this );
-    
-        // interpret arguments
-        this.#haveIdent = this._haveIdent();
-        this.#haveRoles = this._haveRoles();
-        this.#withGlobals = this._withGlobals();
-        this.#withScoped = this._withScoped();
 
         // get and maintain the accounts list in the client side
         if( Meteor.isClient && this.#args.feedNow !== false ){
