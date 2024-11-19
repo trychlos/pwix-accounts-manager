@@ -2,9 +2,9 @@
 
 ## ChangeLog
 
-### 2.1.0-rc
+### 2.1.0
 
-    Release date: 
+    Release date: 2024-11-19
 
     - Improve README
     - Define new AccountsManager.s.getBy() function, thus bumping minor candidate version number
@@ -86,4 +86,4 @@
 
 ---
 P. Wieser
-- Last updated on 2024, Oct. 4th
+- Last updated on 2024, Nov. 19th
