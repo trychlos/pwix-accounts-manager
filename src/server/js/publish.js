@@ -6,61 +6,6 @@ const assert = require( 'assert' ).strict;
 
 import { AccountsHub } from 'meteor/pwix:accounts-hub';
 
-// returns a cursor of all accounts in the collection
-Meteor.publish( 'pwix_accounts_manager_accounts_list_all', async function( instanceName ){
-    const amInstance = AccountsHub.instances[instanceName];
-    const self = this;
-    //console.debug( 'subscribing to', instanceName );
-
-    // @param {Object} item the Record item
-    // @returns {Object} item the transformed item
-    const f_transform = async function( item ){
-        item.DYN = {};
-        const fn = amInstance.serverAllExtend();
-        if( fn ){
-            await fn( instanceName, item, self.userId );
-        }
-        AccountsManager.s.addUndef( instanceName, item );
-        return item;
-    };
-
-    if( amInstance && amInstance instanceof AccountsManager.amClass ){
-        if( !await AccountsManager.isAllowed( 'pwix.accounts_manager.feat.list', self.userId, { amInstance: amInstance } )){
-            return false;
-        }
-        let initializing = true;
-
-        const observer = amInstance.collection().find().observeAsync({
-            added: async function( item ){
-                const transformed = await f_transform( item );
-                self.added( amInstance.collectionName(), item._id, transformed );
-            },
-            changed: async function( newItem, oldItem ){
-                if( !initializing ){
-                    const transformed = await f_transform( newItem );
-                    self.changed( amInstance.collectionName(), newItem._id, transformed );
-                }
-            },
-            removed: async function( oldItem ){
-                self.removed( amInstance.collectionName(), oldItem._id );
-            }
-        });
-
-        initializing = false;
-
-        self.onStop( function(){
-            //console.debug( 'stopping', instanceName );
-            observer.then(( handle ) => { handle.stop(); });
-        });
-
-        self.ready();
-
-    } else {
-        console.warn( 'pwix_accounts_manager_accounts_list_all unknown or invalid instance name', instanceName );
-        return false;
-    }
-});
-
 /*
  * the publication for the tabular display
  * @param {String} tableName
@@ -115,7 +60,7 @@ Meteor.publish( 'pwix_accounts_manager_accounts_tabular', async function( tableN
             if( fn ){
                 await fn( amInstance.name(), item, self.userId );
             }
-            AccountsManager.s.addUndef( amInstance.name(), item );
+            AccountsHub.s.addUndef( amInstance.name(), item );
             return item;
         };
 

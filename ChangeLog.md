@@ -10,7 +10,6 @@
     - Define new AccountsManager.s.getBy() function, thus bumping minor candidate version number
     - Define new 'serverAllExtend' configuration parameter
       NB: the two extend function now hold the publication userId
-    - Fix the DYN sub-object provided by pwix_accounts_manager_accounts_list_all publication
     - Define new 'editTitle' AccountsList component parameter
     - Fix the event emission, re-adding the DYN sub-object
     - Define new preferredLabel() amClass argument
@@ -28,6 +27,7 @@
     - Fix the display of account roles in tabular list
     - Let the caller choose whether auto close the 'new account' dialog after successful creation (todo #4)
     - Fix new email creation
+    - Move the 'pwix_accounts_manager_accounts_list_all' publication to AccountsHub
 
 ### 2.0.0
 

@@ -8,19 +8,6 @@ import { AccountsHub } from 'meteor/pwix:accounts-hub';
 
 AccountsManager.s = AccountsManager.s || {};
 
-// @summary Make sure all the fields of the fieldset are set in the item, even if undefined
-// @param {Object} item
-// @returns {Object} item
-AccountsManager.s.addUndef = function( instanceName, item ){
-    const amInstance = AccountsHub.instances[instanceName];
-    amInstance.fieldSet().names().forEach(( it ) => {
-        if( it.indexOf( '.' ) === -1 && !Object.keys( item ).includes( it )){
-            item[it] = undefined;
-        }
-    });
-    return item;
-};
-
 // @summary builkd a Mongo '$unset' modifier object
 // @param {Object} item
 // @returns {Object} item

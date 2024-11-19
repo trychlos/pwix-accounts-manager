@@ -324,7 +324,7 @@ export class amClass extends AccountsHub.ahClass {
         // subscription
         Tracker.autorun(() => {
             if( Meteor.userId()){
-                self.#usersHandle.set( Meteor.subscribe( 'pwix_accounts_manager_accounts_list_all', self.collectionName()));
+                self.#usersHandle.set( Meteor.subscribe( 'pwix_accounts_hub_list_all', self.collectionName()));
                 if( self.haveRoles()){
                     self.#rolesHandle.set( Meteor.subscribe( 'pwix_roles_user_assignments' ));
                 }
@@ -465,14 +465,6 @@ export class amClass extends AccountsHub.ahClass {
         if( fn && typeof fn === 'function' ){
             await fn( item );
         }
-    }
-
-    /**
-     * @summary 'serverAllExtend' function let the application extends the content of the All publication
-     * @returns {Function} the provided function or null
-     */
-    serverAllExtend(){
-        return this.#args.serverAllExtend || null;
     }
 
     /**

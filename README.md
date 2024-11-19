@@ -207,14 +207,6 @@ Constructor takes an object as single argument, with following keys:
      */
 ```
 
-- `serverAllExtend`
-
-    A server-side function which comes to extend the content of the dataset published for the whiole list.
-
-    The function get the current entity item as its unique argument and returns a Promise when finished with its job.
-
-    Defaults to `null`.
-
 - `serverTabularExtend`
 
     A server-side function which comes to extend the content of the dataset published for the tabular display.
