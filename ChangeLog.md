@@ -6,7 +6,7 @@
 
     Release date: 
 
-    - 
+    - Fix the stylesheet to ellipsize the scoped roles column
 
 ### 2.1.0
 
