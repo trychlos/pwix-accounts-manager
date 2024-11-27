@@ -8,6 +8,7 @@
 
     - Fix the stylesheet to ellipsize the scoped roles column
     - Fix datatables display just after logged-out user
+    - Improve the message when user is not allowed
 
 ### 2.1.0
 
