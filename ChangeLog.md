@@ -7,6 +7,7 @@
     Release date: 
 
     - Fix the stylesheet to ellipsize the scoped roles column
+    - Fix datatables display just after logged-out user
 
 ### 2.1.0
 

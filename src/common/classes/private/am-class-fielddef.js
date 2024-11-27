@@ -181,7 +181,7 @@ export const amClassFielddef = {
                 dt_render( data, type, rowData ){
                     if( type === 'display' ){
                         const item = instance.amById( rowData._id );
-                        return item.DYN.roles.get().join( ', ' );
+                        return item ? item.DYN.roles.get().join( ', ' ) : '';
                     } else {
                         return '';
                     }

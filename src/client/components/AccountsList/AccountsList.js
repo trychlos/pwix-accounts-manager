@@ -10,6 +10,7 @@
 const assert = require( 'assert' ).strict;
 
 import { AccountsHub } from 'meteor/pwix:accounts-hub';
+import { Meteor } from "meteor/meteor";
 import { Modal } from 'meteor/pwix:modal';
 import { pwixI18n } from 'meteor/pwix:i18n';
 import { Tolert } from 'meteor/pwix:tolert';
@@ -35,9 +36,9 @@ Template.AccountsList.onCreated( function(){
 
 Template.AccountsList.helpers({
     // whether the current user has the permission to see the list of accounts
-    canList(){
+    async canList(){
         const instance = Template.instance().AM.amInstance( this.name );
-        const allowed = instance ? AccountsManager.isAllowed( 'pwix.accounts_manager.feat.list', Meteor.userId(), { amInstance: instance }) : false;
+        const allowed = instance ? await AccountsManager.isAllowed( 'pwix.accounts_manager.feat.list', Meteor.userId(), { amInstance: instance }) : false;
         return allowed;
     },
 
