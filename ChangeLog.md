@@ -9,6 +9,7 @@
     - Fix the stylesheet to ellipsize the scoped roles column
     - Fix datatables display just after logged-out user
     - Improve the message when user is not allowed
+    - Delegate onCreateUser() server-side function to AccountsHub
 
 ### 2.1.0
 

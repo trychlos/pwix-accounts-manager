@@ -155,3 +155,9 @@ AccountsManager.s.updateById = async function( instanceName, id, userId, modifie
         console.warn( 'pwix:accounts-manager updateById() unknown or invalid instance name', instanceName );
     }
 };
+
+// v 2.1.1
+// delegates onCreateUser() hook to AccountsHub
+AccountsManager.onCreateUser = function( f ){
+    AccountsHub.onCreateUser( f );
+};

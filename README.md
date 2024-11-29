@@ -248,7 +248,7 @@ Each managed collection is made timestampable, and following fields are added (a
 ```js
     createdAt
     updatedAt
-    CreatedBy
+    createdBy
     updatedBy
 ```
 
@@ -263,12 +263,6 @@ See [below](#configuration)
 Returns the i18n namespace used by the package. Used to add translations at runtime.
 
 Available both on the client and the server.
-
-##### `AccountsManager.onCreateUser( f<Function> )`
-
-On server-side, push a new function on the stack of `Accounts.onCreateUser()` calls.
-
-This only applies to `users` Meteor standard collection.
 
 #### Events
 
