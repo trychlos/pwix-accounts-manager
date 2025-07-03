@@ -10,6 +10,7 @@
     - Fix datatables display just after logged-out user
     - Improve the message when user is not allowed
     - Delegate onCreateUser() server-side function to AccountsHub
+    - Replace an async helper with a ReactiveVar in AccountsList
 
 ### 2.1.0
 

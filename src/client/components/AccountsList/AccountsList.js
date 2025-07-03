@@ -13,6 +13,7 @@ import { AccountsHub } from 'meteor/pwix:accounts-hub';
 import { Meteor } from "meteor/meteor";
 import { Modal } from 'meteor/pwix:modal';
 import { pwixI18n } from 'meteor/pwix:i18n';
+import { ReactiveVar } from 'meteor/reactive-var';
 import { Tolert } from 'meteor/pwix:tolert';
 
 import '../AccountEditPanel/AccountEditPanel.js';
@@ -23,6 +24,9 @@ Template.AccountsList.onCreated( function(){
     const self = this;
 
     self.AM = {
+        // whether the user is allowed to see this list
+        allowed: new ReactiveVar( false ),
+
         // get the amClass instance from its name
         amInstance( name ){
             let instance = name ? AccountsHub.instances[name] : null;
@@ -32,14 +36,21 @@ Template.AccountsList.onCreated( function(){
             return instance;
         }
     };
+
+    // whether the user is allowed to see this list
+    self.autorun(() => {
+        const instance = self.AM.amInstance( Template.currentData().name );
+        AccountsManager.isAllowed( 'pwix.accounts_manager.feat.list', Meteor.userId(), { amInstance: instance })
+            .then(( allowed ) => {
+                self.AM.allowed.set( allowed );
+            });
+    });
 });
 
 Template.AccountsList.helpers({
     // whether the current user has the permission to see the list of accounts
-    async canList(){
-        const instance = Template.instance().AM.amInstance( this.name );
-        const allowed = instance ? await AccountsManager.isAllowed( 'pwix.accounts_manager.feat.list', Meteor.userId(), { amInstance: instance }) : false;
-        return allowed;
+    canList(){
+        return Template.instance().AM.allowed.get();
     },
 
     // string translation
