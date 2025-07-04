@@ -7,7 +7,7 @@
  * - name: the amClass instance name
  */
 
-const assert = require( 'assert' ).strict;
+import { strict as assert } from 'node:assert';
 
 import { AccountsHub } from 'meteor/pwix:accounts-hub';
 import { Meteor } from "meteor/meteor";

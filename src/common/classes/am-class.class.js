@@ -231,6 +231,7 @@ export class amClass extends AccountsHub.ahClass {
             this._lastConnection();
         }
 
+        //console.debug( this );
         return this;
     }
 

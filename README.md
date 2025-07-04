@@ -264,6 +264,16 @@ Returns the i18n namespace used by the package. Used to add translations at runt
 
 Available both on the client and the server.
 
+##### `AccountsManager.isAllowed()`
+
+Manages permissions to the accounts manager.
+
+Prototype is `async AccountsManager.isAllowed( action<String>, userId<String>, args<Object> ): Boolean`.
+
+The provided `args` argument MUST contain an `amInstance` key with an instance of `AccountsManager.amClass`.
+
+Available both on the client and the server.
+
 #### Events
 
 On server side, `AccountsManager.s.eventEmitter` is an event emitter, and emits:
