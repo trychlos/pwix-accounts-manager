@@ -61,7 +61,11 @@ Template.AccountsList.helpers({
     // the Tabular.Table instance
    tabularName(){
         const name = Template.instance().AM.amInstance( this.name )?.tabularName();
-        return Package['aldeed:tabular'].default.tablesByName[name];
+        const table = Package['aldeed:tabular'].default.tablesByName[name];
+        // tableName='users'
+        // table is a Table instance
+        //console.debug( 'tableName', name, 'aldeed table', table );
+        return table;
     }
 });
 

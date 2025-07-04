@@ -346,7 +346,7 @@ export class amClass extends AccountsHub.ahClass {
                         it.DYN.roles = new ReactiveVar( [] );
                         list.push( it );
                     });
-                    //console.debug( 'list', self.collectionName(), list );
+                    //console.debug( 'usersList', self.collectionName(), list );
                     self.#usersList.set( list );
                 });
             }
@@ -357,6 +357,7 @@ export class amClass extends AccountsHub.ahClass {
             if( handle && handle.ready()){
                 self.#usersList.get().forEach(( it ) => {
                     Package['pwix:roles'].Roles.directRolesForUser( it, { anyScope: true }).then(( res ) => {
+                        //console.debug( 'directRolesForUser', it, res );
                         it.DYN.roles.set( res );
                     });
                 });
