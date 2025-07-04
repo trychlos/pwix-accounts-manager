@@ -53,6 +53,7 @@ export const amClassTabular = {
             order: [[ fieldSet.indexByName( 'emails.$.address' ), 'asc' ]],
             destroy: true
         });
+        //console.debug( 'columns', fieldSet.toTabular());
         return tabular;
     }
 };

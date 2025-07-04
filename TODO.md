@@ -14,7 +14,10 @@
 |    6 | 2024- 7-18 | honor tabularActiveCheckboxes |
 |    7 | 2024- 8- 2 | honor hideDisabled |
 |    8 | 2024- 8 -2 | honor email label |
-|    9 |  |  |
+|    9 | 2025- 7- 4 | have preferred email address |
+|   10 | 2025- 7- 4 | be able to have several usernames |
+|   11 | 2025- 7- 4 | have preferred username |
+|   12 |  |  |
 
 ---
 ## Done

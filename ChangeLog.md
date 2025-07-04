@@ -1,4 +1,4 @@
-# pwix:accounts-limanagerst
+# pwix:accounts-manager
 
 ## ChangeLog
 
@@ -9,8 +9,9 @@
     - Fix the stylesheet to ellipsize the scoped roles column
     - Fix datatables display just after logged-out user
     - Improve the message when user is not allowed
-    - Delegate onCreateUser() server-side function to AccountsHub
+    - Delegate onCreateUser() server-side function to AccountsHub, thus bumping minor candidate version number
     - Replace an async helper with a ReactiveVar in AccountsList
+    - Fix the addressing of objects inside arrays (e.g. emails)
 
 ### 2.1.0
 

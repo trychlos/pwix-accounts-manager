@@ -35,6 +35,7 @@ AccountsManager.i18n = {
             list: {
                 admin_notes_th: 'Notes de l\'administrateur',
                 email_address_th: 'Addresse(s) email',
+                email_label_th: 'Intitulé',
                 email_verified_th: 'Vérifiéee',
                 last_connection_th: 'Dernière connexion',
                 login_allowed_th: 'Connexion autorisée',

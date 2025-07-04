@@ -286,7 +286,7 @@ On server side, `AccountsManager.s.eventEmitter` is an event emitter, and emits:
 - `update`, after an item has been updated, on any collection, with an object as argument containing:
 
     - `amInstance`: the instance name
-    - `item`: the account to be created.
+    - `item`: the updated item.
 
 - `delete`, after an item has been deleted, on any collection, with an object as argument containing:
 
