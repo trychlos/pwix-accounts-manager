@@ -43,7 +43,7 @@ Template.account_email_row.onCreated( function(){
                 self.AM.checker.get().removeMe();
             } else {
                 console.warn( id, 'not found' );
-                const trs = $( '.c-account-ident-panel tr.c-account-email-row' );
+                const trs = $( '.am-account-ident-panel tr.am-account-email-row' );
                 $.each( trs, function( index, object ){
                     console.debug( index, $( object ).data( 'item-id' ));
                 });
@@ -127,7 +127,7 @@ Template.account_email_row.helpers({
 });
 
 Template.account_email_row.events({
-    'click .c-account-email-row .js-minus'( event, instance ){
+    'click .am-account-email-row .js-minus'( event, instance ){
         instance.AM.removeById( this.it._id );
     },
 });

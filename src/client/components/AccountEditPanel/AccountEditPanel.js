@@ -280,8 +280,8 @@ Template.AccountEditPanel.events({
                         instance.AM.amInstance.get().byEmailAddress( item.emails[0].address ).then( async ( user ) => {
                             if( user ){
                                 item._id = user._id;
-                                instance.$( '.c-account-ident-panel .ac-signup' ).trigger( 'ac-clear-panel' );
-                                instance.$( '.c-account-roles-panel' ).trigger( 'clear-panel' );
+                                instance.$( '.am-account-ident-panel .ac-signup' ).trigger( 'ac-clear-panel' );
+                                instance.$( '.am-account-roles-panel' ).trigger( 'clear-panel' );
                                 instance.$( '.NotesEdit' ).trigger( 'clear-panel' );
                                 instance.AM.$tabbed.trigger( 'tabbed-do-activate', { tabbedId: instance.AM.tabbedId, index: 0 });
                                 const res = await updateRoles( item );

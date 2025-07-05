@@ -63,7 +63,7 @@ Template.account_emails_list.helpers({
 });
 
 Template.account_emails_list.events({
-    'click .c-account-emails-list .js-plus'( event, instance ){
+    'click .am-account-emails-list .js-plus'( event, instance ){
         const item = this.item.get();
         item.emails = item.emails || [];
         item.emails.push({

@@ -12,6 +12,7 @@
     - Delegate onCreateUser() server-side function to AccountsHub, thus bumping minor candidate version number
     - Replace an async helper with a ReactiveVar in AccountsList
     - Fix the addressing of objects inside arrays (e.g. emails)
+    - Normalize class names to be 'am-' prefixed
 
 ### 2.1.0
 

@@ -118,7 +118,7 @@ Template.account_ident_panel.helpers({
 });
 
 Template.account_ident_panel.events({
-    'ac-signup-ok .c-account-ident-panel'( event, instance, data ){
+    'ac-signup-ok .am-account-ident-panel'( event, instance, data ){
         //console.debug( event, instance, data );
         const checker = instance.AM.checker.get();
         if( checker ){
