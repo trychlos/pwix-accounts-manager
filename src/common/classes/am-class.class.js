@@ -236,6 +236,24 @@ export class amClass extends AccountsHub.ahClass {
     }
 
     /**
+     * @returns {Array<Object>} the additional tabs to be inserted
+     */
+    async additionalTabs(){
+        let adds = this.#args.additionalTabs;
+        if( adds ){
+            if( _.isFunction( adds )){
+                adds = await adds( this );
+            }
+        }
+        if( adds ){
+            if( _.isObject( adds ) && !_.isArray( adds )){
+                adds = [ adds ];
+            }
+        }
+        return adds;
+    }
+
+    /**
      * @returns {Function} the allowFn configured function
      */
     allowFn(){

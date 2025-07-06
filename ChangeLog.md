@@ -13,6 +13,7 @@
     - Replace an async helper with a ReactiveVar in AccountsList
     - Fix the addressing of objects inside arrays (e.g. emails)
     - Normalize class names to be 'am-' prefixed
+    - Define new additionalTabs property to amClass
 
 ### 2.1.0
 

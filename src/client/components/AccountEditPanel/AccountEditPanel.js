@@ -49,7 +49,8 @@ Template.AccountEditPanel.onCreated( function(){
         item: new ReactiveVar( null ),
         // whether we are running inside of a Modal
         isModal: new ReactiveVar( false ),
-
+        // additionalTabs
+        additionalTabs: new ReactiveVar( null ),
         // addressing the Tabbed component
         tabbedId: null,
         $tabbed: null
@@ -82,6 +83,14 @@ Template.AccountEditPanel.onCreated( function(){
         if( self.AM.isNew.get()){
             let item = self.AM.item.get();
             item.loginAllowed = true;
+        }
+    });
+
+    // get additional tabs
+    self.autorun(() => {
+        const amInstance = self.AM.amInstance.get();
+        if( amInstance ){
+            amInstance.additionalTabs().then(( adds ) => { self.AM.additionalTabs.set( adds ); });
         }
     });
 });
@@ -215,6 +224,33 @@ Template.AccountEditPanel.helpers({
                         item: paneData.item,
                         field: userNotes
                     };
+                }
+            });
+        }
+        // add additionalTabs from amInstance if any
+        const adds = Template.instance().AM.additionalTabs.get();
+        if( adds ){
+            adds.forEach(( def ) => {
+                if( def.before && def.tabs ){
+                    let found = false;
+                    for( let i=0 ; i<tabs.length && !found ; ++i ){
+                        if( tabs[i].name === def.before ){
+                            found = true;
+                            if( _.isArray( def.tabs )){
+                                def.tabs.forEach(( it ) => {
+                                    it.paneData = _.merge( {}, it.paneData, paneData );
+                                    tabs.splice( i, 0, it );
+                                });
+                            } else {
+                                console.warn( 'expects tabs be an array, got', def.tabs );
+                            }
+                        }
+                    };
+                    if( !found ){
+                        console.warn( 'tab not found:', def.before );
+                    }
+                } else {
+                    console.warn( 'expects additionalTabs have a \'before\' key, not found', def );
                 }
             });
         }

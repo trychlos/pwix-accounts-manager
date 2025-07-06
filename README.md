@@ -117,6 +117,37 @@ Constructor takes an object as single argument, with following keys:
 
     `allowFn` prototype is: `async allowFn( action<String>, userId<String> [, ...<Any> ] ): Boolean`
 
+- `additionalTabs`
+
+    When set, either an object, or a function which returns such an object, as an array of objects which describes additional tabs to be inserted when editing an account, and their position:
+
+```js
+        [
+            {
+                before: 'name of the tab before which following tabs are to be inserted'
+                tabs: [  <- the array of tabs to be inserted, see pwix:Tabbed for the tab definition
+                    {
+                        tabid: ...
+                    }
+                ]
+            },
+            ...
+        ]
+
+```
+
+    Defauts to nothing.
+
+    When set as a function, expected prototype is `async fn( <amClass> ): <Array>`.
+
+- `allowFn`
+
+    An async function which will be called with an action string identifier, and must return whether the current user is allowed to do the specified action.
+
+    If the function is not provided, then the default is to deny all actions (and do you really want that ?).
+
+    `allowFn` prototype is: `async allowFn( action<String>, userId<String> [, ...<Any> ] ): Boolean`
+
 - `classes`
 
     Let the application provides some classes to add to the display. The classes mentionned here are added to the configured values if any.
