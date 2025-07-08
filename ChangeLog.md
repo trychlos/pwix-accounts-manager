@@ -2,9 +2,9 @@
 
 ## ChangeLog
 
-### 2.2.0-rc
+### 2.2.0
 
-    Release date: 
+    Release date: 2025- 7- 8
 
     - Fix the stylesheet to ellipsize the scoped roles column
     - Fix datatables display just after logged-out user
@@ -99,4 +99,4 @@
 
 ---
 P. Wieser
-- Last updated on 2024, Nov. 19th
+- Last updated on 2025, Jul. 8th
