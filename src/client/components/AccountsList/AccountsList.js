@@ -29,7 +29,7 @@ Template.AccountsList.onCreated( function(){
 
         // get the amClass instance from its name
         amInstance( name ){
-            let instance = name ? AccountsHub.instances[name] : null;
+            let instance = name ? AccountsHub.getInstance( name ) : null;
             if( instance ){
                 assert( instance instanceof AccountsManager.amClass, 'expect an AccountsManager.amClass, got '+instance );
             }

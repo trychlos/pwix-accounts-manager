@@ -60,7 +60,7 @@ Template.AccountEditPanel.onCreated( function(){
     self.autorun(() => {
         const name = Template.currentData().name;
         if( name ){
-            const instance = AccountsHub.instances[name];
+            const instance = AccountsHub.getInstance( name );
             if( instance ){
                 assert( instance instanceof AccountsManager.amClass, 'expect an AccountsManager.amClass, got '+instance );
                 self.AM.amInstance.set( instance );

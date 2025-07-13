@@ -109,14 +109,6 @@ Constructor takes an object as single argument, with following keys:
     ]
 ```
 
-- `allowFn`
-
-    An async function which will be called with an action string identifier, and must return whether the current user is allowed to do the specified action.
-
-    If the function is not provided, then the default is to deny all actions (and do you really want that ?).
-
-    `allowFn` prototype is: `async allowFn( action<String>, userId<String> [, ...<Any> ] ): Boolean`
-
 - `additionalTabs`
 
     When set, either an object, or a function which returns such an object, as an array of objects which describes additional tabs to be inserted when editing an account, and their position:
@@ -158,7 +150,7 @@ Constructor takes an object as single argument, with following keys:
 
     A client-side function to insert a new account.
 
-    Defaults to `AccountsUI.Features.createUser` for the `users` collection, or a warning message else.
+    Defaults to `AccountsUI.Features.createUser` for the `users` instance, or a warning message else.
 
     Prototype must be `async clientNewFn( item<Object> [, clientNewArgs ]): Boolean`.
 
@@ -190,12 +182,6 @@ Constructor takes an object as single argument, with following keys:
 
     Note that this will run a `Meteor.subscribe()` function from inside a `Tracker.autorun()` computation code and is so subject to the usual limitations and caveats of Meteor computations.
 
-- `hideDisabled`
-
-    Whether to hide disabled actions instead of displaying the disabled state.
-
-    Defaults to `true`: disabled actions are hidden.
-
 - `haveIdent`
 
     Whether to display the 'ident' panel, defaulting to `true`.
@@ -205,6 +191,12 @@ Constructor takes an object as single argument, with following keys:
     Whether to display a Roles panel, defaulting to `true`.
 
     For the Roles panel be actually displayed, this `haveRoles` argument must be `true`, **AND** the `pwix:roles` package must be used by the application (it is not _used_ by this package).
+
+- `hideDisabled`
+
+    Whether to hide disabled actions instead of displaying the disabled state.
+
+    Defaults to `true`: disabled actions are hidden.
 
 - `preNewFn`
 
@@ -224,7 +216,7 @@ Constructor takes an object as single argument, with following keys:
 
     Overrides the default `AccountsHub.preferredLabel()`.
 
-    If provided, the function must have the same prootype than the default:
+    If provided, the function must have the same prototype than the default:
 
 ```js
     /**
@@ -391,19 +383,23 @@ Known data context is:
 This package can take advantage of `pwix:permissions` package to manage the user permissions.
 
 It defines following tasks:
-- `pwix.accounts_manager.feat.list`: list all accounts, with additional arguments as an object with following keys:
-    - amInstance: the `amClass` instance
 
 - `pwix.accounts_manager.feat.create`: create a new account, with additional arguments as an object with following keys:
     - amInstance: the `amClass` instance
+
+- `pwix.accounts_manager.fn.delete`: remove the identified account, with additional arguments as an object with following keys:
+    - amInstance: the `amClass` instance
+    - id: the account identifier
 
 - `pwix.accounts_manager.feat.edit`: update the user account, with additional arguments as an object with following keys:
     - amInstance: the `amClass` instance
     - id: the account identifier
 
-- `pwix.accounts_manager.fn.delete`: remove the identified account, with additional arguments as an object with following keys:
+- `pwix.accounts_manager.feat.list`: list all accounts, with additional arguments as an object with following keys:
     - amInstance: the `amClass` instance
-    - id: the account identifier
+
+- `pwix.accounts_manager.fn.getBy`: a server function which can be called without any current user, with additional arguments as an object with following keys:
+    - amInstance: the `amClass` instance
 
 ## Configuration
 

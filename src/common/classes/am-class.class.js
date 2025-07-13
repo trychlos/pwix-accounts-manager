@@ -28,14 +28,7 @@ export class amClass extends AccountsHub.ahClass {
      * @returns {amClass} the corresponding amClass instance
      */
     static instanceByTabularName( name ){
-        let found = null;
-        Object.values( AccountsHub.instances ).every(( it ) => {
-            if( it.tabularName() === name ){
-                found = it;
-            }
-            return !found;
-        });
-        return found;
+        return AccountsHub.getByTabularName( name );
     }
 
     // private data
@@ -194,7 +187,7 @@ export class amClass extends AccountsHub.ahClass {
     constructor( o ){
         assert( o && _.isObject( o ), 'pwix:accounts-manager.amClass() expects an object argument, got '+o );
         super( ...arguments );
-        //console.debug( 'instanciating', this.name());
+        console.debug( 'pwix:accounts-manager instanciating \''+this.name()+'\'', o );
 
         this.#args = o;
         const self = this;

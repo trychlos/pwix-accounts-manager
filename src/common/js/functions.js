@@ -2,7 +2,10 @@
  * pwix:accounts-manager/src/common/js/functions.js
  */
 
+import _ from 'lodash';
 import { strict as assert } from 'node:assert';
+
+import { amClass } from '../classes/am-class.class.js';
 
 /**
  * @param {String} action
@@ -13,7 +16,7 @@ import { strict as assert } from 'node:assert';
  */
 AccountsManager.isAllowed = async function( action, userId=null, args=null ){
     //console.debug( arguments );
-    assert( args && args.amInstance && args.amInstance instanceof AccountsManager.amClass, 'expects an instance of AccountsManager.amClass, got '+args?.amInstance );
+    assert( args && args.amInstance && args.amInstance instanceof amClass, 'expects an instance of AccountsManager.amClass, got '+args?.amInstance );
     let allowed = false;
     const fn = args.amInstance.allowFn();
     if( fn ){

@@ -29,7 +29,7 @@ Template.AccountNewButton.onCreated( function(){
     self.autorun(() => {
         const dataContext = Template.currentData();
         if( dataContext.name ){
-            const amInstance = AccountsHub.instances[dataContext.name];
+            const amInstance = AccountsHub.getInstance( dataContext.name );
             if( amInstance && amInstance instanceof AccountsManager.amClass ){
                 self.AM.amInstance.set( amInstance );
             }
