@@ -387,7 +387,7 @@ It defines following tasks:
 - `pwix.accounts_manager.feat.create`: create a new account, with additional arguments as an object with following keys:
     - amInstance: the `amClass` instance
 
-- `pwix.accounts_manager.fn.delete`: remove the identified account, with additional arguments as an object with following keys:
+- `pwix.accounts_manager.feat.delete`: remove the identified account, with additional arguments as an object with following keys:
     - amInstance: the `amClass` instance
     - id: the account identifier
 
@@ -395,10 +395,7 @@ It defines following tasks:
     - amInstance: the `amClass` instance
     - id: the account identifier
 
-- `pwix.accounts_manager.feat.list`: list all accounts, with additional arguments as an object with following keys:
-    - amInstance: the `amClass` instance
-
-- `pwix.accounts_manager.fn.getBy`: a server function which can be called without any current user, with additional arguments as an object with following keys:
+- `pwix.accounts_manager.feat.list`: display all accounts, with additional arguments as an object with following keys:
     - amInstance: the `amClass` instance
 
 ## Configuration

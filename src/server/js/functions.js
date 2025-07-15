@@ -29,14 +29,11 @@ AccountsManager.s.getBy = async function( instanceName, query, userId ){
     let ret = null;
     const amInstance = AccountsHub.getInstance( instanceName );
     if( amInstance && amInstance instanceof AccountsManager.amClass ){
-        if( !await AccountsManager.isAllowed( 'pwix.accounts_manager.fn.getBy', userId, { amInstance: amInstance })){
-            return null;
-        }
         try {
             ret = await amInstance.collection().find( query ).fetchAsync();
         } catch( e ){
             throw new Meteor.Error(
-                'pwix.accounts_manager.fn.getBy' );
+                'pwix.accounts_manager.s.getBy' );
         }
     } else {
         console.warn( 'pwix:accounts-manager getBy() unknown or invalid instance name', instanceName );
