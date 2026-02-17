@@ -25,6 +25,9 @@ export const amClassTabular = {
             collection: amInstance.collection(),
             columns: fieldSet.toTabular(),
             pub: 'pwix_accounts_manager_accounts_tabular',
+            //selector( userId ){
+            //    return AccountsManager.isAllowed( 'pwix.accounts_manager.feat.list', userId, { amInstance: amInstance });
+            //},
             tabular: {
                 // do not let the user delete himself
                 async deleteButtonEnabled( it ){

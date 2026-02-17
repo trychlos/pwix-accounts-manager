@@ -25,12 +25,23 @@ AccountsManager._defaults = {
  */
 AccountsManager.configure = function( o ){
     if( o && _.isObject( o )){
-        _conf = _.merge( AccountsManager._defaults, _conf, o );
-        AccountsManager._conf.set( _conf );
-        // be verbose if asked for
-        if( _conf.verbosity & AccountsManager.C.Verbose.CONFIGURE ){
-            //console.log( 'pwix:accounts-manager configure() with', o, 'building', AccountsList._conf );
-            console.log( 'pwix:accounts-manager configure() with', o );
+        // check that keys exist
+        let built_conf = {};
+        Object.keys( o ).forEach(( it ) => {
+            if( Object.keys( AccountsManager._defaults ).includes( it )){
+                built_conf[it] = o[it];
+            } else {
+                console.warn( 'pwix:accounts-manager configure() ignore unmanaged key \''+it+'\'' );
+            }
+        });
+        if( Object.keys( built_conf ).length ){
+            _conf = _.merge( AccountsManager._defaults, _conf, built_conf );
+            AccountsManager._conf.set( _conf );
+            // be verbose if asked for
+            if( _conf.verbosity & AccountsManager.C.Verbose.CONFIGURE ){
+                //console.log( 'pwix:accounts-manager configure() with', o, 'building', AccountsList._conf );
+                console.log( 'pwix:accounts-manager configure() with', built_conf );
+            }
         }
     }
     // also acts as a getter
