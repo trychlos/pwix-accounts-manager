@@ -193,6 +193,7 @@ export class amClass extends AccountsHub.ahClass {
         const self = this;
 
         // interpret arguments
+        // error: this._closeAfterNew is not a function on Meteor HMR - a hard reload fixes the issue
         this.#closeAfterNew = this._closeAfterNew();
         this.#haveIdent = this._haveIdent();
         this.#haveRoles = this._haveRoles();

@@ -9,6 +9,7 @@
     - Update to new AccountsHub.getInstance() reactive function, thus bumping minor candidate version number
     - Remove pwix.accounts_manager.fn.getBy permission (as it must always be true)
     - configure() now warns for unmanaged keys
+    - AccountsManager.isAllowed() now accepts both an instance name and an instance class
 
 ### 2.2.0
 
