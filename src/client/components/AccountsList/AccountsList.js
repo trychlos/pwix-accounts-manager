@@ -70,6 +70,10 @@ Template.AccountsList.helpers({
 });
 
 Template.AccountsList.events({
+    'tabular-settings-event .AccountsList'( event, instance, data ){
+        //console.debug( event, data );
+    },
+
     // delete an account
     'tabular-delete-event .AccountsList'( event, instance, data ){
         const dc = this;

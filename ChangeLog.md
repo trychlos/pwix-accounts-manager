@@ -10,6 +10,7 @@
     - Remove pwix.accounts_manager.fn.getBy permission (as it must always be true)
     - configure() now warns for unmanaged keys
     - AccountsManager.isAllowed() now accepts both an instance name and an instance class
+    - Update to new pwix:tabular naming convention
 
 ### 2.2.0
 

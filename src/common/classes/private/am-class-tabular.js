@@ -28,7 +28,7 @@ export const amClassTabular = {
             //selector( userId ){
             //    return AccountsManager.isAllowed( 'pwix.accounts_manager.feat.list', userId, { amInstance: amInstance });
             //},
-            tabular: {
+            pwix: {
                 // do not let the user delete himself
                 async deleteButtonEnabled( it ){
                     return it._id !== Meteor.userId();
@@ -51,7 +51,10 @@ export const amClassTabular = {
                 },
                 async infoButtonTitle( it ){
                     return pwixI18n.label( I18N, 'buttons.info_title', await _tabular_identifier( amInstance, it ));
-                }
+                },
+                withSettingsItems: [
+                    Tabular.C.Items.COLUMN_SELECTION
+                ]
             },
             order: [[ fieldSet.indexByName( 'emails.$.address' ), 'asc' ]],
             destroy: true
