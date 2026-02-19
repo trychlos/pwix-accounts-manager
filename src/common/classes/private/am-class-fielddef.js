@@ -82,7 +82,7 @@ export const amClassFielddef = {
                 regEx: SimpleSchema.RegEx.Email,
                 dt_data: 'any',
                 dt_title: pwixI18n.label( I18N, 'list.email_address_th' ),
-                dt_template: Meteor.isClient && Template.dt_email_address,
+                dt_template: Meteor.isClient && Template.dt_email_addresses,
                 form_check: amClassChecks.email_address,
                 form_type: instance.opts().haveEmailAddress() === AccountsHub.C.Identifier.MANDATORY ? Forms.FieldType.C.MANDATORY : Forms.FieldType.C.OPTIONAL
             },
@@ -104,10 +104,6 @@ export const amClassFielddef = {
                 dt_title: pwixI18n.label( I18N, 'list.email_label_th' ),
                 form_check: amClassChecks.email_label,
                 form_type: Forms.FieldType.C.OPTIONAL
-            },
-            {
-                dt_template: Meteor.isClient && Template.dt_email_more,
-                dt_className: 'dt-center'
             });
         }
 
