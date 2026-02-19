@@ -5,7 +5,8 @@
 import '../../common/js/index.js';
 
 import './check_npms.js';
-import './event-emitter.js';
+import './event_emitter.js';
 import './functions.js';
 import './methods.js';
 import './publish.js';
+import './users_accounts.js';

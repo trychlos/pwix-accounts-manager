@@ -28,3 +28,9 @@ Template.dt_email_more.helpers({
         return pwixI18n.label( I18N, arg.hash.key );
     }
 });
+
+Template.dt_email_more.events({
+    'click .am-email-more'( event, instance ){
+        instance.$( event.currentTarget ).trigger( 'am-email-more', { item: this.item });
+    }
+});

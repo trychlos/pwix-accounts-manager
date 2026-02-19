@@ -1,5 +1,5 @@
 /*
- * pwix:accounts-manager/src/common/js/event-emitter.js
+ * pwix:accounts-manager/src/common/js/event_emitter.js
  */
 
 import EventEmitter from 'node:events';

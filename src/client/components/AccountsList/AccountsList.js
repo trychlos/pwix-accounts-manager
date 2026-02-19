@@ -70,8 +70,14 @@ Template.AccountsList.helpers({
 });
 
 Template.AccountsList.events({
+    // want display more the first email address, data.item is the user document
+    'am-email-more'( event, instance, data ){
+        console.debug( event, data );
+    },
+
+    // edit the settings for this table
     'tabular-settings-event .AccountsList'( event, instance, data ){
-        //console.debug( event, data );
+        console.debug( event, data );
     },
 
     // delete an account

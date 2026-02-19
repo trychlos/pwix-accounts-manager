@@ -12,6 +12,7 @@
     - AccountsManager.isAllowed() now accepts both an instance name and an instance class
     - Update to new pwix:tabular naming convention
     - Improve AccountsList email address column to have the 'more' button inside
+    - Restore (disappeared) lastConnection update on user login on 'users' collection
 
 ### 2.2.0
 
