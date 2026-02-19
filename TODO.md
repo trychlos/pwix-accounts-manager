@@ -17,7 +17,8 @@
 |    9 | 2025- 7- 4 | have preferred email address |
 |   10 | 2025- 7- 4 | be able to have several usernames |
 |   11 | 2025- 7- 4 | have preferred username |
-|   12 |  |  |
+|   12 | 2026- 2-19 | honor am-email-more event to show other email addresses |
+|   13 |  |  |
 
 ---
 ## Done
