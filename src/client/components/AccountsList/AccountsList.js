@@ -10,6 +10,7 @@
 import { strict as assert } from 'node:assert';
 
 import { AccountsHub } from 'meteor/pwix:accounts-hub';
+import { Logger } from 'meteor/pwix:logger';
 import { Meteor } from "meteor/meteor";
 import { Modal } from 'meteor/pwix:modal';
 import { pwixI18n } from 'meteor/pwix:i18n';
@@ -19,6 +20,8 @@ import { Tolert } from 'meteor/pwix:tolert';
 import '../AccountEditPanel/AccountEditPanel.js';
 
 import './AccountsList.html';
+
+const logger = Logger.get();
 
 Template.AccountsList.onCreated( function(){
     const self = this;
@@ -64,7 +67,7 @@ Template.AccountsList.helpers({
         const table = Package['aldeed:tabular'].default.tablesByName[name];
         // tableName='users'
         // table is a Table instance
-        //console.debug( 'tableName', name, 'aldeed table', table );
+        //logger.debug( 'tableName', name, 'aldeed table', table );
         return table;
     }
 });
@@ -72,12 +75,12 @@ Template.AccountsList.helpers({
 Template.AccountsList.events({
     // want display more the first email address, data.item is the user document
     'am-email-more'( event, instance, data ){
-        console.debug( event, data );
+        logger.debug( event, data );
     },
 
     // edit the settings for this table
     'tabular-settings-event .AccountsList'( event, instance, data ){
-        console.debug( event, data );
+        logger.debug( event, data );
     },
 
     // delete an account

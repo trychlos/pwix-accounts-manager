@@ -20,6 +20,7 @@ import { strict as assert } from 'node:assert';
 import { AccountsHub } from 'meteor/pwix:accounts-hub';
 import { AccountsUI } from 'meteor/pwix:accounts-ui';
 import { Forms } from 'meteor/pwix:forms';
+import { Logger } from 'meteor/pwix:logger';
 import { Modal } from 'meteor/pwix:modal';
 import { pwixI18n } from 'meteor/pwix:i18n';
 import { ReactiveVar } from 'meteor/reactive-var';
@@ -32,9 +33,11 @@ import '../account_roles_panel/account_roles_panel.js';
 
 import './AccountEditPanel.html';
 
+const logger = Logger.get();
+
 Template.AccountEditPanel.onCreated( function(){
     const self = this;
-    //console.debug( this );
+    //logger.debug( this );
 
     self.AM = {
         // the amClass instance
@@ -129,7 +132,7 @@ Template.AccountEditPanel.onRendered( function(){
     self.autorun(() => {
         const checker = self.AM.checker.get();
         if( checker ){
-            //console.debug( 'checker', checker.iCheckableId(), checker.status(), checker.validity());
+            //logger.debug( 'checker', checker.iCheckableId(), checker.status(), checker.validity());
         }
     });
 });
@@ -170,7 +173,7 @@ Template.AccountEditPanel.helpers({
                     tabs.push( tab );
                 });
             } else {
-                console.warn( 'expect tabsBefore be an array, got', this.tabsBefore );
+                logger.warn( 'expect tabsBefore be an array, got', this.tabsBefore );
             }
         }
         if( amInstance.haveIdent()){
@@ -188,7 +191,7 @@ Template.AccountEditPanel.helpers({
                     tabs.push( tab );
                 });
             } else {
-                console.warn( 'expect tabs be an array, got', this.tabs );
+                logger.warn( 'expect tabs be an array, got', this.tabs );
             }
         }
         if( amInstance.haveRoles()){
@@ -242,15 +245,15 @@ Template.AccountEditPanel.helpers({
                                     tabs.splice( i, 0, it );
                                 });
                             } else {
-                                console.warn( 'expects tabs be an array, got', def.tabs );
+                                logger.warn( 'expects tabs be an array, got', def.tabs );
                             }
                         }
                     };
                     if( !found ){
-                        console.warn( 'tab not found:', def.before );
+                        logger.warn( 'tab not found:', def.before );
                     }
                 } else {
-                    console.warn( 'expects additionalTabs have a \'before\' key, not found', def );
+                    logger.warn( 'expects additionalTabs have a \'before\' key, not found', def );
                 }
             });
         }
@@ -267,7 +270,7 @@ Template.AccountEditPanel.helpers({
                 });
             });
         }
-        //console.debug( 'tabs', tabs, this );
+        //logger.debug( 'tabs', tabs, this );
         return {
             name: ACCOUNT_EDIT_TABBED,
             tabs: tabs,
@@ -280,7 +283,7 @@ Template.AccountEditPanel.events({
     // submit
     //  event triggered in case of a modal
     'md-click .AccountEditPanel'( event, instance, data ){
-        //console.debug( event, data );
+        //logger.debug( event, data );
         if( data.button.id === Modal.C.Button.OK ){
             instance.$( event.currentTarget ).trigger( 'iz-submit' );
         }
@@ -288,10 +291,10 @@ Template.AccountEditPanel.events({
 
     // submit
     'iz-submit .AccountEditPanel'( event, instance ){
-        //console.debug( event, instance );
+        //logger.debug( event, instance );
         const self = this;
         let item = instance.AM.item.get();
-        //console.debug( 'item', item );
+        //logger.debug( 'item', item );
         // we cannot call here AccountHub.ahClass.preferredLabel() as this later requires an id - so compute something not too far of that
         //  must have at least one of these
         const label = ( item.emails && item.emails[0]?.address ) || item.username || ( item.usernames && item.usernames[0]?.username ) || item._id || pwixI18n.label( I18N, 'edit.new_label' );
@@ -322,7 +325,7 @@ Template.AccountEditPanel.events({
                                 instance.AM.$tabbed.trigger( 'tabbed-do-activate', { tabbedId: instance.AM.tabbedId, index: 0 });
                                 const res = await updateRoles( item );
                             } else {
-                                console.warn( 'unable to retrieve the user account', label );
+                                logger.warn( 'unable to retrieve the user account', label );
                             }
                         });
                         if( closeAfterNew ){
@@ -344,7 +347,7 @@ Template.AccountEditPanel.events({
                         }
                     });
                 } else {
-                    console.warn( 'refusing to call AccountsUI.Features.createUser() on amInstance', instance.AM.amInstance.get());
+                    logger.warn( 'refusing to call AccountsUI.Features.createUser() on amInstance', instance.AM.amInstance.get());
                 }
             }
 

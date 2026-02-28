@@ -15,9 +15,12 @@ import _ from 'lodash';
 
 import { AccountsHub } from 'meteor/pwix:accounts-hub';
 import { Forms } from 'meteor/pwix:forms';
+import { Logger } from 'meteor/pwix:logger';
 import { pwixI18n } from 'meteor/pwix:i18n';
 
 import './account_email_row.html';
+
+const logger = Logger.get();
 
 Template.account_email_row.onCreated( function(){
     const self = this;
@@ -42,10 +45,10 @@ Template.account_email_row.onCreated( function(){
                 Template.currentData().item.set( item );
                 self.AM.checker.get().removeMe();
             } else {
-                console.warn( id, 'not found' );
+                logger.warn( id, 'not found' );
                 const trs = $( '.am-account-ident-panel tr.am-account-email-row' );
                 $.each( trs, function( index, object ){
-                    console.debug( index, $( object ).data( 'item-id' ));
+                    logger.debug( index, $( object ).data( 'item-id' ));
                 });
             }
         }
@@ -133,5 +136,5 @@ Template.account_email_row.events({
 });
 
 Template.account_email_row.onDestroyed( function(){
-    //console.debug( 'onDestroyed', Template.currentData().it.id );
+    //logger.debug( 'onDestroyed', Template.currentData().it.id );
 });

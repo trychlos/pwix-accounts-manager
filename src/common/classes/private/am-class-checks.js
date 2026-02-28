@@ -5,10 +5,13 @@
 const assert = require( 'assert' ).strict;
 import validator from 'email-validator';
 
+import { Logger } from 'meteor/pwix:logger';
 import { pwixI18n } from 'meteor/pwix:i18n';
 import { TM } from 'meteor/pwix:typed-message';
 
 import { amClass } from '../am-class.class.js';
+
+const logger = Logger.get();
 
 // fields check
 //  - value: mandatory, the value to be tested
@@ -36,7 +39,7 @@ const _id2index = function( array, id ){
             return i;
         }
     }
-    console.warn( 'id='+id+' not found' );
+    logger.warn( 'id='+id+' not found' );
     return -1;
 }
 

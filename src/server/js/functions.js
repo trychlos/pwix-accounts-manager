@@ -5,6 +5,9 @@
  */
 
 import { AccountsHub } from 'meteor/pwix:accounts-hub';
+import { Logger } from 'meteor/pwix:logger';
+
+const logger = Logger.get();
 
 AccountsManager.s = AccountsManager.s || {};
 
@@ -36,7 +39,7 @@ AccountsManager.s.getBy = async function( instanceName, query, userId ){
                 'pwix.accounts_manager.s.getBy' );
         }
     } else {
-        console.warn( 'pwix:accounts-manager getBy() unknown or invalid instance name', instanceName );
+        logger.warn( 'getBy() unknown or invalid instance name', instanceName );
     }
     return ret;
 };
@@ -57,7 +60,7 @@ AccountsManager.s.removeById = async function( instanceName, id, userId ){
                 'Unable to remove "'+id+'" account' );
         }
     } else {
-        console.warn( 'pwix:accounts-manager removeById() unknown or invalid instance name', instanceName );
+        logger.warn( 'removeById() unknown or invalid instance name', instanceName );
     }
     return ret;
 };
@@ -67,7 +70,7 @@ AccountsManager.s.removeById = async function( instanceName, id, userId ){
 // NB 2: on login no more allowed, make sure login tokens are cleared in the database
 AccountsManager.s.updateAccount = async function( instanceName, item, userId, origItem ){
     let ret = null;
-    //console.debug( 'item', item, 'userId', userId, 'instanceName', instanceName );
+    //logger.debug( 'item', item, 'userId', userId, 'instanceName', instanceName );
     const amInstance = AccountsHub.getInstance( instanceName );
     if( amInstance && amInstance instanceof AccountsManager.amClass ){
         if( !await AccountsManager.isAllowed( 'pwix.accounts_manager.feat.edit', userId, { amInstance: amInstance, id: item._id })){
@@ -77,9 +80,9 @@ AccountsManager.s.updateAccount = async function( instanceName, item, userId, or
         const itemId = item._id;
         try {
             let orig = await amInstance.collection().findOneAsync({ _id: itemId });
-            //console.debug( 'orig', orig );
+            //logger.debug( 'orig', orig );
             if( itemId === userId && !item.loginAllowed && orig?.loginAllowed ){
-                console.warn( 'cowardly refusing to disallow current user login' );
+                logger.warn( 'updateAccount() cowardly refusing to disallow current user login' );
                 item.loginAllowed = true;
             }
             let ret = null;
@@ -100,21 +103,21 @@ AccountsManager.s.updateAccount = async function( instanceName, item, userId, or
                 // force user logout if needed
                 } else if( !item.loginAllowed && orig.loginAllowed ){
                     amInstance.collection().updateAsync({ _id: itemId }, { $set: { 'services.resume.loginTokens': [] }}).then(( res ) => {
-                        console.log( 'forced user logout', itemId, 'res', res );
+                        logger.log( 'updateAccount() forced user logout', itemId, 'res', res );
                     });
                 }
             } else {
-                console.warn( 'user not found', itemId );
+                logger.warn( 'updateAccount() user not found', itemId );
             }
             return ret;
         } catch( e ){
-            console.debug( e );
+            logger.debug( 'updateAccount() ', e );
             throw new Meteor.Error(
                 'pwix.accounts_manager.fn.updateAccount',
                 'Unable to update "'+itemId+'" account' );
         }
     } else {
-        console.warn( 'pwix:accounts-manager updateAccount() unknown or invalid instance name', instanceName );
+        logger.warn( 'updateAccount() unknown or invalid instance name', instanceName );
     }
 };
 
@@ -140,7 +143,7 @@ AccountsManager.s.updateById = async function( instanceName, id, userId, modifie
                         'Unable to update "'+id+'" account' );
                 }
             } else {
-                console.warn( 'user not found', id );
+                logger.warn( 'updateById() user not found', id );
             }
             return ret;
         } catch( e ){
@@ -149,7 +152,7 @@ AccountsManager.s.updateById = async function( instanceName, id, userId, modifie
                 'Unable to update "'+id+'" account' );
         }
     } else {
-        console.warn( 'pwix:accounts-manager updateById() unknown or invalid instance name', instanceName );
+        logger.warn( 'updateById() unknown or invalid instance name', instanceName );
     }
 };
 

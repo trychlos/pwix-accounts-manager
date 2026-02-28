@@ -6,4 +6,3 @@ import EventEmitter from 'node:events';
 
 AccountsManager.s = AccountsManager.s || {};
 AccountsManager.s.eventEmitter = new EventEmitter();
-//console.debug( 'AccountsManager is an EventEmitter' );

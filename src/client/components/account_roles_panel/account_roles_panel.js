@@ -8,7 +8,11 @@
  * - amInstance: a ReactiveVar which holds the amClass instance
  */
 
+import { Logger } from 'meteor/pwix:logger';
+
 import './account_roles_panel.html';
+
+const logger = Logger.get();
 
 Template.account_roles_panel.helpers({
     // parms for prEditPanel roles edition panel
@@ -22,14 +26,14 @@ Template.account_roles_panel.helpers({
 Template.account_roles_panel.events({
     // trace global roles updates
     'pr-global-state .am-account-roles-panel'( event, instance, data ){
-        //console.debug( event, data, Roles.EditPanel.roles());
-        //console.debug( Roles.EditPanel.roles());
-        //console.debug( 'global', data.global );
+        //logger.debug( event, data, Roles.EditPanel.roles());
+        //logger.debug( Roles.EditPanel.roles());
+        //logger.debug( 'global', data.global );
     },
     // trace scoped roles updates
     'pr-scoped-state .am-account-roles-panel'( event, instance, data ){
-        //console.debug( event, data, Roles.EditPanel.roles());
-        //console.debug( Roles.EditPanel.roles());
-        //console.debug( 'scoped', data.scoped );
+        //logger.debug( event, data, Roles.EditPanel.roles());
+        //logger.debug( Roles.EditPanel.roles());
+        //logger.debug( 'scoped', data.scoped );
     }
 });

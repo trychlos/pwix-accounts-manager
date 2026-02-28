@@ -19,7 +19,6 @@ import { amClass } from '../classes/am-class.class.js';
  * @returns {Boolean} true if the current user is allowed to do the action
  */
 AccountsManager.isAllowed = async function( action, userId=null, args ){
-    //console.debug( arguments );
     assert.ok( args && args.amInstance, 'expects an object argument with \'amInstance\' key, got '+args );
     assert.ok( typeof( args.amInstance ) === 'string' || args.amInstance instanceof String || args.amInstance instanceof amClass, 'expects args.amInstance be a string or an amClass object, got '+args.amInstance );
     let amInstance = args.amInstance;

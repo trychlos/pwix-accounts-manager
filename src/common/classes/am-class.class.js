@@ -10,12 +10,15 @@ const assert = require( 'assert' ).strict;
 
 import { AccountsHub } from 'meteor/pwix:accounts-hub';
 import { Field } from 'meteor/pwix:field';
+import { Logger } from 'meteor/pwix:logger';
 import { ReactiveVar } from 'meteor/reactive-var';
 import SimpleSchema from 'meteor/aldeed:simple-schema';
 import { Tracker } from 'meteor/tracker';
 
 import { amClassFielddef } from './private/am-class-fielddef.js';
 import { amClassTabular } from './private/am-class-tabular.js';
+
+const logger = Logger.get();
 
 export class amClass extends AccountsHub.ahClass {
 
@@ -187,13 +190,15 @@ export class amClass extends AccountsHub.ahClass {
     constructor( o ){
         assert( o && _.isObject( o ), 'pwix:accounts-manager.amClass() expects an object argument, got '+o );
         super( ...arguments );
-        console.debug( 'pwix:accounts-manager instanciating \''+this.name()+'\'', o );
+        logger.debug( 'amClass.amClass() instanciating \''+this.name()+'\'', o );
 
         this.#args = o;
         const self = this;
 
         // interpret arguments
         // error: this._closeAfterNew is not a function on Meteor HMR - a hard reload fixes the issue
+        logger.debug( 'AccountsManager.amClass._closeAfterNew', AccountsManager.amClass._closeAfterNew );
+        logger.debug( 'this._closeAfterNew', this._closeAfterNew );
         this.#closeAfterNew = this._closeAfterNew();
         this.#haveIdent = this._haveIdent();
         this.#haveRoles = this._haveRoles();
@@ -225,7 +230,7 @@ export class amClass extends AccountsHub.ahClass {
             this._lastConnection();
         }
 
-        //console.debug( this );
+        //logger.debug( this );
         return this;
     }
 
@@ -358,7 +363,7 @@ export class amClass extends AccountsHub.ahClass {
                         it.DYN.roles = new ReactiveVar( [] );
                         list.push( it );
                     });
-                    //console.debug( 'usersList', self.collectionName(), list );
+                    //logger.debug( 'usersList', self.collectionName(), list );
                     self.#usersList.set( list );
                 });
             }
@@ -369,7 +374,7 @@ export class amClass extends AccountsHub.ahClass {
             if( handle && handle.ready()){
                 self.#usersList.get().forEach(( it ) => {
                     Package['pwix:roles'].Roles.directRolesForUser( it, { anyScope: true }).then(( res ) => {
-                        //console.debug( 'directRolesForUser', it, res );
+                        //logger.debug( 'directRolesForUser', it, res );
                         it.DYN.roles.set( res );
                     });
                 });

@@ -5,6 +5,9 @@
 const assert = require( 'assert' ).strict;
 
 import { AccountsHub } from 'meteor/pwix:accounts-hub';
+import { Logger } from 'meteor/pwix:logger';
+
+const logger = Logger.get();
 
 /*
  * the publication for the tabular display
@@ -88,7 +91,7 @@ Meteor.publish( 'pwix_accounts_manager_accounts_tabular', async function( tableN
 
         self.ready();
     } else {
-        console.warn( 'pwix_accounts_manager_accounts_tabular unknown or invalid tabular name', tableName );
+        logger.warn( 'pwix_accounts_manager_accounts_tabular unknown or invalid tabular name', tableName );
         return false;
     }
 });

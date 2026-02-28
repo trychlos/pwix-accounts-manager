@@ -12,11 +12,14 @@
 
 import _ from 'lodash';
 
+import { Logger } from 'meteor/pwix:logger';
 import { pwixI18n } from 'meteor/pwix:i18n';
 import { Random } from 'meteor/random';
 import { ReactiveVar } from 'meteor/reactive-var';
 
 import './account_emails_list.html';
+
+const logger = Logger.get();
 
 Template.account_emails_list.onCreated( function(){
     const self = this;
@@ -33,7 +36,7 @@ Template.account_emails_list.onCreated( function(){
 
     // tracking the count of email addresses
     self.autorun(() => {
-        //console.debug( 'emailsCount', self.AM.emailsCount.get());
+        //logger.debug( 'emailsCount', self.AM.emailsCount.get());
     });
 });
 

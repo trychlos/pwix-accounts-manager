@@ -37,6 +37,7 @@ function configure( api ){
     api.use( 'pwix:field@1.0.0-rc' );
     api.use( 'pwix:forms@1.0.0-rc' );
     api.use( 'pwix:i18n@1.5.7' );
+    api.use( 'pwix:logger@1.0.0-rc' );
     api.use( 'pwix:modal@2.0.0' );
     api.use( 'pwix:notes@1.0.0-rc' );
     api.use( 'pwix:plus-button@1.0.0-rc' );

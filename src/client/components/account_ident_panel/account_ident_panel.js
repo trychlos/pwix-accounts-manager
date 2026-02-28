@@ -17,10 +17,13 @@ import strftime from 'strftime';
 import { AccountsHub } from 'meteor/pwix:accounts-hub';
 import { AccountsUI } from 'meteor/pwix:accounts-ui';
 import { Forms } from 'meteor/pwix:forms';
+import { Logger } from 'meteor/pwix:logger';
 import { pwixI18n } from 'meteor/pwix:i18n';
 import { ReactiveVar } from 'meteor/reactive-var';
 
 import './account_ident_panel.html';
+
+const logger = Logger.get();
 
 Template.account_ident_panel.onCreated( function(){
     const self = this;
@@ -119,7 +122,7 @@ Template.account_ident_panel.helpers({
 
 Template.account_ident_panel.events({
     'ac-signup-ok .am-account-ident-panel'( event, instance, data ){
-        //console.debug( event, instance, data );
+        //logger.debug( event, instance, data );
         const checker = instance.AM.checker.get();
         if( checker ){
             checker.setValid( data.ok );
