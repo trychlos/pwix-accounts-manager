@@ -15,6 +15,7 @@
     - Restore (disappeared) lastConnection update on user login on 'users' collection
     - Use pwix:logger universal logger
     - Define a ready() reactive data source
+    - Remove (most of) assert() tests, replacing with logger.error() for debugging facility
 
 ### 2.2.0
 

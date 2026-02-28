@@ -15,7 +15,6 @@
  */
 
 import _ from 'lodash';
-import { strict as assert } from 'node:assert';
 
 import { AccountsHub } from 'meteor/pwix:accounts-hub';
 import { AccountsUI } from 'meteor/pwix:accounts-ui';
@@ -64,9 +63,11 @@ Template.AccountEditPanel.onCreated( function(){
         const name = Template.currentData().name;
         if( name ){
             const instance = AccountsHub.getInstance( name );
-            if( instance ){
-                assert( instance instanceof AccountsManager.amClass, 'expect an AccountsManager.amClass, got '+instance );
+            if( instance && instance instanceof AccountsManager.amClass){
                 self.AM.amInstance.set( instance );
+            } else {
+                logger.error( 'expect an AccountsManager.amClass, got', instance, 'throwing...' );
+                throw new Error( 'Bad argument: instance' );
             }
         }
     });

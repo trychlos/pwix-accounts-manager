@@ -71,10 +71,26 @@ AccountsManager.s.removeById = async function( instanceName, id, userId ){
 AccountsManager.s.updateAccount = async function( instanceName, item, userId, origItem ){
     let ret = null;
     //logger.debug( 'item', item, 'userId', userId, 'instanceName', instanceName );
+    if( !instanceName || !_.isString( instanceName )){
+        logger.error( 'updateAccount() expects \'instanceName\' be a non-empty string, got', instanceName, 'throwing...' );
+        throw new Error( 'Bad argument: instanceName' );
+    }
     const amInstance = AccountsHub.getInstance( instanceName );
-    if( amInstance && amInstance instanceof AccountsManager.amClass ){
-        if( !await AccountsManager.isAllowed( 'pwix.accounts_manager.feat.edit', userId, { amInstance: amInstance, id: item._id })){
-            return null;
+    if( !amInstance || !( amInstance instanceof AccountsManager.amClass )){
+        logger.error( 'updateAccount() expects \'amInstance\' be an instance of AccountsManager.amClass, got', amInstance, 'throwing...' );
+        throw new Error( 'Bad argument: amInstance' );
+    }
+    if( !await AccountsHub.isAllowed( 'pwix.accounts_manager.feat.edit', userId, { instance: amInstance, id: item._id })){
+        return null;
+    }
+    // item._id is lost during update !?
+    const itemId = item._id;
+    try {
+        let orig = await amInstance.collection().findOneAsync({ _id: itemId });
+        //logger.debug( 'orig', orig );
+        if( itemId === userId && !item.loginAllowed && orig?.loginAllowed ){
+            logger.warn( 'updateAccount() cowardly refusing to disallow current user login' );
+            item.loginAllowed = true;
         }
         // item._id is lost during update !?
         const itemId = item._id;

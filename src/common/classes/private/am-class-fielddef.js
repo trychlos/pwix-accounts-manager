@@ -5,7 +5,6 @@
  */
 
 import _ from 'lodash';
-const assert = require( 'assert' ).strict;
 
 import strftime from 'strftime';
 

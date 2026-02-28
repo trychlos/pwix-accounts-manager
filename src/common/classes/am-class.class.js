@@ -6,7 +6,6 @@
  */
 
 import _ from 'lodash';
-const assert = require( 'assert' ).strict;
 
 import { AccountsHub } from 'meteor/pwix:accounts-hub';
 import { Field } from 'meteor/pwix:field';
@@ -58,25 +57,37 @@ export class amClass extends AccountsHub.ahClass {
 
     /*
      * @returns {Object} the fieldset extension to be considered
+     *  can be falsy (returns null) or must have a 'fields' as an object or an array of objects
      */
     _additionalFieldset(){
         let set = this.#args.additionalFieldset;
-        if( set ){
-            assert( _.isObject( set ), 'pwix:accounts-manager.amClass.additionalFieldset() expects an Object argument, got '+set );
-            assert( set.fields && ( _.isObject( set.fields ) || _.isArray( set.fields )), 'pwix:accounts-manager.amClass.additionalFieldset() expects set.fields be an object or an array, got '+set.fields );
-        } else {
-            set = null;
+        if( set && !_.isObject( set )){
+            logger.error( '_additionalFieldset() expects \'set\' be an object when set, got', set, 'throwing...' );
+            throw new Error( 'Bad argument: set' );
         }
+        if( set && !set.fields ){
+            logger.error( '_additionalFieldset() expects \'set\' have a \'fields\' key when set, got', set, 'throwing...' );
+            throw new Error( 'Bad argument: fields' );
+        }
+        if( set && !_.isObject( set.fields ) && !_.isArray( set.fields )){
+            logger.error( '_additionalFieldset() expects \'set.fields\' be an object or an array of objects, got', set, 'throwing...' );
+            throw new Error( 'Bad argument: fields' );
+        }
+        set = set || null;
         return set;
     }
 
     /*
      * @returns {Field.Set} the base fieldset to be considered
+     *  can be falsy (and set a default value)
      */
     _baseFieldset(){
         let set = this.#args.baseFieldset;
         if( set ){
-            assert( set instanceof Field.Set, 'pwix:accounts-manager.amClass.baseFieldset() expects a Field.Set argument, got '+set );
+            if( !( set instanceof Field.Set )){
+                logger.error( '_baseFieldset() expects a \'Field.Set\' argument when set, got', set, 'throwing...' );
+                throw new Error( 'Bad argument: set' );
+            }
         } else {
             let columns = this.defaultFieldDef();
             set = new Field.Set( columns );
@@ -89,10 +100,13 @@ export class amClass extends AccountsHub.ahClass {
      */
     _closeAfterNew(){
         let close = this.#args.closeAfterNew;
-        if( close !== undefined ){
-            assert( close === true || close === false, 'pwix:accounts-manager.amClass._closeAfterNew() expects a Boolean argument, got '+close );
-        } else {
+        if( close === undefined || close === null ){
             close = true;
+        } else if( close === true || close === false ){
+            // fine
+        } else {
+            logger.error( '_closeAfterNew() expects a Boolean argument, got', close, 'throwing...' );
+            throw new Error( 'Bad argument: close' );
         }
         return close;
     }
@@ -103,7 +117,12 @@ export class amClass extends AccountsHub.ahClass {
     _collectionName(){
         let name = this.#args.collection;
         if( name ){
-            assert( _.isString( name ), 'pwix:accounts-manager.amClass._collectionName() expects a String argument, got '+name );
+            if( _.isString( name )){
+                // fine
+            } else {
+                logger.error( '_collectionName() expects a String argument, got', name, 'throwing...' );
+                throw new Error( 'Bad argument: name' );
+            }
         } else {
             name = 'users';
         }
@@ -115,10 +134,13 @@ export class amClass extends AccountsHub.ahClass {
      */
     _haveIdent(){
         let have = this.#args.haveIdent;
-        if( have !== undefined ){
-            assert( have === true || have === false, 'pwix:accounts-manager.amClass._haveIdent() expects a Boolean argument, got '+have );
-        } else {
+        if( have === undefined || have === null ){
             have = true;
+        } else if( have === true || have === false ){
+            // fine
+        } else {
+            logger.error( '_haveIdent() expects a Boolean argument, got', have, 'throwing...' );
+            throw new Error( 'Bad argument: have' );
         }
         return have;
     }
@@ -129,29 +151,16 @@ export class amClass extends AccountsHub.ahClass {
      */
     _haveRoles(){
         let have = this.#args.haveRoles;
-        if( have !== undefined ){
-            assert( have === true || have === false, 'pwix:accounts-manager.amClass._haveRoles() expects a Boolean argument, got '+have );
-        } else {
+        if( have === undefined || have === null ){
             have = true;
+        } else if( have === true || have === false ){
+            // fine
+        } else {
+            logger.error( '_haveRoles() expects a Boolean argument, got', have, 'throwing...' );
+            throw new Error( 'Bad argument: have' );
         }
-        have &&= ( Package['pwix:roles'] !== undefined );
+        have &&= ( Object.keys( Package ).includes( 'pwix:roles' ) && Object.keys( Package['pwix:roles'] ).includes( 'Roles' ));
         return have;
-    }
-
-    /*
-     * @locus: client only
-     * @summary: automatically update the user's last connection
-     */
-    _lastConnection(){
-        assert( Meteor.isClient, 'pwix:accounts-manager amClass._lastConnection() must only run on client' );
-        assert( this.collectionName() === 'users', 'pwix:accounts-manager amClass._lastConnection() must only run for \'users\' collection, got '+this.collectionName());
-        const self = this;
-        Tracker.autorun(() => {
-            const id = Meteor.userId();
-            if( id ){
-                Meteor.callAsync( 'pwix_accounts_manager_accounts_update_byid', self.collectionName(), id, { lastConnection: new Date() });
-            }
-        });
     }
 
     /*
@@ -159,10 +168,13 @@ export class amClass extends AccountsHub.ahClass {
      */
     _withGlobals(){
         let pane = this.#args.withGlobals;
-        if( pane ){
-            assert( pane === true || pane === false, 'pwix:accounts-manager.amClass._withGlobals() expects a Boolean argument, got '+pane );
-        } else {
+        if( pane === undefined || pane === null ){
             pane = true;
+        } else if( pane === true || pane === false ){
+            // fine
+        } else {
+            logger.error( '_withGlobals() expects a Boolean argument, got', pane, 'throwing...' );
+            throw new Error( 'Bad argument: pane' );
         }
         return pane;
     }
@@ -172,10 +184,13 @@ export class amClass extends AccountsHub.ahClass {
      */
     _withScoped(){
         let pane = this.#args.withScoped;
-        if( pane ){
-            assert( pane === true || pane === false, 'pwix:accounts-manager.amClass._withScoped() expects a Boolean argument, got '+pane );
-        } else {
+        if( pane === undefined || pane === null ){
             pane = true;
+        } else if( pane === true || pane === false ){
+            // fine
+        } else {
+            logger.error( '_withScoped() expects a Boolean argument, got', pane, 'throwing...' );
+            throw new Error( 'Bad argument: pane' );
         }
         return pane;
     }
@@ -184,57 +199,51 @@ export class amClass extends AccountsHub.ahClass {
      * @summary
      *  All needed parameters must be specified at instanciation time, as this class doesn't provide any application-level setter.
      *  The collection is entirely defined here.
+     *  As a consequence, options parameter is mandatory.
      * @constructor
+     * @param {Object} o mandatory options
      * @returns {amClass} this instance
      */
     constructor( o ){
-        assert( o && _.isObject( o ), 'pwix:accounts-manager.amClass() expects an object argument, got '+o );
-        ret = super( ...arguments );
-        console.debug( 'ret', this );
-        logger.debug( 'amClass.amClass() instanciating \''+this.name()+'\'', o );
+        if( o && _.isObject( o )){
+            super( ...arguments );
+            logger.debug( 'amClass() instanciating \''+this.name()+'\'', o );
 
-        this.#args = o;
-        const self = this;
+            this.#args = o;
+            const self = this;
 
-        // interpret arguments
-        // error: this._closeAfterNew is not a function on Meteor HMR - one to several hard reload may be needed to fix the issue
-        logger.debug( 'this._closeAfterNew', this._closeAfterNew );
-        this.#closeAfterNew = this._closeAfterNew();
-        this.#haveIdent = this._haveIdent();
-        this.#haveRoles = this._haveRoles();
-        this.#withGlobals = this._withGlobals();
-        this.#withScoped = this._withScoped();
+            // interpret arguments
+            this.#closeAfterNew = this._closeAfterNew();
+            this.#haveIdent = this._haveIdent();
+            this.#haveRoles = this._haveRoles();
+            this.#withGlobals = this._withGlobals();
+            this.#withScoped = this._withScoped();
 
-        // define the Field.Set
-        let set = this._baseFieldset();
-        let adds = this._additionalFieldset();
-        if( adds ){
-            set.extend( adds );
+            // define the Field.Set
+            let set = this._baseFieldset();
+            let adds = this._additionalFieldset();
+            if( adds ){
+                set.extend( adds );
+            }
+            this.#fieldSet = set;
+
+            // attach the defined fieldset as a schema to the collection
+            this.collection().attachSchema( new SimpleSchema( this.#fieldSet.toSchema()), { replace: true });
+            this.collection().attachBehaviour( 'timestampable' );
+
+            // define the Tabular.Table
+            this.#tabular = amClassTabular.new( this );
+
+            // get and maintain the accounts list in the client side
+            if( Meteor.isClient && this.#args.feedNow !== false ){
+                Meteor.defer(() => { self.feedList(); });
+            }
+
+           return this;
         }
-        this.#fieldSet = set;
-
-        // attach the defined fieldset as a schema to the collection
-        this.collection().attachSchema( new SimpleSchema( this.#fieldSet.toSchema()), { replace: true });
-        this.collection().attachBehaviour( 'timestampable' );
-
-        // define the Tabular.Table
-        this.#tabular = amClassTabular.new( this );
-
-        // get and maintain the accounts list in the client side
-        if( Meteor.isClient && this.#args.feedNow !== false ){
-            this.feedList();
-        }
-
-        // update the last connection attribute in the client side for standard Meteor 'users' collection
-        if( Meteor.isClient && this.opts().collection() === 'users' ){
-            this._lastConnection();
-        }
-
-        // timestamp to verify the received data on HMR
-        this._stamp_am = Date.now();
-
-        //logger.debug( this );
-        return this;
+ 
+        logger.error( 'amClass() expects a single Object options argument, got', o, 'throwing...' );
+        throw new Error( 'Bad argment: o' );
     }
 
     /**
@@ -268,15 +277,18 @@ export class amClass extends AccountsHub.ahClass {
      * @returns {Object} the identified user object
      */
     amById( id ){
-        assert( Meteor.isClient, 'pwix:accounts-manager amClass.byId() is only available on client' );
-        let found = null;
-        this.#usersList.get().every(( doc ) => {
-            if( doc._id === id ){
-                found = doc;
-            }
-            return found === null;
-        });
-        return found;
+        if( Meteor.isClient ){
+            let found = null;
+            this.#usersList.get().every(( doc ) => {
+                if( doc._id === id ){
+                    found = doc;
+                }
+                return found === null;
+            });
+            return found;
+        }
+        logger.error( 'amById() should only be run from client side', 'throwing...' );
+        throw new Error( 'Executione side' );
     }
 
     /**
@@ -340,48 +352,46 @@ export class amClass extends AccountsHub.ahClass {
      * @summary: subscribe and autoload the list of user accounts of the collection
      */
     feedList(){
-        assert( Meteor.isClient, 'pwix:accounts-manager amClass.feedList() must only run on client' );
+        if( !Meteor.isClient ){
+            logger.error( 'feedList() should only be run from client side', 'throwing...' );
+            throw new Error( 'Bad side' );
+        }
+        //logger.debug( 'feedList()' );
+        //logger.debug( 'AccountsHub.ready()', AccountsHub.ready());
+        //logger.debug( 'AccountsManager.ready()', AccountsManager.ready());
         const self = this;
-        // subscription
-        Tracker.autorun(() => {
-            if( Meteor.userId()){
-                self.#usersHandle.set( Meteor.subscribe( 'pwix_accounts_hub_list_all', self.collectionName()));
-                if( self.haveRoles()){
-                    self.#rolesHandle.set( Meteor.subscribe( 'pwix_roles_user_assignments' ));
-                }
-            } else {
-                self.#usersHandle.set( null );
-                self.#rolesHandle.set( null );
+        Tracker.autorun( async () => {
+            logger.debug( 'in autorun', self.collectionName());
+            if( !Meteor.userId()){
                 self.#usersList.set( [] );
+                return;
             }
-        });
-        // load users
-        Tracker.autorun(() => {
-            const handle = self.#usersHandle.get();
-            if( handle && handle.ready()){
-                let list = [];
-                self.collection().find().fetchAsync().then(( fetched ) => {
-                    fetched.forEach(( it ) => {
-                        it.DYN = it.DYN || {};
-                        it.DYN.roles = new ReactiveVar( [] );
-                        list.push( it );
-                    });
-                    //logger.debug( 'usersList', self.collectionName(), list );
-                    self.#usersList.set( list );
-                });
+            const usersHandle = Meteor.subscribe( 'pwix_accounts_hub_list_all', self.collectionName());
+            if( !usersHandle.ready()){
+                return;
             }
-        });
-        // load roles
-        Tracker.autorun(() => {
-            const handle = self.#rolesHandle.get();
-            if( handle && handle.ready()){
-                self.#usersList.get().forEach(( it ) => {
-                    Package['pwix:roles'].Roles.directRolesForUser( it, { anyScope: true }).then(( res ) => {
-                        //logger.debug( 'directRolesForUser', it, res );
-                        it.DYN.roles.set( res );
-                    });
-                });
+            const haveRoles = self.haveRoles();
+            let rolesHandle;
+            if( haveRoles ){
+                rolesHandle = Meteor.subscribe( 'pwix_roles_user_assignments' );
             }
+            if( haveRoles && !rolesHandle.ready()){
+                return;
+            }
+            // usersHandle is ready
+            // either we do not have roles, or rolesHandle is ready
+            let list = [];
+            const fetched = await self.collection().find().fetchAsync();
+            for( const it of fetched ){
+                it.DYN = it.DYN || {};
+                it.DYN.roles = new ReactiveVar( [] );
+                if( haveRoles ){
+                    const res = await Package['pwix:roles'].Roles.directRolesForUser( it, { anyScope: true });
+                    it.DYN.roles.set( res );
+                }
+                list.push( it );
+            }
+            self.#usersList.set( list );
         });
     }
 

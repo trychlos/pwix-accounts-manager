@@ -2,7 +2,7 @@
  * pwix:accounts-manager/src/common/classes/private/am-class-checks.js
  */
 
-const assert = require( 'assert' ).strict;
+import { strict as assert } from 'node:assert';
 import validator from 'email-validator';
 
 import { Logger } from 'meteor/pwix:logger';

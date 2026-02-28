@@ -7,8 +7,6 @@
  * - name: the amClass instance name
  */
 
-import { strict as assert } from 'node:assert';
-
 import { AccountsHub } from 'meteor/pwix:accounts-hub';
 import { Logger } from 'meteor/pwix:logger';
 import { Meteor } from "meteor/meteor";
@@ -33,10 +31,11 @@ Template.AccountsList.onCreated( function(){
         // get the amClass instance from its name
         amInstance( name ){
             let instance = name ? AccountsHub.getInstance( name ) : null;
-            if( instance ){
-                assert( instance instanceof AccountsManager.amClass, 'expect an AccountsManager.amClass, got '+instance );
+            if( instance && instance instanceof AccountsManager.amClass ){
+                return instance;
             }
-            return instance;
+            logger.error( 'expect an AccountsManager.amClass, got', instance, 'throwing...' );
+            throw new Error( 'Bad argument: instance' );
         }
     };
 
