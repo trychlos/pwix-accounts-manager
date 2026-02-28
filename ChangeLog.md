@@ -14,6 +14,7 @@
     - Improve AccountsList email address column to have the 'more' button inside
     - Restore (disappeared) lastConnection update on user login on 'users' collection
     - Use pwix:logger universal logger
+    - Define a ready() reactive data source
 
 ### 2.2.0
 

@@ -10,5 +10,6 @@ import './i18n.js';
 import './configure.js';
 //
 import './functions.js';
+import './ready.js';
 
 AccountsManager.amClass = amClass;

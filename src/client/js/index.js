@@ -11,3 +11,6 @@ import '../components/dt_email_verified/dt_email_verified.js';
 import '../../common/js/index.js';
 //
 import '../stylesheets/accounts_manager.less';
+
+// on client side, the package is now fully evaluated, so ready
+AccountsManager.ready( true );

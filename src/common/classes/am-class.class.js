@@ -189,15 +189,15 @@ export class amClass extends AccountsHub.ahClass {
      */
     constructor( o ){
         assert( o && _.isObject( o ), 'pwix:accounts-manager.amClass() expects an object argument, got '+o );
-        super( ...arguments );
+        ret = super( ...arguments );
+        console.debug( 'ret', this );
         logger.debug( 'amClass.amClass() instanciating \''+this.name()+'\'', o );
 
         this.#args = o;
         const self = this;
 
         // interpret arguments
-        // error: this._closeAfterNew is not a function on Meteor HMR - a hard reload fixes the issue
-        logger.debug( 'AccountsManager.amClass._closeAfterNew', AccountsManager.amClass._closeAfterNew );
+        // error: this._closeAfterNew is not a function on Meteor HMR - one to several hard reload may be needed to fix the issue
         logger.debug( 'this._closeAfterNew', this._closeAfterNew );
         this.#closeAfterNew = this._closeAfterNew();
         this.#haveIdent = this._haveIdent();
@@ -229,6 +229,9 @@ export class amClass extends AccountsHub.ahClass {
         if( Meteor.isClient && this.opts().collection() === 'users' ){
             this._lastConnection();
         }
+
+        // timestamp to verify the received data on HMR
+        this._stamp_am = Date.now();
 
         //logger.debug( this );
         return this;

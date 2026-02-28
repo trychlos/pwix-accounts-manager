@@ -434,6 +434,10 @@ Known configuration options are:
 
         Trace functions calls
 
+    - `AccountsManager.C.Verbose.READY`
+
+        Track the readyness status of the package.
+
     Defaults to `AccountsManager.C.Verbose.CONFIGURE`.
 
 A function can be provided by the application for each of these parameters. The function will be called without argument and must return a suitable value.
