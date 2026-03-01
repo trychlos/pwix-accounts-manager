@@ -2,13 +2,13 @@
 
 ## What is it ?
 
-A try to mutualize and factorize the most common part of a simple accounts management system:
+A try to mutualize and factorize the most common parts of a simple accounts management system:
 
 - defines the account schema and provides client and server check functions
 
 - provides components to list and edit accounts.
 
-Most of the configuration is done through the provided class which must be insciated in common application code.
+Most of the configuration is done through the provided class which must be instanciated in common application code.
 
 ## Provides
 
@@ -184,11 +184,11 @@ Constructor takes an object as single argument, with following keys:
 
 - `haveIdent`
 
-    Whether to display the 'ident' panel, defaulting to `true`.
+    Whether to display the 'Ident' panel, defaulting to `true`.
 
 - `haveRoles`
 
-    Whether to display a Roles panel, defaulting to `true`.
+    Whether to display a 'Roles' panel, defaulting to `true`.
 
     For the Roles panel be actually displayed, this `haveRoles` argument must be `true`, **AND** the `pwix:roles` package must be used by the application (it is not _used_ by this package).
 

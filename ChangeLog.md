@@ -16,6 +16,7 @@
     - Use pwix:logger universal logger
     - Define a ready() reactive data source
     - Remove (most of) assert() tests, replacing with logger.error() for debugging facility
+    - Fix the display of user roles and set contextual tooltips
 
 ### 2.2.0
 

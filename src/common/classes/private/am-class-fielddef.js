@@ -10,11 +10,14 @@ import strftime from 'strftime';
 
 import { AccountsHub } from 'meteor/pwix:accounts-hub';
 import { Forms } from 'meteor/pwix:forms';
+import { Logger } from 'meteor/pwix:logger';
 import { Notes } from 'meteor/pwix:notes';
 import { pwixI18n } from 'meteor/pwix:i18n';
 import SimpleSchema from 'meteor/aldeed:simple-schema';
 
 import { amClassChecks } from './am-class-checks.js';
+
+const logger = Logger.get();
 
 export const amClassFielddef = {
 
@@ -168,17 +171,44 @@ export const amClassFielddef = {
             }
         );
         // if the application uses the pwix:roles package, then have a tabular column which summarizes the main roles of the account
+        // these are displayed as an ellipsized string for global and scoped levels
         if( instance.haveRoles()){
             columns.push({
                 name: 'roles',
                 schema: false,
                 dt_title: pwixI18n.label( I18N, 'list.roles_th' ),
                 dt_type: 'string',
-                dt_createdCell: cell => $( cell ).addClass( 'ui-ellipsized' ),
+                //dt_createdCell: cell => $( cell ).addClass( 'ui-ellipsized' ),
                 dt_render( data, type, rowData ){
                     if( type === 'display' ){
                         const item = instance.amById( rowData._id );
-                        return item ? item.DYN.roles.get().join( ', ' ) : '';
+                        if( !item?.DYN?.roles ){
+                            return '';
+                        }
+                        let roleLabels = {};
+                        if( Package['pwix:roles'] ){
+                            roleLabels = Package['pwix:roles'].Roles.scopes.labels.all();
+                        }
+                        let html = '';
+                        const roles = item.DYN.roles.get();
+                        //logger.debug( 'roles', roles );
+                        if( roles.global.direct.length ){
+                            html += '<div class="role-level global" data-bs-toggle="tooltip" data-bs-title="'+pwixI18n.label( I18N, 'list.role_global_tooltip' )+'">';
+                            html += '<div class="title">'+pwixI18n.label( I18N, 'list.role_global' )+'</div>';
+                            html += '<div class="roles">'+roles.global.direct.join( ', ' )+'</div>';
+                            html += '</div>';
+                        }
+                        if( Object.keys( roles.scoped ).length ){
+                            Object.keys( roles.scoped ).every(( scope ) => {
+                                html += '<div class="role-level scope" data-scope="'+scope+'" data-bs-toggle="tooltip" data-bs-title="'+pwixI18n.label( I18N, 'list.role_scoped_tooltip', roleLabels[scope] )+'">';
+                                html += '<div class="title">'+pwixI18n.label( I18N, 'list.role_scoped' )+'</div>';
+                                html += '<div class="roles">'+roles.scoped[scope].direct.join( ', ' )+'</div>';
+                                html += '</div>';
+                                return true;
+                            });
+                        }
+                        //logger.debug( 'html', html );
+                        return html;
                     } else {
                         return '';
                     }

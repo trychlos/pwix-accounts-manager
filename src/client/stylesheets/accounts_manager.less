@@ -73,6 +73,33 @@
     td:nth-child( 7 ) {
         max-width: 350px;
     }
+
+    .role-level {
+        border: 1px solid lightgray;
+        border-radius: 0.25em;
+        padding: 0.25em;
+        display: flex;
+        flex-direction: row;
+        flex-wrap: nowrap;
+        align-items: center;
+
+        .title {
+            font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+            font-size: 75%;
+            color: white;
+            background-color: darkgray;
+            padding: 0.25em 0.5em 0.1em 0.5em;
+            margin-right: 0.25em;
+            border-radius: 0.25em;
+        }
+
+        .roles {
+            white-space: nowrap;
+        }
+    }
+    .role-level:not( :first-child ){
+        margin-top: 0.25em;
+    }
 }
 
 .AccountNewButton {

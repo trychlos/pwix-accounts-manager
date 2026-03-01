@@ -49,8 +49,6 @@ export class amClass extends AccountsHub.ahClass {
     // runtime
     #tabular = null;
     #tabularFieldset = null;
-    #usersHandle = new ReactiveVar( null );
-    #rolesHandle = new ReactiveVar( null );
     #usersList = new ReactiveVar( [] );
 
     // private methods
@@ -350,6 +348,8 @@ export class amClass extends AccountsHub.ahClass {
     /**
      * @locus: client only
      * @summary: subscribe and autoload the list of user accounts of the collection
+     *  NB: we shouldn't rely on tabular publication as this later is only triggered when we display the AccountsList table
+     *  Instead we gather here all the accounts and their characteristics
      */
     feedList(){
         if( !Meteor.isClient ){
@@ -361,7 +361,6 @@ export class amClass extends AccountsHub.ahClass {
         //logger.debug( 'AccountsManager.ready()', AccountsManager.ready());
         const self = this;
         Tracker.autorun( async () => {
-            logger.debug( 'in autorun', self.collectionName());
             if( !Meteor.userId()){
                 self.#usersList.set( [] );
                 return;
@@ -370,27 +369,17 @@ export class amClass extends AccountsHub.ahClass {
             if( !usersHandle.ready()){
                 return;
             }
-            const haveRoles = self.haveRoles();
-            let rolesHandle;
-            if( haveRoles ){
-                rolesHandle = Meteor.subscribe( 'pwix_roles_user_assignments' );
-            }
-            if( haveRoles && !rolesHandle.ready()){
-                return;
-            }
             // usersHandle is ready
-            // either we do not have roles, or rolesHandle is ready
             let list = [];
             const fetched = await self.collection().find().fetchAsync();
             for( const it of fetched ){
                 it.DYN = it.DYN || {};
-                it.DYN.roles = new ReactiveVar( [] );
-                if( haveRoles ){
-                    const res = await Package['pwix:roles'].Roles.directRolesForUser( it, { anyScope: true });
-                    it.DYN.roles.set( res );
-                }
+                const roles = it.DYN.roles;
+                it.DYN.roles = new ReactiveVar({});
+                it.DYN.roles.set( roles );
                 list.push( it );
             }
+            //logger.debug( 'list', self.collectionName(), list );
             self.#usersList.set( list );
         });
     }

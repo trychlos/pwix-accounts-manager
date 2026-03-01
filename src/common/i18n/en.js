@@ -42,6 +42,10 @@ AccountsManager.i18n = {
                 more_title: 'Display more email addresses...',
                 not_allowed: '<p>You are unfortunately not allowed to list the accounts.</p>'
                     +'<p>You can contact your application administrator to ask for the needed habilitation.</p>',
+                role_global: 'Global',
+                role_global_tooltip: 'These are the direct roles assigned to the user at the global level',
+                role_scoped: 'Scoped',
+                role_scoped_tooltip: 'These are the direct roles assigned to the user at the \'%s\' scope level',
                 roles_th: 'Roles',
                 user_notes_th: 'User Notes',
                 username_th: 'Username'

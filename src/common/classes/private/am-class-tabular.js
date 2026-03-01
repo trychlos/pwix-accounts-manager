@@ -55,6 +55,15 @@ export const amClassTabular = {
                     Tabular.C.Items.COLUMN_SELECTION
                 ]
             },
+            drawCallback: function( settings ){
+                // see https://getbootstrap.com/docs/5.3/components/tooltips/
+                // see https://datatables.net/forums/discussion/79345
+                const bootstrap = require( 'bootstrap' );
+                const tooltipTriggerList = [].slice.call( document.querySelectorAll( '[data-bs-toggle="tooltip"]' ));
+                const tooltipList = tooltipTriggerList.map( function( tooltipTriggerEl ){
+                    return new bootstrap.Tooltip( tooltipTriggerEl );
+                });
+            },
             order: [[ fieldSet.indexByName( 'emails.$.address' ), 'asc' ]],
             destroy: true
         });
