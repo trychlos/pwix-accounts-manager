@@ -4,7 +4,6 @@
  * This template is used to display the first email address of the user, plys maybe a 'more' button
  */
 
-
 import './dt_email_addresses.html';
 
 Template.dt_email_addresses.helpers({

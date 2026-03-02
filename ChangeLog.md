@@ -18,6 +18,7 @@
     - Remove (most of) assert() tests, replacing with logger.error() for debugging facility
     - Fix the display of user roles and set contextual tooltips
     - Fix array concatenation of amClass fieldset
+    - Restore sort on email address column now that the column uses a Blaze template
 
 ### 2.2.0
 

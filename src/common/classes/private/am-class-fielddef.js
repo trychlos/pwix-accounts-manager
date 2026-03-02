@@ -79,10 +79,12 @@ export const amClassFielddef = {
                 dt_visible: false
             },
             {
+                // dt_data: 'any' prevents "MongoServerError: FieldPath field names may not start with '$'. Consider using $getField or $setField." exception
+                // dt_data: 'emails.0.address' gives server-side sort for the columns where we are using a Blaze template
                 name: 'emails.$.address',
                 type: String,
                 regEx: SimpleSchema.RegEx.Email,
-                dt_data: 'any',
+                dt_data: 'emails.0.address',
                 dt_title: pwixI18n.label( I18N, 'list.email_address_th' ),
                 dt_template: Meteor.isClient && Template.dt_email_addresses,
                 form_check: amClassChecks.email_address,
@@ -92,10 +94,11 @@ export const amClassFielddef = {
                 name: 'emails.$.verified',
                 type: Boolean,
                 defaultValue: false,
-                dt_data: 'any',
+                dt_data: 'emails.0.verified',
                 dt_title: pwixI18n.label( I18N, 'list.email_verified_th' ),
                 dt_template: Meteor.isClient && Template.dt_email_verified,
                 dt_className: 'dt-center',
+                dt_orderDataType: 'dom-checkbox',
                 form_check: amClassChecks.email_verified
             },
             {
@@ -154,6 +157,7 @@ export const amClassFielddef = {
                         enabled: true
                     }
                 },
+                dt_orderDataType: 'dom-checkbox',
                 form_check: amClassChecks.loginAllowed,
                 form_status: false
             },
@@ -162,10 +166,11 @@ export const amClassFielddef = {
                 type: Date,
                 optional: true,
                 dt_title: pwixI18n.label( I18N, 'list.last_connection_th' ),
-                dt_render( data, type, rowData ){
+                dt_render( data, type, rowData, meta ){
                     return type === 'display' && rowData.lastConnection ? strftime( AccountsManager.configure().datetime, rowData.lastConnection ) : '';
                 },
                 dt_className: 'dt-center',
+                dt_type: 'date',
                 form_status: false,
                 form_check: false
             }
@@ -179,7 +184,7 @@ export const amClassFielddef = {
                 dt_title: pwixI18n.label( I18N, 'list.roles_th' ),
                 dt_type: 'string',
                 //dt_createdCell: cell => $( cell ).addClass( 'ui-ellipsized' ),
-                dt_render( data, type, rowData ){
+                dt_render( data, type, rowData, meta ){
                     if( type === 'display' ){
                         const item = instance.amById( rowData._id );
                         if( !item?.DYN?.roles ){
@@ -191,16 +196,17 @@ export const amClassFielddef = {
                         }
                         let html = '';
                         const roles = item.DYN.roles.get();
+                        //logger.debug( 'item', item );
                         //logger.debug( 'roles', roles );
                         if(( roles?.global.direct || [] ).length ){
-                            html += '<div class="role-level global" data-bs-toggle="tooltip" data-bs-title="'+pwixI18n.label( I18N, 'list.role_global_tooltip' )+'">';
-                            html += '<div class="title">'+pwixI18n.label( I18N, 'list.role_global' )+'</div>';
+                            html += '<div class="role-level global" title="'+pwixI18n.label( I18N, 'list.role_global_tooltip', item.DYN.preferredLabel.label )+'">';
+                            html += '<div class="title">'+pwixI18n.label( I18N, 'list.role_global',  )+'</div>';
                             html += '<div class="roles">'+roles.global.direct.join( ', ' )+'</div>';
                             html += '</div>';
                         }
                         if( Object.keys( roles?.scoped || [] ).length ){
                             Object.keys( roles.scoped ).every(( scope ) => {
-                                html += '<div class="role-level scope" data-scope="'+scope+'" data-bs-toggle="tooltip" data-bs-title="'+pwixI18n.label( I18N, 'list.role_scoped_tooltip', roleLabels[scope] )+'">';
+                                html += '<div class="role-level scope" data-scope="'+scope+'" title="'+pwixI18n.label( I18N, 'list.role_scoped_tooltip', item.DYN.preferredLabel.label, roleLabels[scope] )+'">';
                                 html += '<div class="title">'+pwixI18n.label( I18N, 'list.role_scoped' )+'</div>';
                                 html += '<div class="roles">'+roles.scoped[scope].direct.join( ', ' )+'</div>';
                                 html += '</div>';

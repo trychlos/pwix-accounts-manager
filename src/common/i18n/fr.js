@@ -43,9 +43,9 @@ AccountsManager.i18n = {
                 not_allowed: '<p>Vous n\'êtes malheureusement pas autorisé à consulter la liste des comptes.</p>'
                     +'<p>Vous pouvez vous rapprocher de votre administrateur pour demander les habilitations nécessaires.<p>',
                 role_global: 'Global',
-                role_global_tooltip: 'Ce sont les rôles directement assignés à l\'utilisateur au niveau global',
+                role_global_tooltip: 'Rôles directement assignés à l\'utilisateur \'%s\' au niveau global',
                 role_scoped: 'Périmètre',
-                role_scoped_tooltip: 'Ce sont les rôles directement assignés à l\'utilisateur sur le périmètre \'%s\'',
+                role_scoped_tooltip: 'Ce sont les rôles directement assignés à l\'utilisateur \'%s\' sur le périmètre \'%s\'',
                 roles_th: 'Rôles',
                 user_notes_th: 'Notes de l\'utilisateur',
                 username_th: 'Nom d\'utilisateur'

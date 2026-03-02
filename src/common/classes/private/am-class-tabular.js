@@ -7,8 +7,11 @@
 
 import _ from 'lodash';
 
+import { Logger } from 'meteor/pwix:logger';
 import { pwixI18n } from 'meteor/pwix:i18n';
 import { Tabular } from 'meteor/pwix:tabular';
+
+const logger = Logger.get();
 
 _tabular_identifier = async function( amInstance, it ){
     const res = await amInstance.preferredLabel( it );
@@ -19,10 +22,13 @@ export const amClassTabular = {
     new( amInstance ){
         // define the Tabular.Table
         const fieldSet = amInstance.tabularFieldset();
+        const columns = fieldSet.toTabular();
+        //logger.debug( 'columns', columns );
+        //logger.debug( 'fieldSet.tabularIndexByName emails.$.address', fieldSet.tabularIndexByName( 'emails.$.address', { columns: columns, only_visible: true } ));
         const tabular = new Tabular.Table({
             name: amInstance.tabularName(),
             collection: amInstance.collection(),
-            columns: fieldSet.toTabular(),
+            columns: columns,
             pub: 'pwix_accounts_manager_accounts_tabular',
             //selector( userId ){
             //    return AccountsManager.isAllowed( 'pwix.accounts_manager.feat.list', userId, { amInstance: amInstance });
@@ -55,16 +61,21 @@ export const amClassTabular = {
                     Tabular.C.Items.COLUMN_SELECTION
                 ]
             },
+            /*
             drawCallback: function( settings ){
                 // see https://getbootstrap.com/docs/5.3/components/tooltips/
                 // see https://datatables.net/forums/discussion/79345
-                const bootstrap = require( 'bootstrap' );
+                const bootstrap = require( 'bootstrap/dist/js/bootstrap.min' );
                 const tooltipTriggerList = [].slice.call( document.querySelectorAll( '[data-bs-toggle="tooltip"]' ));
                 const tooltipList = tooltipTriggerList.map( function( tooltipTriggerEl ){
                     return new bootstrap.Tooltip( tooltipTriggerEl );
                 });
             },
-            order: [[ fieldSet.indexByName( 'emails.$.address' ), 'asc' ]],
+            */
+            createdCell(){
+                console.debug( 'here', arguments );
+            },
+            order: [[ fieldSet.tabularIndexByName( 'emails.$.address', { columns: columns }), 'asc' ]],
             destroy: true
         });
         return tabular;
