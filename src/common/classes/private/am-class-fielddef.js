@@ -192,13 +192,13 @@ export const amClassFielddef = {
                         let html = '';
                         const roles = item.DYN.roles.get();
                         //logger.debug( 'roles', roles );
-                        if( roles.global.direct.length ){
+                        if(( roles?.global.direct || [] ).length ){
                             html += '<div class="role-level global" data-bs-toggle="tooltip" data-bs-title="'+pwixI18n.label( I18N, 'list.role_global_tooltip' )+'">';
                             html += '<div class="title">'+pwixI18n.label( I18N, 'list.role_global' )+'</div>';
                             html += '<div class="roles">'+roles.global.direct.join( ', ' )+'</div>';
                             html += '</div>';
                         }
-                        if( Object.keys( roles.scoped ).length ){
+                        if( Object.keys( roles?.scoped || [] ).length ){
                             Object.keys( roles.scoped ).every(( scope ) => {
                                 html += '<div class="role-level scope" data-scope="'+scope+'" data-bs-toggle="tooltip" data-bs-title="'+pwixI18n.label( I18N, 'list.role_scoped_tooltip', roleLabels[scope] )+'">';
                                 html += '<div class="title">'+pwixI18n.label( I18N, 'list.role_scoped' )+'</div>';
@@ -226,9 +226,9 @@ export const amClassFielddef = {
                 name: 'userNotes',
                 dt_title: pwixI18n.label( I18N, 'list.user_notes_th' ),
                 form_title: pwixI18n.label( I18N, 'tabs.user_notes_title' )
-            }),
-            Timestampable.fieldDef()
+            })
         );
+        columns = columns.concat( Timestampable.fieldDef());
 
         return columns;
     }
