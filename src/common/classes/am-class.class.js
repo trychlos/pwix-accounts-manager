@@ -55,7 +55,9 @@ export class amClass extends AccountsHub.ahClass {
 
     /*
      * @returns {Object} the fieldset extension to be considered
-     *  can be falsy (returns null) or must have a 'fields' as an object or an array of objects
+     *  can be falsy (returns null) or :
+     *  - must have a 'fields' as an object or an array of objects
+     *  - may have a 'before' the name of a field where to insert these ones before, defaulting to appending at the end
      */
     _additionalFieldset(){
         let set = this.#args.additionalFieldset;

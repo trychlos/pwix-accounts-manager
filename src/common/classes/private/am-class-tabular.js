@@ -10,6 +10,7 @@ import _ from 'lodash';
 import { Logger } from 'meteor/pwix:logger';
 import { pwixI18n } from 'meteor/pwix:i18n';
 import { Tabular } from 'meteor/pwix:tabular';
+import { bootstrap } from 'meteor/pwix:ui-bootstrap5';
 
 const logger = Logger.get();
 
@@ -61,20 +62,19 @@ export const amClassTabular = {
                     Tabular.C.Items.COLUMN_SELECTION
                 ]
             },
-            /*
             drawCallback: function( settings ){
                 // see https://getbootstrap.com/docs/5.3/components/tooltips/
                 // see https://datatables.net/forums/discussion/79345
-                const bootstrap = require( 'bootstrap/dist/js/bootstrap.min' );
                 const tooltipTriggerList = [].slice.call( document.querySelectorAll( '[data-bs-toggle="tooltip"]' ));
                 const tooltipList = tooltipTriggerList.map( function( tooltipTriggerEl ){
                     return new bootstrap.Tooltip( tooltipTriggerEl );
                 });
             },
-            */
+            /*
             createdCell(){
                 console.debug( 'here', arguments );
             },
+            */
             order: [[ fieldSet.tabularIndexByName( 'emails.$.address', { columns: columns }), 'asc' ]],
             destroy: true
         });
