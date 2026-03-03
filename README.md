@@ -380,9 +380,7 @@ Known data context is:
 
 ## Permissions management
 
-This package can take advantage of `pwix:permissions` package to manage the user permissions.
-
-It defines following tasks:
+This package extends AccountsHub permissions system with following tasks:
 
 - `pwix.accounts_manager.feat.create`: create a new account, with additional arguments as an object with following keys:
     - amInstance: the `amClass` instance
@@ -395,8 +393,7 @@ It defines following tasks:
     - amInstance: the `amClass` instance
     - id: the account identifier
 
-- `pwix.accounts_manager.feat.list`: display all accounts, with additional arguments as an object with following keys:
-    - amInstance: the `amClass` instance
+Note that reading accounts for a server task is not subject to permissions as this is nonetheless required for authentication needs. The above permissions talk about external requests or user-requested tasks.
 
 ## Configuration
 

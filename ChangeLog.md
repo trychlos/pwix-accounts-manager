@@ -20,6 +20,7 @@
     - Fix array concatenation of amClass fieldset
     - Restore sort on email address column now that the column uses a Blaze template
     - Upgrade pwix:ui-bootstrap5 dependency to be able to use Bootstrap tooltips
+    - Meteor methods handl eexceptions throwned by server code
 
 ### 2.2.0
 

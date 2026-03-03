@@ -32,7 +32,7 @@ export const amClassTabular = {
             columns: columns,
             pub: 'pwix_accounts_manager_accounts_tabular',
             //selector( userId ){
-            //    return AccountsManager.isAllowed( 'pwix.accounts_manager.feat.list', userId, { amInstance: amInstance });
+            //    return AccountsHub.isAllowed( 'pwix.accounts_hub.feat.list', userId, { amInstance: amInstance });
             //},
             pwix: {
                 // do not let the user delete himself
@@ -62,14 +62,17 @@ export const amClassTabular = {
                     Tabular.C.Items.COLUMN_SELECTION
                 ]
             },
+            /*
             drawCallback: function( settings ){
                 // see https://getbootstrap.com/docs/5.3/components/tooltips/
                 // see https://datatables.net/forums/discussion/79345
+                // requires ui-bootstrap5 v2.1
                 const tooltipTriggerList = [].slice.call( document.querySelectorAll( '[data-bs-toggle="tooltip"]' ));
                 const tooltipList = tooltipTriggerList.map( function( tooltipTriggerEl ){
                     return new bootstrap.Tooltip( tooltipTriggerEl );
                 });
             },
+            */
             /*
             createdCell(){
                 console.debug( 'here', arguments );

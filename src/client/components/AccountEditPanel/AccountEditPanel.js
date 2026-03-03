@@ -295,7 +295,7 @@ Template.AccountEditPanel.events({
         //logger.debug( event, instance );
         const self = this;
         let item = instance.AM.item.get();
-        //logger.debug( 'item', item );
+        //logger.debug( event, 'item', item );
         // we cannot call here AccountHub.ahClass.preferredLabel() as this later requires an id - so compute something not too far of that
         //  must have at least one of these
         const label = ( item.emails && item.emails[0]?.address ) || item.username || ( item.usernames && item.usernames[0]?.username ) || item._id || pwixI18n.label( I18N, 'edit.new_label' );

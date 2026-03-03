@@ -44,7 +44,7 @@ function configure( api ){
     api.use( 'pwix:tabbed@1.0.0-rc' );
     api.use( 'pwix:tabular@1.0.0-rc' );
     api.use( 'pwix:typed-message@1.2.0' );
-    api.use( 'pwix:ui-bootstrap5@2.0.0-rc' );
+    api.use( 'pwix:ui-bootstrap5@2.1.0-rc' );
     api.use( 'pwix:ui-fontawesome6@1.0.0' );
     api.use( 'pwix:ui-utils@1.1.0' );
     api.use( 'random' );

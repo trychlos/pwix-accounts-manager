@@ -4,6 +4,8 @@
  * Server-only functions
  */
 
+import _ from 'lodash';
+
 import { AccountsHub } from 'meteor/pwix:accounts-hub';
 import { Logger } from 'meteor/pwix:logger';
 
@@ -92,48 +94,36 @@ AccountsManager.s.updateAccount = async function( instanceName, item, userId, or
             logger.warn( 'updateAccount() cowardly refusing to disallow current user login' );
             item.loginAllowed = true;
         }
-        // item._id is lost during update !?
-        const itemId = item._id;
-        try {
-            let orig = await amInstance.collection().findOneAsync({ _id: itemId });
-            //logger.debug( 'orig', orig );
-            if( itemId === userId && !item.loginAllowed && orig?.loginAllowed ){
-                logger.warn( 'updateAccount() cowardly refusing to disallow current user login' );
-                item.loginAllowed = true;
+        let ret = null;
+        if( orig ){
+            await amInstance.preUpdateFn( item );
+            delete item._id;
+            const DYN = item.DYN;
+            delete item.DYN;
+            ret = await amInstance.collection().updateAsync({ _id: itemId }, { $set: item });
+            item.DYN = DYN;
+            item._id = itemId;
+            await amInstance.postUpdateFn( item );
+            AccountsManager.s.eventEmitter.emit( 'update', { amInstance: instanceName, item: item, userId: userId });
+            if( !ret ){
+                throw new Meteor.Error(
+                    'pwix.accounts_manager.fn.updateAccount',
+                    'Unable to update "'+itemId+'" account' );
+            // force user logout if needed
+            } else if( !item.loginAllowed && orig.loginAllowed ){
+                amInstance.collection().updateAsync({ _id: itemId }, { $set: { 'services.resume.loginTokens': [] }}).then(( res ) => {
+                    logger.log( 'updateAccount() forced user logout', itemId, 'res', res );
+                });
             }
-            let ret = null;
-            if( orig ){
-                await amInstance.preUpdateFn( item );
-                delete item._id;
-                const DYN = item.DYN;
-                delete item.DYN;
-                ret = await amInstance.collection().updateAsync({ _id: itemId }, { $set: item });
-                item.DYN = DYN;
-                item._id = itemId;
-                await amInstance.postUpdateFn( item );
-                AccountsManager.s.eventEmitter.emit( 'update', { amInstance: instanceName, item: item, userId: userId });
-                if( !ret ){
-                    throw new Meteor.Error(
-                        'pwix.accounts_manager.fn.updateAccount',
-                        'Unable to update "'+itemId+'" account' );
-                // force user logout if needed
-                } else if( !item.loginAllowed && orig.loginAllowed ){
-                    amInstance.collection().updateAsync({ _id: itemId }, { $set: { 'services.resume.loginTokens': [] }}).then(( res ) => {
-                        logger.log( 'updateAccount() forced user logout', itemId, 'res', res );
-                    });
-                }
-            } else {
-                logger.warn( 'updateAccount() user not found', itemId );
-            }
-            return ret;
-        } catch( e ){
-            logger.debug( 'updateAccount() ', e );
-            throw new Meteor.Error(
-                'pwix.accounts_manager.fn.updateAccount',
-                'Unable to update "'+itemId+'" account' );
+        } else {
+            logger.warn( 'updateAccount() user not found', itemId );
         }
-    } else {
-        logger.warn( 'updateAccount() unknown or invalid instance name', instanceName );
+        return ret;
+    } catch( e ){
+        logger.warning( 'updateAccount() ', e );
+        throw new Meteor.Error(
+            'pwix.accounts_manager.fn.updateAccount',
+            'Unable to update "'+itemId+'" account' );
     }
 };
 

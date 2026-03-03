@@ -54,7 +54,7 @@ Meteor.publish( 'pwix_accounts_manager_accounts_tabular', async function( tableN
         throw new Error( 'Bad argument: amInstance' );
     }
 
-    if( !await AccountsManager.isAllowed( 'pwix.accounts_manager.feat.list', this.userId, { amInstance: amInstance })){
+    if( !await AccountsHub.isAllowed( 'pwix.accounts_hub.feat.list', this.userId, { amInstance: amInstance })){
         this.ready();
         return false;
     }

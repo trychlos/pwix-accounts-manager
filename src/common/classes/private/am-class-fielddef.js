@@ -208,6 +208,7 @@ export const amClassFielddef = {
                             Object.keys( roles.scoped ).every(( scope ) => {
                                 html += '<div class="role-level scope" data-scope="'+scope+'" title="'+pwixI18n.label( I18N, 'list.role_scoped_tooltip', item.DYN.preferredLabel.label, roleLabels[scope] )+'">';
                                 html += '<div class="title">'+pwixI18n.label( I18N, 'list.role_scoped' )+'</div>';
+                                //html += '<div class="title">'+roleLabels[scope]+'</div>';
                                 html += '<div class="roles">'+roles.scoped[scope].direct.join( ', ' )+'</div>';
                                 html += '</div>';
                                 return true;

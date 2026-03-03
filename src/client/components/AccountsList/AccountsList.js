@@ -42,7 +42,7 @@ Template.AccountsList.onCreated( function(){
     // whether the user is allowed to see this list
     self.autorun(() => {
         const instance = self.AM.amInstance( Template.currentData().name );
-        AccountsManager.isAllowed( 'pwix.accounts_manager.feat.list', Meteor.userId(), { amInstance: instance })
+        AccountsHub.isAllowed( 'pwix.accounts_hub.feat.list', Meteor.userId(), { amInstance: instance })
             .then(( allowed ) => {
                 self.AM.allowed.set( allowed );
             });
