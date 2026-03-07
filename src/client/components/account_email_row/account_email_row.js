@@ -97,9 +97,17 @@ Template.account_email_row.onRendered( function(){
                     amInstance: amInstance
                 },
                 id: Template.currentData().it._id,
-                fieldStatusShow: Forms.C.ShowStatus.NONE,
-                setForm: Template.currentData().it
+                fieldStatusShow: Forms.C.ShowStatus.NONE
             }));
+        }
+    });
+
+    // set up the form from the data context
+    self.autorun(() => {
+        const amInstance = Template.currentData().amInstance.get();
+        const checker = self.AM.checker.get();
+        if( amInstance && checker ){
+            checker.setForm( Template.currentData().it );
         }
     });
 });

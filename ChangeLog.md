@@ -22,6 +22,7 @@
     - Upgrade pwix:ui-bootstrap5 dependency to be able to use Bootstrap tooltips
     - Meteor methods handle exceptions throwned by server code
     - isAllowed() permission management function is now handled by AccountsHub
+    - Make sure form data is updated on data context changes
 
 ### 2.2.0
 

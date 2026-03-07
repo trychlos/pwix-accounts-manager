@@ -9,11 +9,11 @@ import './dt_email_addresses.html';
 Template.dt_email_addresses.helpers({
     // list the first email address if any
     address(){
-        return this.item.emails.length ? this.item.emails[0].address : '';
+        return ( this.item.emails || [] ).length ? this.item.emails[0].address : '';
     },
 
     // whether we have several email addresses
     haveMore(){
-        return this.item.emails.length > 1;
+        return ( this.item.emails || [] ).length > 1;
     }
 });

@@ -71,9 +71,17 @@ Template.account_ident_panel.onRendered( function(){
                 data: {
                     item: Template.currentData().item,
                     amInstance: amInstance
-                },
-                setForm: Template.currentData().item.get()
+                }
             }));
+        }
+    });
+
+    // set up the form from the data context
+    self.autorun(() => {
+        const amInstance = Template.currentData().amInstance.get();
+        const checker = self.AM.checker.get();
+        if( amInstance && checker ){
+            checker.setForm( Template.currentData().item.get());
         }
     });
 });
