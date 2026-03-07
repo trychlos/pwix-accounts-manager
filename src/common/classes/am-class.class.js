@@ -362,12 +362,12 @@ export class amClass extends AccountsHub.ahClass {
         //logger.debug( 'AccountsHub.ready()', AccountsHub.ready());
         //logger.debug( 'AccountsManager.ready()', AccountsManager.ready());
         const self = this;
+        const usersHandle = Meteor.subscribe( 'pwix_accounts_hub_list_all', self.collectionName());
         Tracker.autorun( async () => {
             if( !Meteor.userId()){
                 self.#usersList.set( [] );
                 return;
             }
-            const usersHandle = Meteor.subscribe( 'pwix_accounts_hub_list_all', self.collectionName());
             if( !usersHandle.ready()){
                 return;
             }
@@ -381,7 +381,6 @@ export class amClass extends AccountsHub.ahClass {
                 it.DYN.roles.set( roles );
                 list.push( it );
             }
-            //logger.debug( 'list', self.collectionName(), list );
             self.#usersList.set( list );
         });
     }

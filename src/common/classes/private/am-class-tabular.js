@@ -32,7 +32,7 @@ export const amClassTabular = {
             columns: columns,
             pub: 'pwix_accounts_manager_accounts_tabular',
             //selector( userId ){
-            //    return AccountsHub.isAllowed( 'pwix.accounts_hub.feat.list', userId, { amInstance: amInstance });
+            //    return AccountsHub.isAllowed( 'pwix.accounts_hub.feat.list', userId, { instance: amInstance });
             //},
             pwix: {
                 // do not let the user delete himself
@@ -50,7 +50,7 @@ export const amClassTabular = {
                     return pwixI18n.label( I18N, 'delete.confirmation_title', await _tabular_identifier( amInstance, it ));
                 },
                 async editButtonEnabled( it ){
-                    return await AccountsManager.isAllowed( 'pwix.accounts_manager.feat.edit', Meteor.userId(), { amInstance: amInstance, id: it._id });
+                    return await AccountsHub.isAllowed( 'pwix.accounts_manager.feat.edit', Meteor.userId(), { instance: amInstance, id: it._id });
                 },
                 async editButtonTitle( it ){
                     return pwixI18n.label( I18N, 'buttons.edit_title', await _tabular_identifier( amInstance, it ));

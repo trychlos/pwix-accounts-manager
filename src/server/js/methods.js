@@ -12,7 +12,7 @@ Meteor.methods({
         try {
             return await AccountsManager.s.removeById( instanceName, id, this.userId );
         } catch( e ){
-            logger.warning( e );
+            logger.warning( 'pwix_accounts_manager_accounts_remove_byid()', e );
             return null;
         }
     },
@@ -22,7 +22,7 @@ Meteor.methods({
         try {
             return await AccountsManager.s.updateAccount( instanceName, item, this.userId, origItem );
         } catch( e ){
-            logger.warning( e );
+            logger.warning( 'pwix_accounts_manager_accounts_update_account()', e );
             return null;
         }
     },
@@ -32,7 +32,7 @@ Meteor.methods({
         try {
             return await AccountsManager.s.updateById( instanceName, id, this.userId, modifier );
         } catch( e ){
-            logger.warning( e );
+            logger.warning( 'pwix_accounts_manager_accounts_update_byid()', e );
             return null;
         }
     }

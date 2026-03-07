@@ -132,14 +132,6 @@ Constructor takes an object as single argument, with following keys:
 
     When set as a function, expected prototype is `async fn( <amClass> ): <Array>`.
 
-- `allowFn`
-
-    An async function which will be called with an action string identifier, and must return whether the current user is allowed to do the specified action.
-
-    If the function is not provided, then the default is to deny all actions (and do you really want that ?).
-
-    `allowFn` prototype is: `async allowFn( action<String>, userId<String> [, ...<Any> ] ): Boolean`
-
 - `classes`
 
     Let the application provides some classes to add to the display. The classes mentionned here are added to the configured values if any.
@@ -212,24 +204,6 @@ Constructor takes an object as single argument, with following keys:
 
     These let the caller a chance to modify the item before/after the database insert/update.
 
-- `preferredLabel`
-
-    Overrides the default `AccountsHub.preferredLabel()`.
-
-    If provided, the function must have the same prototype than the default:
-
-```js
-    /**
-     * @locus Anywhere
-     * @param {String|Object} arg the user identifier or the user document
-     * @param {String} preferred the optional caller preference, either AccountsHub.C.PreferredLabel.USERNAME or AccountsHub.C.PreferredLabel.EMAIL_ADDRESS,
-     *  defaulting to the value configured at instanciation time
-     * @returns {Promise} a Promise which eventually will resolve to an object with following keys:
-     *  - label: the computed preferred label
-     *  - origin: the origin, which may be 'ID' or AccountsHub.C.PreferredLabel.USERNAME or AccountsHub.C.PreferredLabel.EMAIL_ADDRESS
-     */
-```
-
 - `serverTabularExtend`
 
     A server-side function which comes to extend the content of the dataset published for the tabular display.
@@ -284,16 +258,6 @@ See [below](#configuration)
 ##### `AccountsManager.i18n.namespace()`
 
 Returns the i18n namespace used by the package. Used to add translations at runtime.
-
-Available both on the client and the server.
-
-##### `AccountsManager.isAllowed()`
-
-Manages permissions to the accounts manager.
-
-Prototype is `async AccountsManager.isAllowed( action<String>, userId<String>, args<Object> ): Boolean`.
-
-The provided `args` argument MUST contain an `amInstance` key with an instance of `AccountsManager.amClass`.
 
 Available both on the client and the server.
 
@@ -380,17 +344,17 @@ Known data context is:
 
 ## Permissions management
 
-This package extends AccountsHub permissions system with following tasks:
+This package extends `AccountsHub.isAllowed()` function with following permissions:
 
 - `pwix.accounts_manager.feat.create`: create a new account, with additional arguments as an object with following keys:
-    - amInstance: the `amClass` instance
+    - instance: the `amClass` instance
 
 - `pwix.accounts_manager.feat.delete`: remove the identified account, with additional arguments as an object with following keys:
-    - amInstance: the `amClass` instance
+    - instance: the `amClass` instance
     - id: the account identifier
 
 - `pwix.accounts_manager.feat.edit`: update the user account, with additional arguments as an object with following keys:
-    - amInstance: the `amClass` instance
+    - instance: the `amClass` instance
     - id: the account identifier
 
 Note that reading accounts for a server task is not subject to permissions as this is nonetheless required for authentication needs. The above permissions talk about external requests or user-requested tasks.

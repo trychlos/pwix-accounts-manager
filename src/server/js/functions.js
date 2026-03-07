@@ -50,7 +50,7 @@ AccountsManager.s.removeById = async function( instanceName, id, userId ){
     let ret = null;
     const amInstance = AccountsHub.getInstance( instanceName );
     if( amInstance && amInstance instanceof AccountsManager.amClass ){
-        if( !await AccountsManager.isAllowed( 'pwix.accounts_manager.feat.delete', userId, { amInstance: amInstance, id: id })){
+        if( !await AccountsHub.isAllowed( 'pwix.accounts_manager.feat.delete', userId, { instance: amInstance, id: id })){
             return null;
         }
         try {
@@ -134,7 +134,7 @@ AccountsManager.s.updateById = async function( instanceName, id, userId, modifie
     let ret = null;
     const amInstance = AccountsHub.getInstance( instanceName );
     if( amInstance && amInstance instanceof AccountsManager.amClass ){
-        if( !await AccountsManager.isAllowed( 'pwix.accounts_manager.feat.edit', userId, { amInstance: amInstance, id: id })){
+        if( !await AccountsHub.isAllowed( 'pwix.accounts_manager.feat.edit', userId, { instance: amInstance, id: id })){
             return null;
         }
         try {
