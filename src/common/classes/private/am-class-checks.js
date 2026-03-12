@@ -48,11 +48,11 @@ export const amClassChecks = {
     async email_address( value, data, opts ){
         _assert_data_itemrv( 'amClassChecks.email_address()', data );
         let item = data.item.get();
-        let index = opts.id ? _id2index( item.emails, opts.id ) : -1;
+        let index = opts.rowId ? _id2index( item.emails, opts.rowId ) : -1;
         if( opts.update !== false ){
             if( index < 0 ){
                 item.emails = item.emails || [];
-                item.emails.push({ _id: opts.id });
+                item.emails.push({ _id: opts.rowId });
                 index = 0;
             }
             item.emails[index].address = value;
@@ -88,11 +88,11 @@ export const amClassChecks = {
     async email_label( value, data, opts ){
         _assert_data_itemrv( 'amClassChecks.email_label()', data );
         const item = data.item.get();
-        let index = opts.id ? _id2index( item.emails, opts.id ) : -1;
+        let index = opts.rowId ? _id2index( item.emails, opts.rowId ) : -1;
         if( opts.update !== false ){
             if( index < 0 ){
                 item.emails = item.emails || [];
-                item.emails.push({ _id: opts.id });
+                item.emails.push({ _id: opts.rowId });
                 index = 0;
             }
             item.emails[index].label = value;
@@ -103,11 +103,11 @@ export const amClassChecks = {
     async email_verified( value, data, opts ){
         _assert_data_itemrv( 'amClassChecks.email_verified()', data );
         const item = data.item.get();
-        let index = opts.id ? _id2index( item.emails, opts.id ) : -1;
+        let index = opts.rowId ? _id2index( item.emails, opts.rowId ) : -1;
         if( opts.update !== false ){
             if( index < 0 ){
                 item.emails = item.emails || [];
-                item.emails.push({ _id: opts.id });
+                item.emails.push({ _id: opts.rowId });
                 index = 0;
             }
             item.emails[index].verified = value;

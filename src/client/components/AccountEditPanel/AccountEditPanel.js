@@ -116,25 +116,18 @@ Template.AccountEditPanel.onRendered( function(){
         }
     });
 
-    // allocate an Checker for this (topmost parent) template
-    self.autorun(() => {
-        self.AM.checker.set( new Forms.Checker( self, {
-            messager: self.AM.messager,
-            name: 'AccountEditPanel',
-            okFn( valid ){
-                if( self.AM.isModal.get()){
-                    Modal.set({ buttons: { id: Modal.C.Button.OK, enabled: valid }});
-                }
+    // allocate a Checker for this (topmost parent) template (so an autorun is not needed)
+    const checker = new Forms.Checker( self);
+    checker.init({
+        messager: self.AM.messager,
+        name: 'AccountEditPanel',
+        onValidityChangeRegisterFn( valid ){
+            if( self.AM.isModal.get()){
+                Modal.set({ buttons: { id: Modal.C.Button.OK, enabled: valid }});
             }
-        }));
-    });
-
-    // track the checker
-    self.autorun(() => {
-        const checker = self.AM.checker.get();
-        if( checker ){
-            //logger.debug( 'checker', checker.iCheckableId(), checker.status(), checker.validity());
         }
+    }).then(() => {
+        self.AM.checker.set( checker );
     });
 });
 

@@ -20,6 +20,7 @@ import { Forms } from 'meteor/pwix:forms';
 import { Logger } from 'meteor/pwix:logger';
 import { pwixI18n } from 'meteor/pwix:i18n';
 import { ReactiveVar } from 'meteor/reactive-var';
+import { Tracker } from 'meteor/tracker';
 
 import './account_ident_panel.html';
 
@@ -60,19 +61,30 @@ Template.account_ident_panel.onRendered( function(){
     const self = this;
 
     // initialize the Checker for this panel as soon as we get the parent Checker
-    self.autorun(() => {
+    let running = false;
+    self.autorun(( comp ) => {
         const amInstance = Template.currentData().amInstance.get();
         const parentChecker = Template.currentData().checker.get();
-        const checker = self.AM.checker.get();
-        if( amInstance && parentChecker && !checker ){
-            self.AM.checker.set( new Forms.Checker( self, {
-                parent: parentChecker,
-                panel: new Forms.Panel( self.AM.fields, amInstance.fieldSet()),
-                data: {
-                    item: Template.currentData().item,
-                    amInstance: amInstance
-                }
-            }));
+        let checker = self.AM.checker.get();
+        if( amInstance && parentChecker && !checker && !running ){
+            running = true;
+            Tracker.nonreactive(() => {
+                checker = new Forms.Checker( self );
+                checker.init({
+                    parentChecker: parentChecker,
+                    panel: {
+                        fields: self.AM.fields,
+                        set: amInstance.fieldSet()
+                    },
+                    data: {
+                        item: Template.currentData().item,
+                        amInstance: amInstance
+                    }
+                }).then(() => {
+                    self.AM.checker.set( checker );
+                    comp.stop();
+                })
+            });
         }
     });
 
@@ -133,18 +145,19 @@ Template.account_ident_panel.events({
         //logger.debug( event, instance, data );
         const checker = instance.AM.checker.get();
         if( checker ){
-            checker.setValid( data.ok );
-            // setup the relevant part of the item
-            const item = this.item.get();
-            item.emails = item.emails || [];
-            item.emails[0] = item.emails[0] || {};
-            if( this.amInstance.get().opts().haveEmailAddress() !== AccountsHub.C.Identifier.NONE ){
-                item.emails[0].address = data.email;
-            }
-            if( this.amInstance.get().opts().haveUsername() !== AccountsHub.C.Identifier.NONE ){
-                item.username = data.username;
-            }
-            item.password = data.password;
+            checker.setValid( data.ok ).then(() => {
+                // setup the relevant part of the item
+                const item = this.item.get();
+                item.emails = item.emails || [];
+                item.emails[0] = item.emails[0] || {};
+                if( this.amInstance.get().opts().haveEmailAddress() !== AccountsHub.C.Identifier.NONE ){
+                    item.emails[0].address = data.email;
+                }
+                if( this.amInstance.get().opts().haveUsername() !== AccountsHub.C.Identifier.NONE ){
+                    item.username = data.username;
+                }
+                item.password = data.password;
+            });
         }
     }
 });

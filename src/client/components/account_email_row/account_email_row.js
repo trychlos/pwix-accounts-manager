@@ -17,6 +17,7 @@ import { AccountsHub } from 'meteor/pwix:accounts-hub';
 import { Forms } from 'meteor/pwix:forms';
 import { Logger } from 'meteor/pwix:logger';
 import { pwixI18n } from 'meteor/pwix:i18n';
+import { Tracker } from 'meteor/tracker';
 
 import './account_email_row.html';
 
@@ -28,6 +29,27 @@ Template.account_email_row.onCreated( function(){
     self.AM = {
         // the Form.Checker instance for this panel
         checker: new ReactiveVar( null ),
+        // the managed fields
+        fields: {
+            'emails.$.address': {
+                js: '.js-email',
+                formFrom( $node ){
+                    return $node.val();
+                },
+                formTo( $node, item ){
+                    $node.val( item.address );
+                }
+            },
+            'emails.$.verified': {
+                js: '.js-verified',
+                formFrom( $node ){
+                    return $node.prop( 'checked' );
+                },
+                formTo( $node, item ){
+                    $node.prop( 'checked', item.verified );
+                }
+            }
+        },
 
         // remove the email item
         removeById( id ){
@@ -65,40 +87,32 @@ Template.account_email_row.onRendered( function(){
     });
 
     // initialize the Checker for this panel as soon as we get the parent Checker
-    self.autorun(() => {
+    let running = false;
+    self.autorun(( comp ) => {
         const amInstance = Template.currentData().amInstance.get();
         const parentChecker = Template.currentData().checker.get();
-        const checker = self.AM.checker.get();
-        if( amInstance && parentChecker && !checker ){
-            self.AM.checker.set( new Forms.Checker( self, {
-                parent: parentChecker,
-                panel: new Forms.Panel({
-                    'emails.$.address': {
-                        js: '.js-email',
-                        formFrom( $node ){
-                            return $node.val();
-                        },
-                        formTo( $node, item ){
-                            $node.val( item.address );
-                        }
+        let checker = self.AM.checker.get();
+        if( amInstance && parentChecker && !checker && !running ){
+            running = true;
+            Tracker.nonreactive(() => {
+                checker = new Forms.Checker( self );
+                checker.init({
+                    parentChecker: parentChecker,
+                    panel: {
+                        fields: self.AM.fields,
+                        set: amInstance.fieldSet()
                     },
-                    'emails.$.verified': {
-                        js: '.js-verified',
-                        formFrom( $node ){
-                            return $node.prop( 'checked' );
-                        },
-                        formTo( $node, item ){
-                            $node.prop( 'checked', item.verified );
-                        }
-                    }
-                }, amInstance.fieldSet()),
-                data: {
-                    item: itemRv,
-                    amInstance: amInstance
-                },
-                id: Template.currentData().it._id,
-                fieldStatusShow: Forms.C.ShowStatus.NONE
-            }));
+                    data: {
+                        item: itemRv,
+                        amInstance: amInstance
+                    },
+                    rowId: Template.currentData().it._id,
+                    fieldStatusShow: Forms.C.ShowStatus.NONE
+                }).then(() => {
+                    self.AM.checker.set( checker );
+                    comp.stop();
+                });
+            });
         }
     });
 
@@ -132,7 +146,7 @@ Template.account_email_row.helpers({
     //  we are using here the CheckStatus value of the Checker itself
     parmsCheckStatus(){
         return {
-            statusRv: Template.instance().AM.checker.get()?.iStatusableStatusRv() || null
+            statusRv: Template.instance().AM.checker.get()?.iCheckableStatusRv() || null
         };
     }
 });
