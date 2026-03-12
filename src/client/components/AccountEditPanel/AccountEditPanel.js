@@ -110,7 +110,7 @@ Template.AccountEditPanel.onRendered( function(){
     // set the modal target+title
     self.autorun(() => {
         if( self.AM.isModal.get()){
-            Modal.set({
+            Modal.topmost().set({
                 target: self.$( '.AccountEditPanel' )
             });
         }
@@ -123,7 +123,7 @@ Template.AccountEditPanel.onRendered( function(){
         name: 'AccountEditPanel',
         onValidityChangeRegisterFn( valid ){
             if( self.AM.isModal.get()){
-                Modal.set({ buttons: { id: Modal.C.Button.OK, enabled: valid }});
+                Modal.topmost().set({ buttons: { id: Modal.C.Button.OK, enabled: valid }});
             }
         }
     }).then(() => {
@@ -323,7 +323,7 @@ Template.AccountEditPanel.events({
                             }
                         });
                         if( closeAfterNew ){
-                            Modal.close();
+                            Modal.topmost().close();
                         }
                     }
                 });
@@ -337,7 +337,7 @@ Template.AccountEditPanel.events({
                             Tolert.error( pwixI18n.label( I18N, 'edit.new_error', label ));
                         }
                         if( closeAfterNew ){
-                            Modal.close();
+                            Modal.topmost().close();
                         }
                     });
                 } else {
@@ -363,7 +363,7 @@ Template.AccountEditPanel.events({
                 } else {
                     Tolert.error( pwixI18n.label( I18N, 'edit.edit_error', label ));
                 }
-                Modal.close();
+                Modal.topmost().close();
             });
         }
     },

@@ -24,6 +24,7 @@
     - isAllowed() permission management function is now handled by AccountsHub
     - Make sure form data is updated on data context changes
     - Update to pwix:forms v1.6
+    - Update to pwix:modal v2.5
 
 ### 2.2.0
 
