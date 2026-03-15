@@ -352,7 +352,7 @@ Template.AccountEditPanel.events({
             if( fn ){
                 promise = fn( item, instance.AM.amInstance.get().clientUpdateArgs());
             } else {
-                promise = Meteor.callAsync( 'pwix_accounts_manager_accounts_update_account', self.name, item, self.item );
+                promise = Meteor.callAsync( 'pwix.AccountsManager.m.updateAccount', self.name, item, self.item );
             }
             promise.then( async ( res ) => {
                 if( res ){

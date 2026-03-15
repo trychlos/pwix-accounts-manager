@@ -42,7 +42,7 @@ Template.AccountNewButton.helpers({
         return AccountsHub.isAllowed( 'pwix.accounts_manager.feat.create', Meteor.userId(), { instance: Template.instance().AM.amInstance.get() });
     },
 
-    // parms for new account (plusButton)
+    // parms for new account (PlusButton)
     parmsNewAccount(){
         let parms = { ...this };
         parms.label = parms.label || pwixI18n.label( I18N, 'new.btn_plus_label' );
@@ -52,7 +52,7 @@ Template.AccountNewButton.helpers({
 });
 
 Template.AccountNewButton.events({
-    'click .plusButton'( event, instance ){
+    'click .PlusButton'( event, instance ){
         const self = this;
         Modal.run({
             ...self,

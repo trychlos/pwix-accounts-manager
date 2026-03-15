@@ -362,7 +362,7 @@ export class amClass extends AccountsHub.ahClass {
         //logger.debug( 'AccountsHub.ready()', AccountsHub.ready());
         //logger.debug( 'AccountsManager.ready()', AccountsManager.ready());
         const self = this;
-        const usersHandle = Meteor.subscribe( 'pwix_accounts_hub_list_all', self.collectionName());
+        const usersHandle = Meteor.subscribe( 'pwix.AccountsHub.p.listAll', self.collectionName());
         Tracker.autorun( async () => {
             if( !Meteor.userId()){
                 self.#usersList.set( [] );

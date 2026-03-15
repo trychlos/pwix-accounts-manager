@@ -42,8 +42,8 @@ const logger = Logger.get();
  *    }
  *  }
  */
-Meteor.publish( 'pwix_accounts_manager_accounts_tabular', async function( tableName, ids, fields ){
-    //logger.debug( 'pwix_accounts_manager_accounts_tabular', tableName, ids, fields );
+Meteor.publish( 'pwix.AccountsManager.p.tabularLast', async function( tableName, ids, fields ){
+    //logger.debug( 'pwix.AccountsManager.p.tabularLast', tableName, ids, fields );
     if( !tableName || !_.isString( tableName )){
         logger.error( 'expects \'tableName\' be a non-empty string, got', tableName, 'throwing...' );
         throw new Error( 'Bad argument: tableName' );

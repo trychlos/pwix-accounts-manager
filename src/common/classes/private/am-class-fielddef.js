@@ -183,7 +183,6 @@ export const amClassFielddef = {
                 schema: false,
                 dt_title: pwixI18n.label( I18N, 'list.roles_th' ),
                 dt_type: 'string',
-                //dt_createdCell: cell => $( cell ).addClass( 'ui-ellipsized' ),
                 dt_render( data, type, rowData, meta ){
                     if( type === 'display' ){
                         const item = instance.amById( rowData._id );
@@ -199,16 +198,15 @@ export const amClassFielddef = {
                         //logger.debug( 'item', item );
                         //logger.debug( 'roles', roles );
                         if(( roles?.global.direct || [] ).length ){
-                            html += '<div class="role-level global" title="'+pwixI18n.label( I18N, 'list.role_global_tooltip', item.DYN.preferredLabel.label )+'">';
+                            html += '<div class="role-level global ui-ellipsized" title="'+pwixI18n.label( I18N, 'list.role_global_tooltip', item.DYN.preferredLabel.label )+'">';
                             html += '<div class="title">'+pwixI18n.label( I18N, 'list.role_global',  )+'</div>';
                             html += '<div class="roles">'+roles.global.direct.join( ', ' )+'</div>';
                             html += '</div>';
                         }
                         if( Object.keys( roles?.scoped || [] ).length ){
                             Object.keys( roles.scoped ).every(( scope ) => {
-                                html += '<div class="role-level scope" data-scope="'+scope+'" title="'+pwixI18n.label( I18N, 'list.role_scoped_tooltip', item.DYN.preferredLabel.label, roleLabels[scope] )+'">';
+                                html += '<div class="role-level scope ui-ellipsized" data-scope="'+scope+'" title="'+pwixI18n.label( I18N, 'list.role_scoped_tooltip', item.DYN.preferredLabel.label, roleLabels[scope] )+'">';
                                 html += '<div class="title">'+pwixI18n.label( I18N, 'list.role_scoped' )+'</div>';
-                                //html += '<div class="title">'+roleLabels[scope]+'</div>';
                                 html += '<div class="roles">'+roles.scoped[scope].direct.join( ', ' )+'</div>';
                                 html += '</div>';
                                 return true;

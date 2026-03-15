@@ -30,7 +30,7 @@ export const amClassTabular = {
             name: amInstance.tabularName(),
             collection: amInstance.collection(),
             columns: columns,
-            pub: 'pwix_accounts_manager_accounts_tabular',
+            pub: 'pwix.AccountsManager.p.tabularLast',
             //selector( userId ){
             //    return AccountsHub.isAllowed( 'pwix.accounts_hub.feat.list', userId, { instance: amInstance });
             //},
