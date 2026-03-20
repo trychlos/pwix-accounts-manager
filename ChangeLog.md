@@ -26,6 +26,7 @@
     - Update to pwix:forms v1.6
     - Update to pwix:modal v2.5
     - Make sure methods and publications are prefixed with a full namespace
+    - Prevent too many autorun's when calling setForm()
 
 ### 2.2.0
 

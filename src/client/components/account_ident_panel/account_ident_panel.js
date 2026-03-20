@@ -89,11 +89,12 @@ Template.account_ident_panel.onRendered( function(){
     });
 
     // set up the form from the data context
-    self.autorun(() => {
+    self.autorun(( comp ) => {
         const amInstance = Template.currentData().amInstance.get();
         const checker = self.AM.checker.get();
         if( amInstance && checker ){
             checker.setForm( Template.currentData().item.get());
+            comp.stop();
         }
     });
 });
