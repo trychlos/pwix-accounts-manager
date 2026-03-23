@@ -45,6 +45,8 @@ const _id2index = function( array, id ){
 
 export const amClassChecks = {
 
+    // email address not only be a unique email address but also must be unique among username namespace
+    // rationale: someone with bad intentions could spoof an email address by entering it as a username
     async email_address( value, data, opts ){
         _assert_data_itemrv( 'amClassChecks.email_address()', data );
         let item = data.item.get();
@@ -69,20 +71,21 @@ export const amClassChecks = {
                 message: pwixI18n.label( I18N, 'check.email_invalid' )
             });
         }
-        return data.amInstance.byEmailAddress( value )
-            .then(( user ) => {
-                let ok = false;
-                if( user ){
-                    // we have found a user
-                    ok = user._id === item._id;
-                } else {
-                    ok = true;
-                }
-                return ok ? null : new TM.TypedMessage({
-                    level: TM.MessageLevel.C.ERROR,
-                    message: pwixI18n.label( I18N, 'check.email_exists' )
-                });
+        let user = await data.amInstance.byEmailAddress( value );
+        if( user && user._id !== item._id ){
+            return new TM.TypedMessage({
+                level: TM.MessageLevel.C.ERROR,
+                message: pwixI18n.label( I18N, 'check.email_exists' )
             });
+        }
+        user = await data.amInstance.byUsername( value );
+        if( user && user._id !== item._id ){
+            return new TM.TypedMessage({
+                level: TM.MessageLevel.C.ERROR,
+                message: pwixI18n.label( I18N, 'check.email_exists' )
+            });
+        }
+        return null;
     },
 
     async email_label( value, data, opts ){
@@ -133,6 +136,7 @@ export const amClassChecks = {
         return null;
     },
 
+    // email addresses and usernames must be unique in common namespace
     async username( value, data, opts ){
         _assert_data_itemrv( 'amClassChecks.username()', data );
         const item = data.item.get();
@@ -145,19 +149,19 @@ export const amClassChecks = {
                 message: pwixI18n.label( I18N, 'check.username_unset' )
             });
         }
-        return data.amInstance.byUsername( value )
-            .then(( user ) => {
-                let ok = false;
-                if( user ){
-                    // we have found a user
-                    ok = user._id === item._id;
-                } else {
-                    ok = true;
-                }
-                return ok ? null : new TM.TypedMessage({
-                    level: TM.MessageLevel.C.ERROR,
-                    message: pwixI18n.label( I18N, 'check.username_exists' )
-                });
+        let user = await data.amInstance.byUsername( value );
+        if( user && user._id !== item._id ){
+            return new TM.TypedMessage({
+                level: TM.MessageLevel.C.ERROR,
+                message: pwixI18n.label( I18N, 'check.username_exists' )
             });
+        }
+        user = await data.amInstance.byEmailAddress( value );
+        if( user && user._id !== item._id ){
+            return new TM.TypedMessage({
+                level: TM.MessageLevel.C.ERROR,
+                message: pwixI18n.label( I18N, 'check.username_exists' )
+            });
+        }
     }
 };

@@ -27,6 +27,7 @@
     - Update to pwix:modal v2.5
     - Make sure methods and publications are prefixed with a full namespace
     - Prevent too many autorun's when calling setForm()
+    - Both email adress and username must be identifiers in both email address and username namespaces
 
 ### 2.2.0
 
