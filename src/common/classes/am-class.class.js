@@ -6,12 +6,12 @@
  */
 
 import _ from 'lodash';
+import SimpleSchema from 'simpl-schema';
 
 import { AccountsHub } from 'meteor/pwix:accounts-hub';
 import { Field } from 'meteor/pwix:field';
 import { Logger } from 'meteor/pwix:logger';
 import { ReactiveVar } from 'meteor/reactive-var';
-import SimpleSchema from 'meteor/aldeed:simple-schema';
 import { Tracker } from 'meteor/tracker';
 
 import { amClassFielddef } from './private/am-class-fielddef.js';

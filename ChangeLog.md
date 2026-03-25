@@ -28,6 +28,7 @@
     - Make sure methods and publications are prefixed with a full namespace
     - Prevent too many autorun's when calling setForm()
     - Both email adress and username must be identifiers in both email address and username namespaces
+    - Replace aldeed:simple-schema dependency with npm simpl-schema
 
 ### 2.2.0
 

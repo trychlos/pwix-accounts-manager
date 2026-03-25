@@ -11,6 +11,7 @@ if( false ){
 checkNpmVersions({
     'email-validator': '^2.0.4',
     'lodash': '^4.17.0',
+    'simpl-schema': '^3.4.7',
     'strftime': '^0.10.2'
 },
     'pwix:accounts-manager'

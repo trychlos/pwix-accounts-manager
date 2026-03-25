@@ -6,6 +6,7 @@
 
 import _ from 'lodash';
 
+import SimpleSchema from 'simpl-schema';
 import strftime from 'strftime';
 
 import { AccountsHub } from 'meteor/pwix:accounts-hub';
@@ -13,7 +14,6 @@ import { Forms } from 'meteor/pwix:forms';
 import { Logger } from 'meteor/pwix:logger';
 import { Notes } from 'meteor/pwix:notes';
 import { pwixI18n } from 'meteor/pwix:i18n';
-import SimpleSchema from 'meteor/aldeed:simple-schema';
 
 import { amClassChecks } from './am-class-checks.js';
 
