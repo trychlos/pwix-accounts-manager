@@ -83,7 +83,7 @@ export const amClassFielddef = {
                 // dt_data: 'emails.0.address' gives server-side sort for the columns where we are using a Blaze template
                 name: 'emails.$.address',
                 type: String,
-                regEx: SimpleSchema.RegEx.Email,
+                //regEx: SimpleSchema.RegEx.Email,
                 dt_data: 'emails.0.address',
                 dt_title: pwixI18n.label( I18N, 'list.email_address_th' ),
                 dt_template: Meteor.isClient && Template.dt_email_addresses,

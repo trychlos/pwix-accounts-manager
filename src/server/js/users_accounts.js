@@ -28,7 +28,7 @@ Accounts.onLogin(( data ) => {
             logger.error( 'onLogin() expect amInstance be an instance of AccountsManager.amClass, got', amInstance, 'throwing...' );
             throw new Error( 'Bad argument: amInstance' );
         }
-        amInstance.collection().updateAsync( { _id: data.user._id }, { $set: { lastConnection: Date.now() }}).then(( res ) => {
+        amInstance.collection().updateAsync( { _id: data.user._id }, { $set: { lastConnection: new Date() }}).then(( res ) => {
             logger.info( 'onLogin() userId', data.user._id, 'type', '\''+data.type+'\'', 'res', res );
         });
     }
