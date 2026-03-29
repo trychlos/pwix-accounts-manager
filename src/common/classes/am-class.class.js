@@ -6,9 +6,9 @@
  */
 
 import _ from 'lodash';
-import SimpleSchema from 'simpl-schema';
+import SimpleSchema from 'meteor/aldeed:simple-schema';
 
-import { AccountsHub } from 'meteor/pwix:accounts-hub';
+import { AccountsCore } from 'meteor/pwix:accounts-core';
 import { Field } from 'meteor/pwix:field';
 import { Logger } from 'meteor/pwix:logger';
 import { ReactiveVar } from 'meteor/reactive-var';
@@ -19,7 +19,7 @@ import { amClassTabular } from './private/am-class-tabular.js';
 
 const logger = Logger.get();
 
-export class amClass extends AccountsHub.ahClass {
+export class amClass extends AccountsCore.ahClass {
 
     // static data
 
@@ -30,7 +30,7 @@ export class amClass extends AccountsHub.ahClass {
      * @returns {amClass} the corresponding amClass instance
      */
     static instanceByTabularName( name ){
-        return AccountsHub.getByTabularName( name );
+        return AccountsCore.getByTabularName( name );
     }
 
     // private data
@@ -228,7 +228,9 @@ export class amClass extends AccountsHub.ahClass {
             this.#fieldSet = set;
 
             // attach the defined fieldset as a schema to the collection
-            this.collection().attachSchema( new SimpleSchema( this.#fieldSet.toSchema()), { replace: true });
+            const schema = this.#fieldSet.toSchema();
+            if( this.name() === 'users' ) logger.debug( 'users schema', schema );
+            this.collection().attachSchema( new SimpleSchema( schema ), { replace: true });
             this.collection().attachBehaviour( 'timestampable' );
 
             // define the Tabular.Table
@@ -359,10 +361,10 @@ export class amClass extends AccountsHub.ahClass {
             throw new Error( 'Bad side' );
         }
         //logger.debug( 'feedList()' );
-        //logger.debug( 'AccountsHub.ready()', AccountsHub.ready());
+        //logger.debug( 'AccountsCore.ready()', AccountsCore.ready());
         //logger.debug( 'AccountsManager.ready()', AccountsManager.ready());
         const self = this;
-        const usersHandle = Meteor.subscribe( 'pwix.AccountsHub.p.listAll', self.collectionName());
+        const usersHandle = Meteor.subscribe( 'pwix.AccountsCore.p.listAll', self.collectionName());
         Tracker.autorun( async () => {
             if( !Meteor.userId()){
                 self.#usersList.set( [] );
@@ -430,11 +432,11 @@ export class amClass extends AccountsHub.ahClass {
      * @summary Returns the preferred label for the user
      * @locus Anywhere
      * @param {String|Object} user the user identifier or the user document
-     * @param {String} preferred the optional caller preference, either AccountsHub.C.PreferredLabel.USERNAME or AccountsHub.C.PreferredLabel.EMAIL_ADDRESS,
+     * @param {String} preferred the optional caller preference, either AccountsCore.C.PreferredLabel.USERNAME or AccountsCore.C.PreferredLabel.EMAIL_ADDRESS,
      *  defaulting to the value configured at instanciation time
      * @returns {Promise} a Promise which eventually will resolve to an object with following keys:
      *  - label: the computed preferred label
-     *  - origin: the origin, which may be 'ID' or AccountsHub.C.PreferredLabel.USERNAME or AccountsHub.C.PreferredLabel.EMAIL_ADDRESS
+     *  - origin: the origin, which may be 'ID' or AccountsCore.C.PreferredLabel.USERNAME or AccountsCore.C.PreferredLabel.EMAIL_ADDRESS
      */
     async preferredLabel( user, preferred=null ){
         const res = await( this.#args.preferredLabel ? this.#args.preferredLabel( user, preferred ) : super.preferredLabel( user, preferred ));

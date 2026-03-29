@@ -6,7 +6,7 @@
 
     Release date: 
 
-    - Update to new AccountsHub.getInstance() reactive function, thus bumping minor candidate version number
+    - Update to new AccountsCore.getInstance() reactive function, thus bumping minor candidate version number
     - Remove pwix.accounts_manager.fn.getBy permission (as it must always be true)
     - configure() now warns for unmanaged keys
     - AccountsManager.isAllowed() now accepts both an instance name and an instance class
@@ -21,14 +21,13 @@
     - Restore sort on email address column now that the column uses a Blaze template
     - Upgrade pwix:ui-bootstrap5 dependency to be able to use Bootstrap tooltips
     - Meteor methods handle exceptions throwned by server code
-    - isAllowed() permission management function is now handled by AccountsHub
+    - isAllowed() permission management function is now handled by AccountsCore
     - Make sure form data is updated on data context changes
     - Update to pwix:forms v1.6
     - Update to pwix:modal v2.5
     - Make sure methods and publications are prefixed with a full namespace
     - Prevent too many autorun's when calling setForm()
     - Both email adress and username must be identifiers in both email address and username namespaces
-    - Replace aldeed:simple-schema dependency with npm simpl-schema
     - fix lastConnection update
 
 ### 2.2.0
@@ -38,7 +37,7 @@
     - Fix the stylesheet to ellipsize the scoped roles column
     - Fix datatables display just after logged-out user
     - Improve the message when user is not allowed
-    - Delegate onCreateUser() server-side function to AccountsHub, thus bumping minor candidate version number
+    - Delegate onCreateUser() server-side function to AccountsCore, thus bumping minor candidate version number
     - Replace an async helper with a ReactiveVar in AccountsList
     - Fix the addressing of objects inside arrays (e.g. emails)
     - Normalize class names to be 'am-' prefixed
@@ -69,13 +68,13 @@
     - Fix the display of account roles in tabular list
     - Let the caller choose whether auto close the 'new account' dialog after successful creation (todo #4)
     - Fix new email creation
-    - Move the 'pwix_accounts_manager_accounts_list_all' publication to AccountsHub
+    - Move the 'pwix_accounts_manager_accounts_list_all' publication to AccountsCore
 
 ### 2.0.0
 
     Release date: 2024-10- 4
 
-    - Replace pwix:accounts-conf and pwix:accounts-tools dependencies with pwix:accounts-hub, thus bumping major candidate version numner
+    - Replace pwix:accounts-conf and pwix:accounts-tools dependencies with pwix:accounts-core, thus bumping major candidate version numner
     - Increase AccountNewButton left margin
     - Define 'tabsBefore' parameter
     - Fix the modal detection

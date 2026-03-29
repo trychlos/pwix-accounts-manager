@@ -6,10 +6,10 @@
 
 import _ from 'lodash';
 
-import SimpleSchema from 'simpl-schema';
+import SimpleSchema from 'meteor/aldeed:simple-schema';
 import strftime from 'strftime';
 
-import { AccountsHub } from 'meteor/pwix:accounts-hub';
+import { AccountsCore } from 'meteor/pwix:accounts-core';
 import { Forms } from 'meteor/pwix:forms';
 import { Logger } from 'meteor/pwix:logger';
 import { Notes } from 'meteor/pwix:notes';
@@ -59,7 +59,7 @@ export const amClassFielddef = {
         let columns = [];
 
         // if have an email address
-        if( instance.opts().haveEmailAddress() !== AccountsHub.C.Identifier.NONE ){
+        if( instance.opts().haveEmailAddress() !== AccountsCore.C.Identifier.NONE ){
             columns.push({
                 name: 'emails',
                 type: Array,
@@ -88,7 +88,7 @@ export const amClassFielddef = {
                 dt_title: pwixI18n.label( I18N, 'list.email_address_th' ),
                 dt_template: Meteor.isClient && Template.dt_email_addresses,
                 form_check: amClassChecks.email_address,
-                form_type: instance.opts().haveEmailAddress() === AccountsHub.C.Identifier.MANDATORY ? Forms.FieldType.C.MANDATORY : Forms.FieldType.C.OPTIONAL
+                form_type: instance.opts().haveEmailAddress() === AccountsCore.C.Identifier.MANDATORY ? Forms.FieldType.C.MANDATORY : Forms.FieldType.C.OPTIONAL
             },
             {
                 name: 'emails.$.verified',
@@ -113,14 +113,14 @@ export const amClassFielddef = {
         }
 
         // if have a username
-        if( instance.opts().haveUsername() !== AccountsHub.C.Identifier.NONE ){
+        if( instance.opts().haveUsername() !== AccountsCore.C.Identifier.NONE ){
             columns.push({
                 name: 'username',
                 type: String,
                 optional: true,
                 dt_title: pwixI18n.label( I18N, 'list.username_th' ),
                 form_check: amClassChecks.username,
-                form_type: instance.opts().haveUsername() === AccountsHub.C.Identifier.MANDATORY ? Forms.FieldType.C.MANDATORY : Forms.FieldType.C.OPTIONAL
+                form_type: instance.opts().haveUsername() === AccountsCore.C.Identifier.MANDATORY ? Forms.FieldType.C.MANDATORY : Forms.FieldType.C.OPTIONAL
             });
         }
 
