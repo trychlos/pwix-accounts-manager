@@ -13,8 +13,7 @@ AccountsManager.i18n = {
             },
             check: {
                 email_exists: 'This email address already exists',
-                email_invalid: 'This email address is not valid',
-                email_unset: 'An email address is mandatory',
+                email_preferred: 'More than one email address is marked as \'preferred\'',
                 login_disallow_himself: 'You are about to disallow your own login authorization',
                 username_exists: 'This username already exists',
                 username_unset: 'A username is mandatory'
@@ -31,6 +30,10 @@ AccountsManager.i18n = {
                 new_error: 'We are unfortunately unable to create the "%s" identity. Please retry later',
                 new_label: '(new)',
                 new_success: 'The identity "%s" has been successfully created',
+            },
+            dialogs: {
+                accounts_select_dialog_title: 'Select one or more user accounts',
+                accounts_select_ph: 'Select the desired accounts'
             },
             list: {
                 admin_notes_th: 'Admin Notes',

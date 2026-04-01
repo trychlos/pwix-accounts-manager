@@ -13,8 +13,7 @@ AccountsManager.i18n = {
             },
             check: {
                 email_exists: 'Cette adresse de messagerie est déjà utilisée',
-                email_invalid: 'Cette adresse de messagerie n\'est pas valide',
-                email_unset: 'Une adresse de messagerie est obligatoire',
+                email_preferred: 'Plus d\'une adresse de messagerie est marquée comme \'préférée\'',
                 login_disallow_himself: 'Vous êtes sur le point de désactiver votre propre autorisation de connexion',
                 username_exists: 'Ce nom d\'utilisateur est déjà utilisé',
                 username_unset: 'Un nom d\'utilisateur est obligatoire'
@@ -31,6 +30,10 @@ AccountsManager.i18n = {
                 new_error: 'Nous sommes malheureusement dans l\'impossibilité de créer le compte "%s". Merci de réessayer ultérieurement',
                 new_label: '(nouveau)',
                 new_success: 'Le compte "%s" a été créé avec succès'
+            },
+            dialogs: {
+                accounts_select_dialog_title: 'Choisissez un ou plusieurs comptes utilisateur',
+                accounts_select_ph: 'Selectionnez les comptes souhaités'
             },
             list: {
                 admin_notes_th: 'Notes de l\'administrateur',

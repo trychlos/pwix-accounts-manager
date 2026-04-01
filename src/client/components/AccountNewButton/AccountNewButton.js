@@ -4,13 +4,13 @@
  * Let the accounts manager create a new account.
  *
  * Parms:
- *  - name: the amClass instance name
+ *  - name: the amAccount instance name
  *  - ... plus all PlusButton parameters
  */
 
 import _ from 'lodash';
 
-import { AccountsHub } from 'meteor/pwix:accounts-hub';
+import { AccountsCore } from 'meteor/pwix:accounts-core';
 import { Modal } from 'meteor/pwix:modal';
 import { pwixI18n } from 'meteor/pwix:i18n';
 
@@ -22,15 +22,18 @@ Template.AccountNewButton.onCreated( function(){
     const self = this;
 
     self.AM = {
-        amInstance: new ReactiveVar( null )
+        canCreate: new ReactiveVar( false )
     };
 
     self.autorun(() => {
         const dataContext = Template.currentData();
         if( dataContext.name ){
-            const amInstance = AccountsHub.getInstance( dataContext.name );
-            if( amInstance && amInstance instanceof AccountsManager.amClass ){
-                self.AM.amInstance.set( amInstance );
+            const acInstance = AccountsCore.getInstance( dataContext.name );
+            if( acInstance && acInstance instanceof AccountsManager.amAccount ){
+                AccountsCore.isAllowed( 'pwix.accounts_manager.feat.create', Meteor.userId(), { instance: acInstance })
+                    .then(( res ) => {
+                        self.AM.canCreate.set( res );
+                    });
             }
         }
     });
@@ -39,7 +42,7 @@ Template.AccountNewButton.onCreated( function(){
 Template.AccountNewButton.helpers({
     // whether the user is allowed to create new account
     canCreate(){
-        return AccountsHub.isAllowed( 'pwix.accounts_manager.feat.create', Meteor.userId(), { instance: Template.instance().AM.amInstance.get() });
+        return Template.instance().AM.canCreate.get();
     },
 
     // parms for new account (PlusButton)
@@ -59,7 +62,7 @@ Template.AccountNewButton.events({
             mdBody: 'AccountEditPanel',
             mdButtons: [ Modal.C.Button.CANCEL, Modal.C.Button.OK ],
             mdClasses: this.mdClasses || 'modal-lg',
-            mdClassesContent: AccountsManager.configure().classes + ' ' + instance.AM.amInstance.get().classes(),
+            mdClassesContent: instance.AM.acInstance.get().classes(),
             mdTitle: this.mdTitle || pwixI18n.label( I18N, 'new.modal_title' ),
             item: null
         });

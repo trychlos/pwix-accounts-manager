@@ -15,7 +15,6 @@ let _conf = {};
 AccountsManager._conf = new ReactiveVar( _conf );
 
 AccountsManager._defaults = {
-    classes: '',
     datetime: '%Y-%m-%d %H:%M:%S',
     verbosity: AccountsManager.C.Verbose.CONFIGURE
 };

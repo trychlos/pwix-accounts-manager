@@ -4,7 +4,7 @@
 
 import _ from 'lodash';
 
-import { AccountsHub } from 'meteor/pwix:accounts-hub';
+import { AccountsCore } from 'meteor/pwix:accounts-core';
 import { Logger } from 'meteor/pwix:logger';
 
 const logger = Logger.get();

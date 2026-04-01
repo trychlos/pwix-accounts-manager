@@ -8,12 +8,12 @@
  * - checker: a ReactiveVar which holds the parent Checker
  * - it: the emails row to be managed here
  * - emailsCount: a ReactiveVar which counts the email addresses
- * - amInstance: a ReactiveVar which holds the amClass instance
+ * - amInstance: a ReactiveVar which holds the amAccount instance
  */
 
 import _ from 'lodash';
 
-import { AccountsHub } from 'meteor/pwix:accounts-hub';
+import { AccountsCore } from 'meteor/pwix:accounts-core';
 import { Forms } from 'meteor/pwix:forms';
 import { Logger } from 'meteor/pwix:logger';
 import { pwixI18n } from 'meteor/pwix:i18n';
@@ -135,7 +135,7 @@ Template.account_email_row.helpers({
 
     // rule: doesn't remove last connection way, i.e. keep at least one username or one email address
     minusEnabled( it ){
-        const haveUseableUsername = this.amInstance?.get().opts().haveUsername() !== AccountsHub.C.Identifier.NONE && this.item.get().username;
+        const haveUseableUsername = this.amInstance?.get().opts().haveUsername() !== AccountsCore.C.Identifier.NONE && this.item.get().username;
         return ( haveUseableUsername || this.emailsCount.get() > 1 ) ? '' : 'disabled';
     },
 

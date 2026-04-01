@@ -2,13 +2,13 @@
  * pwix:accounts-manager/src/server/js/users_accounts.js
  *
  * Rationale:
- *  pwix:accounts-manager/src/common/classes/private/am-class-fielddef.js defines 'lastConnection' as an AccountsManager extension.
- *  So update it here instead of accounts-hub
+ *  pwix:accounts-manager/src/common/helpers/am-fielddef.js defines 'loginLastConnection' as an AccountsManager extension.
+ *  So update it here instead of accounts-core
  *  NB: only manage 'users' collection here
  */
 
 import { Accounts } from 'meteor/accounts-base';
-import { AccountsHub } from 'meteor/pwix:accounts-hub';
+import { AccountsCore } from 'meteor/pwix:accounts-core';
 import { AccountsManager } from 'meteor/pwix:accounts-manager';
 import { Logger } from 'meteor/pwix:logger';
 
@@ -23,13 +23,27 @@ const logger = Logger.get();
 
 Accounts.onLogin(( data ) => {
     if( AccountsManager.ready()){
-        const amInstance = AccountsHub.getInstance( 'users' );
-        if( !amInstance || !( amInstance instanceof AccountsManager.amClass )){
-            logger.error( 'onLogin() expect amInstance be an instance of AccountsManager.amClass, got', amInstance, 'throwing...' );
-            throw new Error( 'Bad argument: amInstance' );
-        }
-        amInstance.collection().updateAsync( { _id: data.user._id }, { $set: { lastConnection: new Date() }}).then(( res ) => {
+        const acInstance = AccountsCore.getInstance( 'users' );
+        check( acInstance, AccountsManager.amAccount );
+        acInstance.collection().updateAsync( { _id: data.user._id }, { $set: { loginLastConnection: new Date() }}).then(( res ) => {
             logger.info( 'onLogin() userId', data.user._id, 'type', '\''+data.type+'\'', 'res', res );
+            /*
+            // make sure 'lastConnection' is part of the acInstance schema
+            logger.debug( 'acInstance c2', acInstance.collection()._c2 );
+            logger.debug( 'acInstance simpleSchemas', acInstance.collection()._c2._simpleSchemas );
+            logger.debug( 'acInstance simpleSchemas first', acInstance.collection()._c2._simpleSchemas[0] );
+            const schema = acInstance.collection()._c2._simpleSchemas[0].schema;
+            if( simpleSchema ){
+                logger.debug( 'acInstance schema', schema._schema );
+                logger.debug( 'acInstance keys', schema._schemakeys );
+            }
+            // check 'users' schema
+            const ss = Meteor.users.simpleSchema();
+            logger.log( 'services', ss.getDefinition('services' ));
+            logger.log( 'resume', ss.getDefinition('services.resume' ));
+            logger.log( 'loginTokens', ss.getDefinition('services.resume.loginTokens' ));
+            logger.log( 'schemaKeys', ss._schemaKeys || Object.keys(ss.schema()));
+            */
         });
     }
 });

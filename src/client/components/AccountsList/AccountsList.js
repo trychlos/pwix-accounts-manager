@@ -2,12 +2,14 @@
  * pwix:accounts-manager/src/client/components/AccountsList/AccountsList.js
  *
  * Display here a table whith a row per account (the 'item'), whatever be the count of email addresses and if the account has a username.
+ * The tabular is expected to have been setup in common code, and is known by its tabular name
  *
  * Parms:
- * - name: the amClass instance name
+ * - name: the tabular name, defaulting to 'AccountsList'
  */
 
-import { AccountsHub } from 'meteor/pwix:accounts-hub';
+import { AccountsCore } from 'meteor/pwix:accounts-core';
+import { check, Match } from 'meteor/check';
 import { Logger } from 'meteor/pwix:logger';
 import { Meteor } from "meteor/meteor";
 import { Modal } from 'meteor/pwix:modal';
@@ -25,27 +27,30 @@ Template.AccountsList.onCreated( function(){
     const self = this;
 
     self.AM = {
+        // the amAccount instance
+        amInstance: new ReactiveVar( false ),
         // whether the user is allowed to see this list
         allowed: new ReactiveVar( false ),
-
-        // get the amClass instance from its name
-        amInstance( name ){
-            let instance = name ? AccountsHub.getInstance( name ) : null;
-            if( instance && instance instanceof AccountsManager.amClass ){
-                return instance;
-            }
-            logger.error( 'expect an AccountsManager.amClass, got', instance, 'throwing...' );
-            throw new Error( 'Bad argument: instance' );
-        }
     };
+
+    // get and check the amAccount instance
+    self.autorun(() => {
+        const amInstance = AccountsManager.amAccount.byTabularName( Template.currentData().name );
+        if( amInstance ){
+            check( amInstance, AccountsManager.amAccount );
+            self.AM.amInstance.set( amInstance );
+        }
+    });
 
     // whether the user is allowed to see this list
     self.autorun(() => {
-        const instance = self.AM.amInstance( Template.currentData().name );
-        AccountsHub.isAllowed( 'pwix.accounts_hub.feat.list', Meteor.userId(), { instance: instance })
-            .then(( allowed ) => {
-                self.AM.allowed.set( allowed );
-            });
+        const amInstance = self.AM.amInstance.get();
+        if( amInstance ){
+            AccountsCore.isAllowed( 'pwix.accounts_core.feat.list', Meteor.userId(), { instance: amInstance })
+                .then(( allowed ) => {
+                    self.AM.allowed.set( allowed );
+                });
+        }
     });
 });
 
@@ -62,9 +67,8 @@ Template.AccountsList.helpers({
 
     // the Tabular.Table instance
    tabularName(){
-        const name = Template.instance().AM.amInstance( this.name )?.tabularName();
-        const table = Package['aldeed:tabular'].default.tablesByName[name];
-        // tableName='users'
+        const table = Package['aldeed:tabular'].default.tablesByName[this.name];
+        // tableName='UserAccountsList'
         // table is a Table instance
         //logger.debug( 'tableName', name, 'aldeed table', table );
         return table;
@@ -86,41 +90,50 @@ Template.AccountsList.events({
     'tabular-delete-event .AccountsList'( event, instance, data ){
         const dc = this;
         let label = null;
-        instance.AM.amInstance( this.name )?.preferredLabel( data.item )
-            .then(( res ) => {
-                label = res.label;
-                Meteor.callAsync( 'pwix.AccountsManager.m.removeById', dc.name, data.item._id )
-            })
-            .then(() => {
-                Tolert.success( pwixI18n.label( I18N, 'delete.success', label ));
-            })
-            .catch(( e ) => {
-                Tolert.error({ type:e.error, message:e.reason });
-            });
+        const amInstance = instance.AM.amInstance.get();
+        if( amInstance ){
+            amInstance.preferredLabel( data.item )
+                .then(( res ) => {
+                    label = res.label;
+                    Meteor.callAsync( 'pwix.AccountsManager.m.removeById', amInstance.name(), data.item._id )
+                })
+                .then(() => {
+                    Tolert.success( pwixI18n.label( I18N, 'delete.success', label ));
+                })
+                .catch(( e ) => {
+                    Tolert.error({ type:e.error, message:e.reason });
+                });
+        }
         return false; // doesn't propagate
     },
 
     // edit an account
-    'tabular-edit-event .AccountsList'( event, instance, data ){
-        let label = null;
+    'tabular-edit-event .AccountsList': async function( event, instance, data ){
         const self = this;
-        const amInstance = instance.AM.amInstance( this.name );
-        amInstance.preferredLabel( data.item )
-            .then(( res ) => {
-                let title = this.mdTitle || pwixI18n.label( I18N, 'edit.modal_title', res.label );
-                if( self.editTitle && typeof self.editTitle === 'function' ){
-                    title = self.editTitle( data.item );
-                }
-                Modal.run({
-                    ...self,
-                    mdBody: 'AccountEditPanel',
-                    mdButtons: [ Modal.C.Button.CANCEL, Modal.C.Button.OK ],
-                    mdClasses: this.mdClasses || 'modal-lg',
-                    mdClassesContent: AccountsManager.configure().classes + ' ' + amInstance.classes(),
-                    mdTitle: title,
-                    item: amInstance.amById( data.item._id )
+        const amInstance = instance.AM.amInstance.get();
+        let item, title;
+        if( amInstance ){
+            amInstance.preferredLabel( data.item )
+                .then(( res ) => {
+                    title = this.mdTitle || pwixI18n.label( I18N, 'edit.modal_title', res.label );
+                    if( self.editTitle && typeof self.editTitle === 'function' ){
+                        title = self.editTitle( data.item );
+                    }
+                    return amInstance.byId( data.item._id )
+                })
+                .then(( res ) => {
+                    item = res;
+                    Modal.run({
+                        ...self,
+                        name: amInstance.name(),
+                        mdBody: 'AccountEditPanel',
+                        mdButtons: [ Modal.C.Button.CANCEL, Modal.C.Button.OK ],
+                        mdClasses: this.mdClasses || 'modal-lg',
+                        mdTitle: title,
+                        item: item
+                    });
                 });
-            });
+        }
         return false;
     }
 });

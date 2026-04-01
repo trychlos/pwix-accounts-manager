@@ -3,6 +3,13 @@
  */
 
 AccountsManager.C = {
+    // some constants for our publications
+    pub: {
+        tabular: {
+            name: 'pwix.AccountsManager.p.tabularLast'
+        }
+    },
+
     // verbosity levels
     Verbose: {
         NONE: 0,

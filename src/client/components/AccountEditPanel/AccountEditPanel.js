@@ -7,17 +7,15 @@
  * + have a 'Roles' panel
  *
  * Parms:
- *  - name: the amClass instance name
+ *  - name: the amAccount instance name
  *  - item: the account's object to be edited, or null
- *  - tabs: an optional array of tabs provided by the application
- *  - tabsBefore: an optional array of tabs provided by the application
- *  - tabsUpdates: an optional updates object
  */
 
 import _ from 'lodash';
 
-import { AccountsHub } from 'meteor/pwix:accounts-hub';
+import { AccountsCore } from 'meteor/pwix:accounts-core';
 import { AccountsUI } from 'meteor/pwix:accounts-ui';
+import { check, Match } from 'meteor/check';
 import { Forms } from 'meteor/pwix:forms';
 import { Logger } from 'meteor/pwix:logger';
 import { Modal } from 'meteor/pwix:modal';
@@ -25,10 +23,8 @@ import { pwixI18n } from 'meteor/pwix:i18n';
 import { ReactiveVar } from 'meteor/reactive-var';
 import { Tolert } from 'meteor/pwix:tolert';
 
-import '../account_email_row/account_email_row.js';
-import '../account_emails_list/account_emails_list.js';
-import '../account_ident_panel/account_ident_panel.js';
-import '../account_roles_panel/account_roles_panel.js';
+import '../account_ident_tab/account_ident_tab.js';
+import '../account_roles_tab/account_roles_tab.js';
 
 import './AccountEditPanel.html';
 
@@ -39,7 +35,7 @@ Template.AccountEditPanel.onCreated( function(){
     //logger.debug( this );
 
     self.AM = {
-        // the amClass instance
+        // the amAccount instance
         amInstance: new ReactiveVar( null ),
         // the global Checker for this modal
         checker: new ReactiveVar( null ),
@@ -51,24 +47,21 @@ Template.AccountEditPanel.onCreated( function(){
         item: new ReactiveVar( null ),
         // whether we are running inside of a Modal
         isModal: new ReactiveVar( false ),
-        // additionalTabs
-        additionalTabs: new ReactiveVar( null ),
+        // tabs list
+        defaultTabs: null,
+        tabsList: new ReactiveVar( null ),
         // addressing the Tabbed component
         tabbedId: null,
         $tabbed: null
     };
 
-    // get the amClass instance from its name
+    // get the amAccount instance from its name
     self.autorun(() => {
         const name = Template.currentData().name;
         if( name ){
-            const instance = AccountsHub.getInstance( name );
-            if( instance && instance instanceof AccountsManager.amClass){
-                self.AM.amInstance.set( instance );
-            } else {
-                logger.error( 'expect an AccountsManager.amClass, got', instance, 'throwing...' );
-                throw new Error( 'Bad argument: instance' );
-            }
+            const amInstance = AccountsCore.getInstance( name );
+            check( amInstance, AccountsManager.amAccount );
+            self.AM.amInstance.set( amInstance );
         }
     });
 
@@ -79,28 +72,80 @@ Template.AccountEditPanel.onCreated( function(){
 
     // setup the item to be edited
     self.autorun(() => {
-        self.AM.item.set( _.cloneDeep( Template.currentData().item || {} ));
+        const clone = _.cloneDeep( Template.currentData().item || {} );
+        if( self.AM.isNew.get()){
+            clone.loginAllowed = true;
+        }
+        self.AM.item.set( clone );
     });
 
-    // (non reactively) setup default value on new item
+    // build default tab names array
     self.autorun(() => {
-        if( self.AM.isNew.get()){
-            let item = self.AM.item.get();
-            item.loginAllowed = true;
+        const amInstance = self.AM.amInstance.get();
+        if( amInstance && !self.AM.defaultTabs ){
+            tabsList = [];
+            tabsList.push({
+                name: 'account_ident_tab',
+                navLabel: pwixI18n.label( I18N, 'tabs.ident_title' ),
+                paneTemplate: 'account_ident_tab'
+            });
+            if( amInstance.haveRoles()){
+                tabsList.push({
+                    name: 'account_roles_tab',
+                    navLabel: pwixI18n.label( I18N, 'tabs.roles_title' ),
+                    paneTemplate: 'account_roles_tab'
+                });
+            }
+            const adminNotes = amInstance.fieldSet().byName( 'adminNotes' );
+            if( adminNotes ){
+                tabsList.push({
+                    name: 'account_admin_notes_tab',
+                    navLabel: adminNotes.toForm().title,
+                    paneTemplate: 'NotesEdit',
+                    paneData(){
+                        return {
+                            item: self.AM.item,
+                            field: adminNotes
+                        };
+                    }
+                });
+            }
+            const userNotes = amInstance.fieldSet().byName( 'userNotes' );
+            if( userNotes ){
+                tabsList.push({
+                    name: 'account_user_notes_tab',
+                    navLabel: userNotes.toForm().title,
+                    paneTemplate: 'NotesEdit',
+                    paneData(){
+                        return {
+                            item: self.AM.item,
+                            field: userNotes
+                        };
+                    }
+                });
+            }
+            self.AM.defaultTabs = tabsList;
         }
     });
 
-    // get additional tabs
+    // build dynamic tabs list
     self.autorun(() => {
         const amInstance = self.AM.amInstance.get();
-        if( amInstance ){
-            amInstance.additionalTabs().then(( adds ) => { self.AM.additionalTabs.set( adds ); });
+        let tabsList = self.AM.tabsList.get();
+        if( amInstance && !tabsList ){
+            const fn = amInstance.opts().editTabsFn();
+            if( fn ){
+                fn( self.AM.defaultTabs ).then(( tabs ) => { self.AM.tabsList.set( tabs ); });
+            } else {
+                self.AM.tabsList.set( self.AM.defaultTabs );
+            }
         }
     });
 });
 
 Template.AccountEditPanel.onRendered( function(){
     const self = this;
+    //logger.debug( self.AM.amInstance.get().fieldSet());
 
     // whether we are running inside of a Modal
     self.autorun(() => {
@@ -151,15 +196,21 @@ Template.AccountEditPanel.helpers({
     },
 
     // parms for TabbedTemplate
+    //  add the default datacontext to tabs which have not a 'paneData' key
     parmsTabbed(){
-        const amInstance = Template.instance().AM.amInstance.get();
         const paneData = {
             item: Template.instance().AM.item,
             isNew: Template.instance().AM.isNew.get(),
             checker: Template.instance().AM.checker,
             amInstance: Template.instance().AM.amInstance
         };
-        let tabs = [];
+        const tabs = Template.instance().AM.tabsList.get();
+        for( const tab of tabs ){
+            if( !tab.paneData ){
+                tab.paneData = paneData;
+            }
+        }
+        /*
         if( this.tabsBefore ){
             if( _.isArray( this.tabsBefore ) && this.tabsBefore.length ){
                 this.tabsBefore.forEach(( tab ) => {
@@ -170,101 +221,8 @@ Template.AccountEditPanel.helpers({
                 logger.warn( 'expect tabsBefore be an array, got', this.tabsBefore );
             }
         }
-        if( amInstance.haveIdent()){
-            tabs.push({
-                name: 'account_ident_tab',
-                navLabel: pwixI18n.label( I18N, 'tabs.ident_title' ),
-                paneTemplate: 'account_ident_panel',
-                paneData: paneData
-            });
-        }
-        if( this.tabs ){
-            if( _.isArray( this.tabs ) && this.tabs.length ){
-                this.tabs.forEach(( tab ) => {
-                    tab.paneData = _.merge( {}, tab.paneData, paneData );
-                    tabs.push( tab );
-                });
-            } else {
-                logger.warn( 'expect tabs be an array, got', this.tabs );
-            }
-        }
-        if( amInstance.haveRoles()){
-            tabs.push({
-                name: 'account_roles_tab',
-                navLabel: pwixI18n.label( I18N, 'tabs.roles_title' ),
-                paneTemplate: 'account_roles_panel',
-                paneData: paneData
-            });
-        }
-        const adminNotes = amInstance.fieldSet().byName( 'adminNotes' );
-        if( adminNotes ){
-            tabs.push({
-                name: 'account_admin_notes_tab',
-                navLabel: adminNotes.toForm().title,
-                paneTemplate: 'NotesEdit',
-                paneData(){
-                    return {
-                        item: paneData.item,
-                        field: adminNotes
-                    };
-                }
-            });
-        }
-        const userNotes = amInstance.fieldSet().byName( 'userNotes' );
-        if( userNotes ){
-            tabs.push({
-                name: 'account_user_notes_tab',
-                navLabel: userNotes.toForm().title,
-                paneTemplate: 'NotesEdit',
-                paneData(){
-                    return {
-                        item: paneData.item,
-                        field: userNotes
-                    };
-                }
-            });
-        }
-        // add additionalTabs from amInstance if any
-        const adds = Template.instance().AM.additionalTabs.get();
-        if( adds ){
-            adds.forEach(( def ) => {
-                if( def.before && def.tabs ){
-                    let found = false;
-                    for( let i=0 ; i<tabs.length && !found ; ++i ){
-                        if( tabs[i].name === def.before ){
-                            found = true;
-                            if( _.isArray( def.tabs )){
-                                def.tabs.forEach(( it ) => {
-                                    it.paneData = _.merge( {}, it.paneData, paneData );
-                                    tabs.splice( i, 0, it );
-                                });
-                            } else {
-                                logger.warn( 'expects tabs be an array, got', def.tabs );
-                            }
-                        }
-                    };
-                    if( !found ){
-                        logger.warn( 'tab not found:', def.before );
-                    }
-                } else {
-                    logger.warn( 'expects additionalTabs have a \'before\' key, not found', def );
-                }
-            });
-        }
-        // update these tabs if asked for
-        if( this.tabsUpdates ){
-            Object.keys( this.tabsUpdates ).forEach(( it ) => {
-                let found = false;
-                tabs.every(( tab ) => {
-                    if( tab.name === it ){
-                        found = true;
-                        _.merge( tab, this.tabsUpdates[it] );
-                    }
-                    return !found;
-                });
-            });
-        }
-        //logger.debug( 'tabs', tabs, this );
+            */
+        //logger.debug( 'parmsTabbed', tabs, this );
         return {
             name: ACCOUNT_EDIT_TABBED,
             tabs: tabs,
@@ -289,7 +247,7 @@ Template.AccountEditPanel.events({
         const self = this;
         let item = instance.AM.item.get();
         //logger.debug( event, 'item', item );
-        // we cannot call here AccountHub.ahClass.preferredLabel() as this later requires an id - so compute something not too far of that
+        // we cannot call here AccountCore.acAccount.preferredLabel() as this requires an id which we have only on update, not on creation - so compute something not too far of that
         //  must have at least one of these
         const label = ( item.emails && item.emails[0]?.address ) || item.username || ( item.usernames && item.usernames[0]?.username ) || item._id || pwixI18n.label( I18N, 'edit.new_label' );
         // when creating a new account, we let the user create several by reusing the same modal
@@ -301,8 +259,8 @@ Template.AccountEditPanel.events({
             return true;
         };
         if( instance.AM.isNew.get()){
-            const closeAfterNew = instance.AM.amInstance.get().closeAfterNew();
-            if( instance.AM.amInstance.get().name() === AccountsHub.ahOptions._defaults.name ){
+            const closeAfterNew = instance.AM.amInstance.get().editCloseAfterNew();
+            if( instance.AM.amInstance.get().name() === AccountsCore.Options._defaults.name ){
                 AccountsUI.Features.createUser({
                     username: item.username,
                     password: item.password,
@@ -310,7 +268,7 @@ Template.AccountEditPanel.events({
                 }, {
                     name: ACCOUNTS_UI_SIGNUP_PANEL,
                     successFn(){
-                        instance.AM.amInstance.get().byEmailAddress( item.emails[0].address ).then( async ( user ) => {
+                        AccountsCore.byEmailAddress( instance.AM.amInstance.get(), item.emails[0].address ).then( async ( user ) => {
                             if( user ){
                                 item._id = user._id;
                                 instance.$( '.am-account-ident-panel .ac-signup' ).trigger( 'ac-clear-panel' );

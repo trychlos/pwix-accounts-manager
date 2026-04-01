@@ -17,7 +17,7 @@
     - Define a ready() reactive data source
     - Remove (most of) assert() tests, replacing with logger.error() for debugging facility
     - Fix the display of user roles and set contextual tooltips
-    - Fix array concatenation of amClass fieldset
+    - Fix array concatenation of amAccount fieldset
     - Restore sort on email address column now that the column uses a Blaze template
     - Upgrade pwix:ui-bootstrap5 dependency to be able to use Bootstrap tooltips
     - Meteor methods handle exceptions throwned by server code
@@ -29,6 +29,9 @@
     - Prevent too many autorun's when calling setForm()
     - Both email adress and username must be identifiers in both email address and username namespaces
     - fix lastConnection update
+    - Rename pwix:accounts-hub dependency to pwix:accounts-core, upgrading it to 2.0.0-rc.0
+    - Remove 'serverTabularExtend' amAccount parameter obsoleted by AccountCore.acAccount.transform
+    - replace 'addtionalTabs, 'tabsUpdate', 'tabsBefore', 'tabs', 'haveIdent' and 'haveRoles' amAccount parameters by 'editTabsFn'
 
 ### 2.2.0
 
@@ -41,7 +44,7 @@
     - Replace an async helper with a ReactiveVar in AccountsList
     - Fix the addressing of objects inside arrays (e.g. emails)
     - Normalize class names to be 'am-' prefixed
-    - Define new additionalTabs property to amClass
+    - Define new additionalTabs property to amAccount
 
 ### 2.1.0
 
@@ -53,7 +56,7 @@
       NB: the two extend function now hold the publication userId
     - Define new 'editTitle' AccountsList component parameter
     - Fix the event emission, re-adding the DYN sub-object
-    - Define new preferredLabel() amClass argument
+    - Define new preferredLabel() amAccount argument
     - Change the internal email identifier 'id' to '_id', thus removing the limitation when removing emails rows
     - Fix the label computation when saving an item
     - AccountsManager.s.getBy() now use the special 'getBy' permission to handle cases where we do not have any userId
@@ -63,8 +66,8 @@
     - Improve the new account toaster label
     - Fix call to missing remove method
     - Fix instance name usage from data context
-    - Define new amClass.get() reactive data source
-    - Let the subscription be delayed after the amClass instanciation
+    - Define new amAccount.get() reactive data source
+    - Let the subscription be delayed after the amAccount instanciation
     - Fix the display of account roles in tabular list
     - Let the caller choose whether auto close the 'new account' dialog after successful creation (todo #4)
     - Fix new email creation
@@ -85,14 +88,14 @@
     - Review the requested permissions to better suit CRUD standards
     - Simplify AccountsList component
     - Define tabularFieldsDef tabular display definition
-    - Define new amClass.defaultFieldDef() method
+    - Define new amAccount.defaultFieldDef() method
     - Always open new account dialog on the first pane
     - Define 'haveIdent' parameter
     - Consider the mdTitle passed by the caller
     - Define new clientNewFn() function to define a new account
     - Fix configuration overrides
-    - Remove amClass.collectionDb() method (rather use ahClass.collection())
-    - Define 'serverTabularExtend' amClass parameter
+    - Remove amAccount.collectionDb() method (rather use acAccount.collection())
+    - Define 'serverTabularExtend' amAccount parameter
     - Fix default ordering by ascending email address
     - AccountsManager is now an EventEmitter and sends a server-side event on create, update and delete operations
 

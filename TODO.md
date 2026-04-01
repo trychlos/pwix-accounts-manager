@@ -30,7 +30,7 @@
 |    2 | 2024- 6- 9 | AccountsList: let the application manage the info, edit and delete buttons |
 |      | 2024- 6-22 | this is delegated to pwix:tabular |
 |    4 | 2024- 6-24 | whether to be able to reuse the same input panel when creating an account should be a configurable option |
-|      | 2024-11-16 | is actually an amClass option |
+|      | 2024-11-16 | is actually an amAccount option |
 |    5 | 2024- 7- 2 | should have an accounts-conf configuration package just to handle accounts configurations parameters which are at application level and shared between packages |
 |      | 2024- 7-12 | done |
 

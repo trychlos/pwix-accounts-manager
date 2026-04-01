@@ -8,19 +8,22 @@
  * - item: a ReactiveVar which holds the account object to edit (may be empty, but not null)
  * - isNew: true|false
  * - checker: a ReactiveVar which holds the parent Checker
- * - amInstance: a ReactiveVar which holds the amClass instance
+ * - amInstance: a ReactiveVar which holds the amAccount instance
  */
 
 import _ from 'lodash';
 import strftime from 'strftime';
 
-import { AccountsHub } from 'meteor/pwix:accounts-hub';
+import { AccountsCore } from 'meteor/pwix:accounts-core';
 import { AccountsUI } from 'meteor/pwix:accounts-ui';
 import { Forms } from 'meteor/pwix:forms';
 import { Logger } from 'meteor/pwix:logger';
 import { pwixI18n } from 'meteor/pwix:i18n';
 import { ReactiveVar } from 'meteor/reactive-var';
 import { Tracker } from 'meteor/tracker';
+
+import '../account_email_row/account_email_row.js';
+import '../account_emails_list/account_emails_list.js';
 
 import './account_ident_panel.html';
 
@@ -35,10 +38,10 @@ Template.account_ident_panel.onCreated( function(){
                 js: '.js-login-allowed',
                 form_status: Forms.C.ShowStatus.NONE
             },
-            lastConnection: {
+            loginLastConnection: {
                 js: '.js-last-login',
                 formTo( $node, item ){
-                    return $node.val( item.lastConnection ? strftime( AccountsManager.configure().datetime, item.lastConnection ) : '' );
+                    return $node.val( item.loginLastConnection ? strftime( AccountsManager.configure().datetime, item.loginLastConnection ) : '' );
                 }
             }
         },
@@ -49,7 +52,7 @@ Template.account_ident_panel.onCreated( function(){
     // setup the fields depending of the accounts configuration
     self.autorun(() => {
         const amInstance = Template.currentData().amInstance;
-        if( amInstance && amInstance.get().opts().haveUsername() !== AccountsHub.C.Identifier.NONE ){
+        if( amInstance && amInstance.get().usernameMayHaveOne()){
             self.AM.fields.username = {
                 js: '.js-username'
             };
@@ -59,6 +62,7 @@ Template.account_ident_panel.onCreated( function(){
 
 Template.account_ident_panel.onRendered( function(){
     const self = this;
+    logger.debug( this );
 
     // initialize the Checker for this panel as soon as we get the parent Checker
     let running = false;
@@ -102,12 +106,12 @@ Template.account_ident_panel.onRendered( function(){
 Template.account_ident_panel.helpers({
     // whether we want an email address
     haveEmailAddress(){
-        return this.amInstance ? this.amInstance.get().opts().haveEmailAddress() !== AccountsHub.C.Identifier.NONE : false;
+        return this.amInstance ? this.amInstance.get().opts().haveEmailAddress() !== AccountsCore.C.Identifier.NONE : false;
     },
 
     // whether we want a username
     haveUsername(){
-        return this.amInstance ? this.amInstance.get().opts().haveUsername() !== AccountsHub.C.Identifier.NONE : false;
+        return this.amInstance ? this.amInstance.get().opts().haveUsername() !== AccountsCore.C.Identifier.NONE : false;
     },
 
     // string translation
@@ -151,10 +155,10 @@ Template.account_ident_panel.events({
                 const item = this.item.get();
                 item.emails = item.emails || [];
                 item.emails[0] = item.emails[0] || {};
-                if( this.amInstance.get().opts().haveEmailAddress() !== AccountsHub.C.Identifier.NONE ){
+                if( this.amInstance.get().opts().haveEmailAddress() !== AccountsCore.C.Identifier.NONE ){
                     item.emails[0].address = data.email;
                 }
-                if( this.amInstance.get().opts().haveUsername() !== AccountsHub.C.Identifier.NONE ){
+                if( this.amInstance.get().opts().haveUsername() !== AccountsCore.C.Identifier.NONE ){
                     item.username = data.username;
                 }
                 item.password = data.password;

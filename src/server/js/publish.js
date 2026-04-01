@@ -4,7 +4,8 @@
 
 import _ from 'lodash';
 
-import { AccountsHub } from 'meteor/pwix:accounts-hub';
+import { AccountsCore } from 'meteor/pwix:accounts-core';
+import { check, Match } from 'meteor/check';
 import { Logger } from 'meteor/pwix:logger';
 
 const logger = Logger.get();
@@ -42,40 +43,32 @@ const logger = Logger.get();
  *    }
  *  }
  */
-Meteor.publish( 'pwix.AccountsManager.p.tabularLast', async function( tableName, ids, fields ){
+Meteor.publish( AccountsManager.C.pub.tabular.name, async function( tableName, ids, fields ){
+    check( tableName, Match.NonEmptyString );
+    const acInstance = AccountsManager.amAccount.byTabularName( tableName );
+    check( acInstance, AccountsManager.amAccount );
     //logger.debug( 'pwix.AccountsManager.p.tabularLast', tableName, ids, fields );
-    if( !tableName || !_.isString( tableName )){
-        logger.error( 'expects \'tableName\' be a non-empty string, got', tableName, 'throwing...' );
-        throw new Error( 'Bad argument: tableName' );
-    }
-    const amInstance = AccountsManager.amClass.instanceByTabularName( tableName );
-    if( !amInstance || !( amInstance instanceof AccountsManager.amClass )){
-        logger.error( 'expects \'amInstance\' be an instance of \'AccountsManager.amClass\', got', amInstance, 'throwing...' );
-        throw new Error( 'Bad argument: amInstance' );
-    }
 
-    if( !await AccountsHub.isAllowed( 'pwix.accounts_hub.feat.list', this.userId, { instance: amInstance })){
+    if( !await AccountsCore.isAllowed( 'pwix.accounts_core.feat.list', this.userId, { instance: acInstance })){
         this.ready();
         return false;
     }
 
     const self = this;
-    const collectionName = amInstance.collectionName();
+    const collectionName = acInstance.opts().collection();
     let initializing = true;
 
     // @param {Object} item the Record item
     // @returns {Object} item the transformed item
     const f_transform = async function( item ){
-        item.DYN = {};
-        const fn = amInstance.serverTabularExtend();
-        if( fn ){
-            await fn( amInstance.name(), item, self.userId );
+        const transforms = acInstance.transformsPublish( AccountsManager.C.pub.tabular.name );
+        for( const fn of transforms ){
+            item = await fn( acInstance, item, {}, self.userId );
         }
-        AccountsHub.s.addUndef( amInstance.name(), item );
         return item;
     };
 
-    const observer = amInstance.collection().find().observeAsync({
+    const observer = acInstance.collection().find().observeAsync({
         added: async function( item ){
             const transformed = await f_transform( item );
             self.added( collectionName, item._id, transformed );

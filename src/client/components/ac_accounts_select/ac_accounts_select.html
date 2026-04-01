@@ -1,0 +1,11 @@
+<template name="ac_accounts_select">
+    <div class="ac-accounts-select">
+
+        <select class="form-select multiple-select" {{ isDisabled }} multiple="multiple">
+            {{#each it in itemsList }}
+                <option value="{{ itId it }}" {{ itSelected it }}>{{ itLabel it }}</option>
+            {{/each}}
+        </select>
+
+    </div>
+</template>

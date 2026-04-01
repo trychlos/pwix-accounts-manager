@@ -7,7 +7,7 @@
  * Parms:
  * - item: a ReactiveVar which holds the account object to edit (may be empty, but not null)
  * - checker: a ReactiveVar which holds the parent Checker
- * - amInstance: a ReactiveVar which holds the amClass instance
+ * - amInstance: a ReactiveVar which holds the amAccount instance
  */
 
 import _ from 'lodash';
