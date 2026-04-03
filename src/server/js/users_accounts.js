@@ -24,7 +24,7 @@ const logger = Logger.get();
 Accounts.onLogin(( data ) => {
     if( AccountsManager.ready()){
         const acInstance = AccountsCore.getInstance( 'users' );
-        check( acInstance, AccountsManager.amAccount );
+        check( acInstance, AccountsManager.Account );
         acInstance.collection().updateAsync( { _id: data.user._id }, { $set: { loginLastConnection: new Date() }}).then(( res ) => {
             logger.info( 'onLogin() userId', data.user._id, 'type', '\''+data.type+'\'', 'res', res );
             /*

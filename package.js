@@ -40,6 +40,7 @@ function configure( api ){
     api.use( 'pwix:modal@2.5.0-rc' );
     api.use( 'pwix:notes@1.0.0-rc' );
     api.use( 'pwix:plus-button@1.0.0-rc' );
+    api.use( 'pwix:roles@1.8.0', { weak: true });
     api.use( 'pwix:tabbed@1.0.0-rc' );
     api.use( 'pwix:tabular@1.0.0-rc' );
     api.use( 'pwix:typed-message@1.2.0' );

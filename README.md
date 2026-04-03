@@ -43,7 +43,7 @@ The exported `AccountsManager` global object provides following items:
 
 ##### `amAccount`
 
-This is a very thin extend of `AccountsCore.acAccount` class, and it actually eventually fully replace it. This means that invoking `AccountsCore.acAccount` and `AccountsManager.amAccount` provides you exactly the same extended class.
+This is a very thin extend of `AccountsCore.Account` class, and it actually eventually fully replace it. This means that invoking `AccountsCore.Account` and `AccountsManager.Account` provides you exactly the same extended class.
 
 ###### Methods
 
@@ -76,57 +76,24 @@ This is a very thin extend of `AccountsCore.acAccount` class, and it actually ev
             - `checker`: a ReactiveVar which holds the parent Forms.Checker
             - `amInstance`: a ReactiveVar which holds the amAccount instance
 
-    - `editWithGlobalRoles`
+        Default it to have:
 
-        Whether the Roles panel, when displayed, should include a "Global roles" pane, defaulting to `true`.
+        - an identity tab to let the user enter email addresses and usernames
+        - a roles tab if the application has roles
+        - a tab for admin notes
+        - a tab for user notes.
 
-    - `editWithScopedRoles`
+    - `listActiveCheckboxes`
 
-        Whether the Roles panel, when displayed, should include a "Scoped roles" pane, defaulting to `true`.
+        Whether the checkboxes rendered in the tabular display are active, i.e. accept a click to switch their state, defaulting to `false`.
 
-        - `clientNewFn`
-
-            A client-side function to insert a new account.
-
-            Defaults to `AccountsUI.Features.createUser` for the `users` instance, or a warning message else.
-
-            Prototype must be `async clientNewFn( item<Object> [, clientNewArgs ]): Boolean`.
-
-        - `clientNewArgs`
-
-            Arguments to be passed to above `clientNewFn`, defaulting to none.
-
-        - `clientUpdateFn`
-
-            A client-side function to update an account.
-
-            Defaults to none.
-
-            Prototype must be `async clientUpdateFn( item<Object> [, clientUpdateArgs ]): Boolean`.
-
-        - `clientUpdateArgs`
-
-            Arguments to be passed to above `clientUpdateFn`, defaulting to none.
+        Rationale: even if it would be very more easy to directly click on the tabular display to toggle a checkbox, some administrators may find this way too much easy, if not error prone, and prefer to have to pass through a distinct page/modal/display unit to securize a bit this update. The chosen default privileges the security over the esayness.
 
     - `listFeedNow`
 
         Whether the class should subscribe to the `all` publication to feed its internal list as soon as it is instanciated, defaulting to `true`.
 
         Note that this will run a `Meteor.subscribe()` function from inside a `Tracker.autorun()` computation code and is so subject to the usual limitations and caveats of Meteor computations.
-
-        - `preNewFn`
-
-        - `postNewFn`
-
-        - `preUpdateFn`
-
-        - `postUpdateFn`
-
-            Async functions which are called for the relative operation.
-
-            Prototype is: `async preNewFn( item<Object>)`.
-
-            These let the caller a chance to modify the item before/after the database insert/update.
 
     - `scopesFn`
 
@@ -334,6 +301,10 @@ In other words, all instanciation arguments are available through `<my_amAccount
 
 ##### `AccountsManager.configure( o<Object> )`
 
+##### `async AccountsManager.createUser( userDoc<Object>, options<Object> ): <Boolean>`
+
+##### `async AccountsManager.deleteUser( userDoc<Object>, options<Object> ): <Boolean>`
+
 See [below](#configuration)
 
 ##### `AccountsManager.i18n.namespace()`
@@ -368,6 +339,7 @@ The modal triggers an 'ah-accounts-select' event at validation time, with data a
 
 This function is available on client-side only.
 
+##### `async AccountsManager.updateUser( userDoc<Object>, options<Object> ): <Boolean>`
 
 #### Events
 

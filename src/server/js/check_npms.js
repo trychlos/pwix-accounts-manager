@@ -9,7 +9,6 @@ if( false ){
 }
 
 checkNpmVersions({
-    'email-validator': '^2.0.4',
     'lodash': '^4.17.0',
     'multiple-select-vanilla': '^5.1.0',
     'strftime': '^0.10.2'

@@ -30,26 +30,10 @@ AccountsManager.s.addUnset = function( instanceName, item ){
     return $unset;
 };
 
-AccountsManager.s.getBy = async function( instanceName, query, userId ){
-    let ret = null;
-    const acInstance = AccountsCore.getInstance( instanceName );
-    if( acInstance && acInstance instanceof AccountsManager.amAccount ){
-        try {
-            ret = await acInstance.collection().find( query ).fetchAsync();
-        } catch( e ){
-            throw new Meteor.Error(
-                'pwix.accounts_manager.s.getBy' );
-        }
-    } else {
-        logger.warn( 'getBy() unknown or invalid instance name', instanceName );
-    }
-    return ret;
-};
-
 AccountsManager.s.removeById = async function( instanceName, id, userId ){
     let ret = null;
     const acInstance = AccountsCore.getInstance( instanceName );
-    if( acInstance && acInstance instanceof AccountsManager.amAccount ){
+    if( acInstance && acInstance instanceof AccountsManager.Account ){
         if( !await AccountsCore.isAllowed( 'pwix.accounts_manager.feat.delete', userId, { instance: acInstance, id: id })){
             return null;
         }
@@ -78,8 +62,8 @@ AccountsManager.s.updateAccount = async function( instanceName, item, userId, or
         throw new Error( 'Bad argument: instanceName' );
     }
     const acInstance = AccountsCore.getInstance( instanceName );
-    if( !acInstance || !( acInstance instanceof AccountsManager.amAccount )){
-        logger.error( 'updateAccount() expects \'acInstance\' be an instance of AccountsManager.amAccount, got', acInstance, 'throwing...' );
+    if( !acInstance || !( acInstance instanceof AccountsManager.Account )){
+        logger.error( 'updateAccount() expects \'acInstance\' be an instance of AccountsManager.Account, got', acInstance, 'throwing...' );
         throw new Error( 'Bad argument: acInstance' );
     }
     if( !await AccountsCore.isAllowed( 'pwix.accounts_manager.feat.update', userId, { instance: acInstance, id: item._id })){
@@ -133,7 +117,7 @@ AccountsManager.s.updateAccount = async function( instanceName, item, userId, or
 AccountsManager.s.updateById = async function( instanceName, id, userId, modifier ){
     let ret = null;
     const acInstance = AccountsCore.getInstance( instanceName );
-    if( acInstance && acInstance instanceof AccountsManager.amAccount ){
+    if( acInstance && acInstance instanceof AccountsManager.Account ){
         if( !await AccountsCore.isAllowed( 'pwix.accounts_manager.feat.update', userId, { instance: acInstance, id: id })){
             return null;
         }

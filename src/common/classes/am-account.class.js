@@ -23,7 +23,7 @@ import { amTransforms } from '../helpers/am-transforms.js';
 
 const logger = Logger.get();
 
-export class amAccount extends AccountsCore.acAccount {
+export class amAccount extends AccountsCore.Account {
 
     // static data
 
@@ -37,13 +37,10 @@ export class amAccount extends AccountsCore.acAccount {
      * @returns {amAccount} the corresponding amAccount instance
      */
     static byTabularName( name ){
-        return AccountsManager.amAccount.tabulars[name]?.instance;
+        return AccountsManager.Account.tabulars[name]?.instance;
     }
 
     // private data
-
-    // raw provided arguments
-    #args = null;
 
     // runtime
     #fieldset = null;
@@ -78,7 +75,6 @@ export class amAccount extends AccountsCore.acAccount {
         super( ...arguments );
         logger.debug( 'amAccount() instanciating \''+this.name()+'\'', args );
 
-        this.#args = args;
         this._setOpts( new amOptions( args ));
 
         // update the publish transformations
@@ -99,34 +95,6 @@ export class amAccount extends AccountsCore.acAccount {
         }
 
         return this;
-    }
-
-    /**
-     * @returns {Any} arguments to the client-side function to create a new account
-     */
-    xclientNewArgs(){
-        return this.#args.clientNewArgs || null;
-    }
-
-    /**
-     * @returns {Function} a client-side function to create a new account
-     */
-    xclientNewFn(){
-        return this.#args.clientNewFn || null;
-    }
-
-    /**
-     * @returns {Any} arguments to the client-side function to update an account
-     */
-    xclientUpdateArgs(){
-        return this.#args.clientUpdateArgs || null;
-    }
-
-    /**
-     * @returns {Function} a client-side function to update an account
-     */
-    xclientUpdateFn(){
-        return this.#args.clientUpdateFn || null;
     }
 
     /**
@@ -198,65 +166,6 @@ export class amAccount extends AccountsCore.acAccount {
     }
 
     /**
-     * @returns {Boolean} whether the disabled links should be hidden
-     */
-    xhideDisabled(){
-        let hide = this.#args.hideDisabled;
-        if( hide !== true && hide !== false ){
-            hide = true;
-        }
-        return hide;
-    }
-
-    /**
-     * @summary Calls the preNewfn function if any
-     * @locus Server
-     * @param {Object} item the item to be inserted
-     */
-    async xpreNewFn( item ){
-        const fn = this.#args.preNewFn;
-        if( fn && typeof fn === 'function' ){
-            await fn( item );
-        }
-    }
-
-    /**
-     * @summary Calls the postNewFn function if any
-     * @locus Server
-     * @param {Object} item the item to be inserted
-     */
-    async xpostNewFn( item ){
-        const fn = this.#args.postNewFn;
-        if( fn && typeof fn === 'function' ){
-            await fn( item );
-        }
-    }
-
-    /**
-     * @summary Calls the preUpdateFn function if any
-     * @locus Server
-     * @param {Object} item the item to be inserted
-     */
-    async xpreUpdateFn( item ){
-        const fn = this.#args.preUpdateFn;
-        if( fn && typeof fn === 'function' ){
-            await fn( item );
-        }
-    }
-
-    /**
-     * @summary Calls the postUpdateFn function if any
-     * @locus Server
-     * @param {Object} item the item to be inserted
-     */
-    async xpostUpdateFn( item ){
-        const fn = this.#args.postUpdateFn;
-        if( fn && typeof fn === 'function' ){
-            await fn( item );
-        }
-    }
-
-    /**
      * @setup Setup a tabular display
      * @param {String} name the name of the tabular display
      * @param {Object} args
@@ -266,13 +175,13 @@ export class amAccount extends AccountsCore.acAccount {
         logger.verbose({ verbosity: AccountsManager.configure().verbosity, against: AccountsManager.C.Verbose.FUNCTIONS }, 'amAccount.setupTabular()', arguments );
         check( name, Match.NonEmptyString );
         check( args, Object );
-        if( AccountsManager.amAccount.tabulars[name] ){
+        if( AccountsManager.Account.tabulars[name] ){
             logger.error( 'setupTabular() tabular is already defined', name );
             return false;
         }
         // define the Tabular.Table
         const tabular = amTabular._initTabular( this, name, args );
-        AccountsManager.amAccount.tabulars[name] = { instance: this, args, tabular };
+        AccountsManager.Account.tabulars[name] = { instance: this, args, tabular };
         logger.debug( 'registering', name );
         return true;
     }

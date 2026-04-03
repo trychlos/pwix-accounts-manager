@@ -45,8 +45,8 @@ const logger = Logger.get();
  */
 Meteor.publish( AccountsManager.C.pub.tabular.name, async function( tableName, ids, fields ){
     check( tableName, Match.NonEmptyString );
-    const acInstance = AccountsManager.amAccount.byTabularName( tableName );
-    check( acInstance, AccountsManager.amAccount );
+    const acInstance = AccountsManager.Account.byTabularName( tableName );
+    check( acInstance, AccountsManager.Account );
     //logger.debug( 'pwix.AccountsManager.p.tabularLast', tableName, ids, fields );
 
     if( !await AccountsCore.isAllowed( 'pwix.accounts_core.feat.list', this.userId, { instance: acInstance })){

@@ -35,9 +35,9 @@ Template.AccountsList.onCreated( function(){
 
     // get and check the amAccount instance
     self.autorun(() => {
-        const amInstance = AccountsManager.amAccount.byTabularName( Template.currentData().name );
+        const amInstance = AccountsManager.Account.byTabularName( Template.currentData().name );
         if( amInstance ){
-            check( amInstance, AccountsManager.amAccount );
+            check( amInstance, AccountsManager.Account );
             self.AM.amInstance.set( amInstance );
         }
     });

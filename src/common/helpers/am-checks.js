@@ -3,7 +3,6 @@
  */
 
 import { strict as assert } from 'node:assert';
-import validator from 'email-validator';
 
 import { AccountsCore } from 'meteor/pwix:accounts-core';
 import { Logger } from 'meteor/pwix:logger';
@@ -49,6 +48,7 @@ export const amChecks = {
     // email address not only be a unique email address but also must be unique among usernames namespace
     // rationale: someone with bad intentions could spoof an email address by entering it as a username
     async email_address( value, data, opts ){
+        logger.debug( 'amChecks.email_addres()', arguments );
         _assert_data_itemrv( 'amChecks.email_address()', data );
         let item = data.item.get();
         let index = opts.rowId ? _id2index( item.emails, opts.rowId ) : -1;
@@ -70,22 +70,27 @@ export const amChecks = {
                     message: err
                 }));
             }
+            logger.debug( errs );
             return errs;
         }
         // and check that this is an identifier for both email addresses and usernames too
         let user = await data.amInstance.byEmailAddress( value );
         if( user && user._id !== item._id ){
-            return new TM.TypedMessage({
+            const errs = new TM.TypedMessage({
                 level: TM.MessageLevel.C.ERROR,
                 message: pwixI18n.label( I18N, 'check.email_exists' )
             });
+            logger.debug( errs );
+            return errs;
         }
         user = await data.amInstance.byUsername( value );
         if( user && user._id !== item._id ){
-            return new TM.TypedMessage({
+            const errs = new TM.TypedMessage({
                 level: TM.MessageLevel.C.ERROR,
                 message: pwixI18n.label( I18N, 'check.email_exists' )
             });
+            logger.debug( errs );
+            return errs;
         }
         return null;
     },

@@ -18,7 +18,7 @@ import './configure.js';
 import './functions.js';
 import './ready.js';
 
-AccountsManager.amAccount = amAccount;
+AccountsManager.Account = amAccount;
 AccountsManager.Checks = amChecks;
 AccountsManager.Fielddef = amFielddef;
 AccountsManager.Options = amOptions;

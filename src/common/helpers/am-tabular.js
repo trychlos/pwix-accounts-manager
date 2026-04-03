@@ -24,7 +24,7 @@ _tabular_identifier = async function( acInstance, it ){
 
 export const amTabular = {
     _initTabular( acInstance, name, args ){
-        check( acInstance, AccountsManager.amAccount );
+        check( acInstance, AccountsManager.Account );
         check( name, Match.NonEmptyString );
         check( args, Object );
         // define the Tabular.Table

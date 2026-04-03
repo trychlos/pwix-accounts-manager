@@ -56,7 +56,7 @@ Template.ac_select_dialog.onCreated( function(){
         if( acInstance ){
             self.AH.handle.set( self.subscribe( 'pwix.AccountsCore.p.listAll', name ));
         } else {
-            logger.warn( 'unknown AccountsCore.acAccount instance', name );
+            logger.warn( 'unknown AccountsCore.Account instance', name );
         }
     });
 

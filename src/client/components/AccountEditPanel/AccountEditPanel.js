@@ -60,7 +60,7 @@ Template.AccountEditPanel.onCreated( function(){
         const name = Template.currentData().name;
         if( name ){
             const amInstance = AccountsCore.getInstance( name );
-            check( amInstance, AccountsManager.amAccount );
+            check( amInstance, AccountsManager.Account );
             self.AM.amInstance.set( amInstance );
         }
     });
@@ -89,6 +89,7 @@ Template.AccountEditPanel.onCreated( function(){
                 navLabel: pwixI18n.label( I18N, 'tabs.ident_title' ),
                 paneTemplate: 'account_ident_tab'
             });
+            /*
             if( amInstance.haveRoles()){
                 tabsList.push({
                     name: 'account_roles_tab',
@@ -96,6 +97,7 @@ Template.AccountEditPanel.onCreated( function(){
                     paneTemplate: 'account_roles_tab'
                 });
             }
+                */
             const adminNotes = amInstance.fieldSet().byName( 'adminNotes' );
             if( adminNotes ){
                 tabsList.push({
@@ -166,13 +168,21 @@ Template.AccountEditPanel.onRendered( function(){
     checker.init({
         messager: self.AM.messager,
         name: 'AccountEditPanel',
-        onValidityChangeRegisterFn( valid ){
+        onValidityChangeRegisterFn: ( valid ) => {
             if( self.AM.isModal.get()){
                 Modal.topmost().set({ buttons: { id: Modal.C.Button.OK, enabled: valid }});
             }
         }
     }).then(() => {
         self.AM.checker.set( checker );
+    });
+
+    // monitor the validity of the checker
+    self.autorun(() => {
+        const checker = self.AM.checker.get();
+        if( checker ){
+            logger.debug( 'checker', checker, checker.iSeq(), checker.validity(), checker.status());
+        }
     });
 });
 
@@ -184,6 +194,7 @@ Template.AccountEditPanel.helpers({
     haveMessager(){
         return this.item !== null;
     },
+
     isModal(){
         return Template.instance().AM.isModal.get() === true;
     },
@@ -305,7 +316,7 @@ Template.AccountEditPanel.events({
 
         // on update, then... update and close
         } else {
-            const fn = instance.AM.amInstance.get().clientUpdateFn();
+            const fn = null; //instance.AM.amInstance.get().clientUpdateFn();
             let promise;
             if( fn ){
                 promise = fn( item, instance.AM.amInstance.get().clientUpdateArgs());

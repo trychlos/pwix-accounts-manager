@@ -11,12 +11,15 @@
 import _ from 'lodash';
 
 import { AccountsCore } from 'meteor/pwix:accounts-core';
+import { Logger } from 'meteor/pwix:logger';
 import { Modal } from 'meteor/pwix:modal';
 import { pwixI18n } from 'meteor/pwix:i18n';
 
 import '../AccountEditPanel/AccountEditPanel.js';
 
 import './AccountNewButton.html';
+
+const logger = Logger.get();
 
 Template.AccountNewButton.onCreated( function(){
     const self = this;
@@ -29,7 +32,7 @@ Template.AccountNewButton.onCreated( function(){
         const dataContext = Template.currentData();
         if( dataContext.name ){
             const acInstance = AccountsCore.getInstance( dataContext.name );
-            if( acInstance && acInstance instanceof AccountsManager.amAccount ){
+            if( acInstance && acInstance instanceof AccountsManager.Account ){
                 AccountsCore.isAllowed( 'pwix.accounts_manager.feat.create', Meteor.userId(), { instance: acInstance })
                     .then(( res ) => {
                         self.AM.canCreate.set( res );
@@ -62,7 +65,6 @@ Template.AccountNewButton.events({
             mdBody: 'AccountEditPanel',
             mdButtons: [ Modal.C.Button.CANCEL, Modal.C.Button.OK ],
             mdClasses: this.mdClasses || 'modal-lg',
-            mdClassesContent: instance.AM.acInstance.get().classes(),
             mdTitle: this.mdTitle || pwixI18n.label( I18N, 'new.modal_title' ),
             item: null
         });

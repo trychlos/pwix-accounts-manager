@@ -8,7 +8,6 @@ import _ from 'lodash';
 
 import { AccountsCore } from 'meteor/pwix:accounts-core';
 import { Logger } from 'meteor/pwix:logger';
-import { Options } from 'meteor/pwix:options';
 
 const logger = Logger.get();
 
@@ -20,8 +19,7 @@ export class amOptions extends AccountsCore.Options {
     static _defaults = {
         editCloseAfterNew: true,
         editTabsFn: null,
-        editWithGlobalRoles: true,
-        editWithScopedRoles: true,
+        listActiveCheckboxes: false,
         listFeedNow: true,
     };
 

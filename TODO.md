@@ -12,7 +12,6 @@
 | ---: | :---       | :---                       |
 |    3 | 2024- 6-24 | admin notes should not be available to standard user |
 |    6 | 2024- 7-18 | honor tabularActiveCheckboxes |
-|    7 | 2024- 8- 2 | honor hideDisabled |
 |    8 | 2024- 8 -2 | honor email label |
 |    9 | 2025- 7- 4 | have preferred email address |
 |   10 | 2025- 7- 4 | be able to have several usernames |
@@ -33,6 +32,8 @@
 |      | 2024-11-16 | is actually an amAccount option |
 |    5 | 2024- 7- 2 | should have an accounts-conf configuration package just to handle accounts configurations parameters which are at application level and shared between packages |
 |      | 2024- 7-12 | done |
+|    7 | 2024- 8- 2 | honor hideDisabled |
+|      | 2026- 4- 2 | parameter is cancelled |
 
 ---
 P. Wieser

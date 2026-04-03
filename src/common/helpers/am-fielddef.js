@@ -54,7 +54,7 @@ export const amFielddef = {
     //      emails: [ { address: 'aaaa@aaa.aa', verified: false } ],
     //    }
     defaultColumns( acInstance ){
-        check( acInstance, AccountsManager.amAccount );
+        check( acInstance, AccountsManager.Account );
         let columns = [];
 
         // if may have an email address
@@ -292,7 +292,7 @@ export const amFielddef = {
 
     // define the default fieldset at instanciation time
     initFieldset( acInstance ){
-        check( acInstance, AccountsManager.amAccount );
+        check( acInstance, AccountsManager.Account );
         let columns = amFielddef.defaultColumns( acInstance );
         return new Field.Set( columns );
     }
