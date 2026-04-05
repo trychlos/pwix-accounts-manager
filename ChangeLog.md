@@ -34,6 +34,7 @@
     - Replace 'addtionalTabs, 'tabsUpdate', 'tabsBefore', 'tabs', 'haveIdent' and 'haveRoles' amAccount parameters by 'editTabsFn'
     - Remove unused AccountsManager.s.getBy() function (and redondant regarding AccountsCore.s.byQuery())
     - Exported AccountsManager.amAccount class is renamed to AccountsManager.Account
+    - Introduce editAdminNotes ReactiveVar (todo #3)"
 
 ### 2.2.0
 

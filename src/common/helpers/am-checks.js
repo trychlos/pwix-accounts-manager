@@ -45,10 +45,10 @@ const _id2index = function( array, id ){
 
 export const amChecks = {
 
-    // email address not only be a unique email address but also must be unique among usernames namespace
+    // email address must not only be a unique email address but also must be unique among usernames namespace
     // rationale: someone with bad intentions could spoof an email address by entering it as a username
     async email_address( value, data, opts ){
-        logger.debug( 'amChecks.email_addres()', arguments );
+        //logger.debug( 'amChecks.email_addres()', arguments );
         _assert_data_itemrv( 'amChecks.email_address()', data );
         let item = data.item.get();
         let index = opts.rowId ? _id2index( item.emails, opts.rowId ) : -1;
@@ -70,7 +70,7 @@ export const amChecks = {
                     message: err
                 }));
             }
-            logger.debug( errs );
+            //logger.debug( errs );
             return errs;
         }
         // and check that this is an identifier for both email addresses and usernames too

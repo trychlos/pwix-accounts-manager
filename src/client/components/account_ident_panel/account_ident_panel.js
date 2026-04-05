@@ -62,7 +62,6 @@ Template.account_ident_panel.onCreated( function(){
 
 Template.account_ident_panel.onRendered( function(){
     const self = this;
-    logger.debug( this );
 
     // initialize the Checker for this panel as soon as we get the parent Checker
     let running = false;

@@ -41,7 +41,7 @@ The exported `AccountsManager` global object provides following items:
 
 #### Classes
 
-##### `amAccount`
+##### `Account`
 
 This is a very thin extend of `AccountsCore.Account` class, and it actually eventually fully replace it. This means that invoking `AccountsCore.Account` and `AccountsManager.Account` provides you exactly the same extended class.
 
@@ -288,22 +288,19 @@ The class extends the `AccountsCore.Options` class to reactively manage `amAccou
 
 In other words, all instanciation arguments are available through `<my_amAccount_instance>.opts().<my_argument>()`, e.g. `amInstance.opts().editTabsFn()`.
 
-#### `AccountsManager.Checks` helpers
+#### Helpers
 
-#### `AccountsManager.Fielddef` helpers
+##### `AccountsManager.Checks`
 
-#### `AccountsManager.Tabular` helpers
+##### `AccountsManager.Fielddef`
 
-#### `AccountsManager.Transforms` helpers
+##### `AccountsManager.Tabular`
 
+##### `AccountsManager.Transforms`
 
 #### Functions
 
 ##### `AccountsManager.configure( o<Object> )`
-
-##### `async AccountsManager.createUser( userDoc<Object>, options<Object> ): <Boolean>`
-
-##### `async AccountsManager.deleteUser( userDoc<Object>, options<Object> ): <Boolean>`
 
 See [below](#configuration)
 
