@@ -13,9 +13,13 @@ AccountsManager.i18n = {
             },
             check: {
                 email_exists: 'Cette adresse de messagerie est déjà utilisée',
+                email_max: 'Un maximum de %s adresse(s) de messagerie est configuré, mais %s ont été trouvée(s)',
+                email_min: 'Un minimum de %s adresse(s) de messagerie est configuré mais %s ont été trouvée(s)',
                 email_preferred: 'Plus d\'une adresse de messagerie est marquée comme \'préférée\'',
                 login_disallow_himself: 'Vous êtes sur le point de désactiver votre propre autorisation de connexion',
                 username_exists: 'Ce nom d\'utilisateur est déjà utilisé',
+                username_max: 'Un maximum de %s username(s) est configuré, mais %s ont été trouvée(s)',
+                username_min: 'Un minimum de %s username(s) est configuré mais %s ont été trouvée(s)',
                 username_unset: 'Un nom d\'utilisateur est obligatoire'
             },
             delete: {

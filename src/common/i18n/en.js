@@ -13,9 +13,13 @@ AccountsManager.i18n = {
             },
             check: {
                 email_exists: 'This email address already exists',
+                email_max: 'At most %s email address(es) are wanted, while only %s are found',
+                email_min: 'At least %s email address(es) are wanted, while only %s are found',
                 email_preferred: 'More than one email address is marked as \'preferred\'',
                 login_disallow_himself: 'You are about to disallow your own login authorization',
                 username_exists: 'This username already exists',
+                username_max: 'At most %s username(s) are wanted, while only %s are found',
+                username_min: 'At least %s username(s) are wanted, while only %s are found',
                 username_unset: 'A username is mandatory'
             },
             delete: {

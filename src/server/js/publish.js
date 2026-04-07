@@ -58,24 +58,14 @@ Meteor.publish( AccountsManager.C.pub.tabular.name, async function( tableName, i
     const collectionName = acInstance.opts().collection();
     let initializing = true;
 
-    // @param {Object} item the Record item
-    // @returns {Object} item the transformed item
-    const f_transform = async function( item ){
-        const transforms = acInstance.transformsPublish( AccountsManager.C.pub.tabular.name );
-        for( const fn of transforms ){
-            item = await fn( acInstance, item, {}, self.userId );
-        }
-        return item;
-    };
-
     const observer = acInstance.collection().find().observeAsync({
         added: async function( item ){
-            const transformed = await f_transform( item );
+            const transformed = await AccountsCore.s.applyPublishTransforms( AccountsManager.C.pub.tabular.name, acInstance, item, {}, self.userId );
             self.added( collectionName, item._id, transformed );
         },
         changed: async function( newItem, oldItem ){
             if( !initializing ){
-                const transformed = await f_transform( newItem );
+                const transformed = await AccountsCore.s.applyPublishTransforms( AccountsManager.C.pub.tabular.name, acInstance, newItem, {}, self.userId );
                 self.changed( collectionName, newItem._id, transformed );
             }
         },

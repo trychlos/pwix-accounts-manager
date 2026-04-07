@@ -47,6 +47,8 @@ Template.AccountEditPanel.onCreated( function(){
         item: new ReactiveVar( null ),
         // whether we are running inside of a Modal
         isModal: new ReactiveVar( false ),
+        // whether the current user is allowed to edit admin notes
+        editAdminNotes: new ReactiveVar( false ),
         // tabs list
         defaultTabs: null,
         tabsList: new ReactiveVar( null ),
@@ -73,6 +75,8 @@ Template.AccountEditPanel.onCreated( function(){
     // setup the item to be edited
     self.autorun(() => {
         const clone = _.cloneDeep( Template.currentData().item || {} );
+        // this will anyway be set by the AccountsCore automatisms at user creation
+        //  but this let the UI show what will be created
         if( self.AM.isNew.get()){
             clone.loginAllowed = true;
         }
@@ -89,7 +93,6 @@ Template.AccountEditPanel.onCreated( function(){
                 navLabel: pwixI18n.label( I18N, 'tabs.ident_title' ),
                 paneTemplate: 'account_ident_tab'
             });
-            /*
             if( amInstance.haveRoles()){
                 tabsList.push({
                     name: 'account_roles_tab',
@@ -97,9 +100,8 @@ Template.AccountEditPanel.onCreated( function(){
                     paneTemplate: 'account_roles_tab'
                 });
             }
-                */
             const adminNotes = amInstance.fieldSet().byName( 'adminNotes' );
-            if( adminNotes ){
+            if( adminNotes && self.AM.editAdminNotes.get()){
                 tabsList.push({
                     name: 'account_admin_notes_tab',
                     navLabel: adminNotes.toForm().title,
@@ -168,6 +170,11 @@ Template.AccountEditPanel.onRendered( function(){
     checker.init({
         messager: self.AM.messager,
         name: 'AccountEditPanel',
+        data: {
+            item: self.AM.item
+        },
+        crossCheckRegisterFn( data, opts ){
+        },
         onValidityChangeRegisterFn: ( valid ) => {
             if( self.AM.isModal.get()){
                 Modal.topmost().set({ buttons: { id: Modal.C.Button.OK, enabled: valid }});
@@ -181,7 +188,7 @@ Template.AccountEditPanel.onRendered( function(){
     self.autorun(() => {
         const checker = self.AM.checker.get();
         if( checker ){
-            logger.debug( 'checker', checker, checker.iSeq(), checker.validity(), checker.status());
+            //logger.debug( 'checker', checker, checker.iSeq(), checker.validity(), checker.status());
         }
     });
 });
@@ -321,7 +328,7 @@ Template.AccountEditPanel.events({
             if( fn ){
                 promise = fn( item, instance.AM.amInstance.get().clientUpdateArgs());
             } else {
-                promise = Meteor.callAsync( 'pwix.AccountsManager.m.updateAccount', self.name, item, self.item );
+                promise = Meteor.callAsync( 'pwix.AccountsCore.m.updateAccount', self.name, item, self.item );
             }
             promise.then( async ( res ) => {
                 if( res ){

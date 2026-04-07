@@ -22,6 +22,8 @@ import { pwixI18n } from 'meteor/pwix:i18n';
 import { ReactiveVar } from 'meteor/reactive-var';
 import { Tracker } from 'meteor/tracker';
 
+import { amChecks } from '../../../common/helpers/am-checks.js';
+
 import '../account_email_row/account_email_row.js';
 import '../account_emails_list/account_emails_list.js';
 
@@ -78,6 +80,9 @@ Template.account_ident_panel.onRendered( function(){
                     panel: {
                         fields: self.AM.fields,
                         set: amInstance.fieldSet()
+                    },
+                    crossCheckRegisterFn( data, opts ){
+                        return amChecks.ident_cross_check( data, opts );
                     },
                     data: {
                         item: Template.currentData().item,

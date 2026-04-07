@@ -30,27 +30,6 @@ AccountsManager.s.addUnset = function( instanceName, item ){
     return $unset;
 };
 
-AccountsManager.s.removeById = async function( instanceName, id, userId ){
-    let ret = null;
-    const acInstance = AccountsCore.getInstance( instanceName );
-    if( acInstance && acInstance instanceof AccountsManager.Account ){
-        if( !await AccountsCore.isAllowed( 'pwix.accounts_manager.feat.delete', userId, { instance: acInstance, id: id })){
-            return null;
-        }
-        try {
-            ret = await acInstance.collection().removeAsync({ _id: id });
-            AccountsManager.s.eventEmitter.emit( 'delete', { acInstance: instanceName, id: id });
-        } catch( e ){
-            throw new Meteor.Error(
-                'pwix.accounts_manager.fn.removeById',
-                'Unable to remove "'+id+'" account' );
-        }
-    } else {
-        logger.warn( 'removeById() unknown or invalid instance name', instanceName );
-    }
-    return ret;
-};
-
 // update the account
 // NB 1: cowardly refuse to disallow login of the current user
 // NB 2: on login no more allowed, make sure login tokens are cleared in the database
@@ -144,10 +123,4 @@ AccountsManager.s.updateById = async function( instanceName, id, userId, modifie
     } else {
         logger.warn( 'updateById() unknown or invalid instance name', instanceName );
     }
-};
-
-// v 2.1.1
-// delegates onCreateUser() hook to AccountsCore
-AccountsManager.onCreateUser = function( f ){
-    AccountsCore.onCreateUser( f );
 };

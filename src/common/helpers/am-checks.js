@@ -44,6 +44,58 @@ const _id2index = function( array, id ){
 }
 
 export const amChecks = {
+    // check that an identity is OK
+    async ident_cross_check( data, opts ){
+        _assert_data_itemrv( 'amChecks.email_address()', data );
+        const item = data.item.get();
+        const errs = [];
+        // check email(s) count
+        const emailMin = data.amInstance.emailMinCount();
+        const emailMax = data.amInstance.emailMaxCount();
+        let emailCount = 0;
+        for( const it of ( item.emails || [] )){
+            if( it.address ){
+                emailCount += 1;
+            }
+        }
+        if( emailCount < emailMin ){
+            errs.push( new TM.TypedMessage({
+                level: TM.MessageLevel.C.ERROR,
+                message: pwixI18n.label( I18N, 'check.email_min', emailMin, emailCount )
+            }));
+        }
+        if( emailCount > emailMax ){
+            errs.push( new TM.TypedMessage({
+                level: TM.MessageLevel.C.ERROR,
+                message: pwixI18n.label( I18N, 'check.email_max', emailMax, emailCount )
+            }));
+        }
+        // check username(s) count
+        const usernameMin = data.amInstance.usernameMinCount();
+        const usernameMax = data.amInstance.usernameMaxCount();
+        let usernameCount = 0;
+        if( item.username ){
+            usernameCount += 1;
+        }
+        for( const it of ( item.usernames || [] )){
+            if( it.username ){
+                usernameCount += 1;
+            }
+        }
+        if( usernameCount < usernameMin ){
+            errs.push( new TM.TypedMessage({
+                level: TM.MessageLevel.C.ERROR,
+                message: pwixI18n.label( I18N, 'check.username_min', usernameMin, usernameCount )
+            }));
+        }
+        if( usernameCount > usernameMax ){
+            errs.push( new TM.TypedMessage({
+                level: TM.MessageLevel.C.ERROR,
+                message: pwixI18n.label( I18N, 'check.username_max', usernameMax, usernameCount )
+            }));
+        }
+        return errs.length ? errs: null;
+    },
 
     // email address must not only be a unique email address but also must be unique among usernames namespace
     // rationale: someone with bad intentions could spoof an email address by entering it as a username
