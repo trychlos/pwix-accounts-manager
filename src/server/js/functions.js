@@ -13,7 +13,7 @@ const logger = Logger.get();
 
 AccountsManager.s = AccountsManager.s || {};
 
-// @summary builkd a Mongo '$unset' modifier object
+// @summary build a Mongo '$unset' modifier object
 // @param {Object} item
 // @returns {Object} item
 AccountsManager.s.addUnset = function( instanceName, item ){

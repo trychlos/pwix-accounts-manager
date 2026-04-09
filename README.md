@@ -433,6 +433,10 @@ Known data context is:
 
 This package extends `AccountsCore.isAllowed()` function with following permissions:
 
+- `pwix.accounts_manager.data.adminNotes`: whether the current user is able to see/edit admin notes:
+    - instance: the `amAccount` instance
+    - id: the account identifier
+
 - `pwix.accounts_manager.feat.create`: create a new account, with additional arguments as an object with following keys:
     - instance: the `amAccount` instance
 

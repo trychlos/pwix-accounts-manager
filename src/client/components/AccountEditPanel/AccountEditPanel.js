@@ -50,8 +50,11 @@ Template.AccountEditPanel.onCreated( function(){
         // whether the current user is allowed to edit admin notes
         editAdminNotes: new ReactiveVar( false ),
         // tabs list
-        defaultTabs: null,
+        defaultTabs: new ReactiveVar( null ),
         tabsList: new ReactiveVar( null ),
+        // guards to not ask for permission on each update
+        prevUserId: null,
+        prevTargetId: null,
         // addressing the Tabbed component
         tabbedId: null,
         $tabbed: null
@@ -80,29 +83,59 @@ Template.AccountEditPanel.onCreated( function(){
         if( self.AM.isNew.get()){
             clone.loginAllowed = true;
         }
+        logger.debug( 'setting item', clone );
         self.AM.item.set( clone );
     });
 
+    // whether the current user can see/edit admin notes for the account
+    // recompute the default tabs list when we get the permission
+    // set guard against asking for permissions which this is useless so that we do not rebuild tabs on every update
+    self.autorun(() => {
+        if( !self.AM.prevUserId || self.AM.prevUserId !== Meteor.userId()){
+            self.AM.prevUserId = Meteor.userId();
+            if( self.AM.isNew.get()){
+                if( !self.AM.prevTargetId ){
+                    logger.debug( 'set permission' );
+                    self.AM.editAdminNotes.set( true );
+                    self.AM.defaultTabs.set( null );
+                    self.AM.prevTargetId = 'SET';
+                }
+            } else if( self.AM.prevTargetId !== self.AM.item.get()._id ){
+                AccountsCore.isAllowed( 'pwix.accounts_manager.data.adminNotes', Meteor.userId(), {
+                    id: self.AM.item.get()._id,
+                    instance: self.AM.amInstance.get()
+                }).then(( res ) => {
+                    self.AM.editAdminNotes.set( res );
+                    self.AM.defaultTabs.set( null );
+                    self.AM.prevTargetId = self.AM.item.get()._id;
+                });
+            }
+        }
+    });
+
     // build default tab names array
+    //  must be reactive when permissions arrive
     self.autorun(() => {
         const amInstance = self.AM.amInstance.get();
-        if( amInstance && !self.AM.defaultTabs ){
-            tabsList = [];
-            tabsList.push({
+        let defaultTabs = self.AM.defaultTabs.get();
+        if( amInstance && !defaultTabs ){
+            defaultTabs = [];
+            defaultTabs.push({
                 name: 'account_ident_tab',
                 navLabel: pwixI18n.label( I18N, 'tabs.ident_title' ),
                 paneTemplate: 'account_ident_tab'
             });
             if( amInstance.haveRoles()){
-                tabsList.push({
+                defaultTabs.push({
                     name: 'account_roles_tab',
                     navLabel: pwixI18n.label( I18N, 'tabs.roles_title' ),
                     paneTemplate: 'account_roles_tab'
                 });
             }
             const adminNotes = amInstance.fieldSet().byName( 'adminNotes' );
-            if( adminNotes && self.AM.editAdminNotes.get()){
-                tabsList.push({
+            const editAdminNotes = self.AM.editAdminNotes.get();
+            if( adminNotes && editAdminNotes ){
+                defaultTabs.push({
                     name: 'account_admin_notes_tab',
                     navLabel: adminNotes.toForm().title,
                     paneTemplate: 'NotesEdit',
@@ -116,7 +149,7 @@ Template.AccountEditPanel.onCreated( function(){
             }
             const userNotes = amInstance.fieldSet().byName( 'userNotes' );
             if( userNotes ){
-                tabsList.push({
+                defaultTabs.push({
                     name: 'account_user_notes_tab',
                     navLabel: userNotes.toForm().title,
                     paneTemplate: 'NotesEdit',
@@ -128,7 +161,8 @@ Template.AccountEditPanel.onCreated( function(){
                     }
                 });
             }
-            self.AM.defaultTabs = tabsList;
+            self.AM.defaultTabs.set( defaultTabs );
+            self.AM.tabsList.set( null );
         }
     });
 
@@ -139,9 +173,9 @@ Template.AccountEditPanel.onCreated( function(){
         if( amInstance && !tabsList ){
             const fn = amInstance.opts().editTabsFn();
             if( fn ){
-                fn( self.AM.defaultTabs ).then(( tabs ) => { self.AM.tabsList.set( tabs ); });
+                fn( self.AM.defaultTabs.get()).then(( tabs ) => { self.AM.tabsList.set( tabs ); });
             } else {
-                self.AM.tabsList.set( self.AM.defaultTabs );
+                self.AM.tabsList.set( self.AM.defaultTabs.get());
             }
         }
     });

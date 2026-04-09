@@ -31,7 +31,7 @@ export const amTabular = {
         const fielddef = args.fieldDef || amFielddef.defaultColumns( acInstance );
         const fieldSet = new Field.Set( fielddef );
         const columns = fieldSet.toTabular();
-        //logger.debug( 'columns', columns );
+        //logger.debug( 'tabular columns', columns );
         //logger.debug( 'fieldSet.tabularIndexByName emails.$.address', fieldSet.tabularIndexByName( 'emails.$.address', { columns: columns, only_visible: true } ));
         const tabular = new Tabular.Table({
             name: name,

@@ -55,6 +55,7 @@ export class amAccount extends AccountsCore.Account {
         const transforms = this.transformsPublish( AccountsManager.C.pub.tabular.name );
         transforms.push( AccountsCore.Transforms.addDyn );
         transforms.push( AccountsCore.Transforms.addPreferredLabel );
+        transforms.push( AccountsCore.Transforms.addUndefined );
         transforms.push( AccountsCore.Transforms.cleanupUserDocument );
         // if we have Roles package, then update our two publication transformations arrays we know about
         if( this.haveRoles()){
@@ -73,7 +74,8 @@ export class amAccount extends AccountsCore.Account {
         logger.verbose({ verbosity: AccountsManager.configure().verbosity, against: AccountsManager.C.Verbose.FUNCTIONS }, 'amAccount.amAccount()', arguments );
         check( args, Match.OneOf( null, undefined, Object ));
         super( ...arguments );
-        logger.debug( 'amAccount() instanciating \''+this.name()+'\'', args );
+        //logger.debug( 'amAccount() instanciating \''+this.name()+'\'', args );
+        logger.debug( 'amAccount() instanciating \''+this.name()+'\'' );
 
         this._setOpts( new amOptions( args ));
 

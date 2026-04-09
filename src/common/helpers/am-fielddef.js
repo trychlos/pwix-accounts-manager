@@ -79,8 +79,8 @@ export const amFielddef = {
                     dt_visible: false
                 },
                 {
-                    // dt_data: 'any' prevents "MongoServerError: FieldPath field names may not start with '$'. Consider using $getField or $setField." exception
-                    // dt_data: 'emails.0.address' gives server-side sort for the columns where we are using a Blaze template
+                    // dt_data prevents "MongoServerError: FieldPath field names may not start with '$'. Consider using $getField or $setField." exception
+                    //  + the used syntax let us sort by email address
                     name: 'emails.$.address',
                     type: String,
                     regEx: SimpleSchema.RegEx.Email,
@@ -105,6 +105,7 @@ export const amFielddef = {
                     name: 'emails.$.preferred',
                     type: Boolean,
                     optional: true,
+                    dt_data: 'emails.0.preferred',
                     dt_visible: false,
                     form_check: amChecks.email_preferred,
                     form_type: Forms.FieldType.C.OPTIONAL
@@ -113,8 +114,8 @@ export const amFielddef = {
                     name: 'emails.$.label',
                     type: String,
                     optional: true,
+                    dt_data: 'emails.0.label',
                     dt_visible: false,
-                    dt_data: 'any',
                     dt_title: pwixI18n.label( I18N, 'list.email_label_th' ),
                     form_check: amChecks.email_label,
                     form_type: Forms.FieldType.C.OPTIONAL

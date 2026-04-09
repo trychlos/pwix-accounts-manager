@@ -60,12 +60,16 @@ Meteor.publish( AccountsManager.C.pub.tabular.name, async function( tableName, i
 
     const observer = acInstance.collection().find().observeAsync({
         added: async function( item ){
+            //if( item._id === 'KkpHFA8JcL8hWi6Cn' ) logger.debug( 'added item', item );
             const transformed = await AccountsCore.s.applyPublishTransforms( AccountsManager.C.pub.tabular.name, acInstance, item, {}, self.userId );
+            //if( item._id === 'KkpHFA8JcL8hWi6Cn' ) logger.debug( 'added transformed', transformed );
             self.added( collectionName, item._id, transformed );
         },
         changed: async function( newItem, oldItem ){
             if( !initializing ){
+                //if( newItem._id === 'KkpHFA8JcL8hWi6Cn' ) logger.debug( 'changed item', newItem );
                 const transformed = await AccountsCore.s.applyPublishTransforms( AccountsManager.C.pub.tabular.name, acInstance, newItem, {}, self.userId );
+                //if( newItem._id === 'KkpHFA8JcL8hWi6Cn' ) logger.debug( 'changed transformed', transformed );
                 self.changed( collectionName, newItem._id, transformed );
             }
         },
