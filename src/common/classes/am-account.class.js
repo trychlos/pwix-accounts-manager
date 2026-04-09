@@ -48,6 +48,15 @@ export class amAccount extends AccountsCore.Account {
     // private methods
 
     // @locus Server
+    // @summary delete all login tokens
+    //  this doesn't really logout clients, but at least prevent them to reconnect
+    // @param {String} userId the user identifier to be logged-out
+    async _disconnnectAll( userId ){
+        const res = await this.collection().updateAsync({ _id: userId }, { $set: { 'services.resume.loginTokens': [] }});
+        logger.log( '_disconnnectAll() forced user logout', userId, 'res', res );
+    }
+
+    // @locus Server
     // @summary Initialize the transformation functions for new publications from this package
     _initPublishTransformation(){
         if( Meteor.isServer ){
@@ -62,6 +71,64 @@ export class amAccount extends AccountsCore.Account {
                 this.transformsPublish( AccountsCore.C.pub.listAll.name ).push( AccountsManager.Transforms.transformRoles );
                 this.transformsPublish( AccountsManager.C.pub.tabular.name ).push( AccountsManager.Transforms.transformRoles );
             }
+        }
+    }
+
+    // @locus Server
+    // @summary Initialize common hooks for 'users' collection
+    //  these hooks are not used by AccountsCore base class, so safety guards are just as a way to show how to do
+    _initUsersHooks(){
+        if( Meteor.isServer ){
+            const self = this;
+
+            const _origPostDelete = this.hooksServer?.postDeleteFn || null;
+            this.hooksServer.postDeleteFn = async function( userDoc, opts={}, userId ){
+                if( _origPostDelete ){
+                    await _origPostDelete( userDoc, opts, userId );
+                }
+                // force logout of all clients when an account is deleted
+                await self._disconnectAll( userDoc._id );
+                // be a good EventEmitter
+                AccountsManager.s.eventEmitter.emit( 'delete', { amInstance: self.name(), item: userDoc, userId: userId });
+            };
+
+            const _origPostInsert = this.hooksServer?.postInsertFn || null;
+            this.hooksServer.postInsertFn = async function( userDoc, opts={}, userId ){
+                if( _origPostInsert ){
+                    await _origPostInsert( userDoc, opts, userId );
+                }
+                // be a good EventEmitter
+                AccountsManager.s.eventEmitter.emit( 'insert', { amInstance: self.name(), item: userDoc, userId: userId });
+            };
+
+            const _origPreUpdate = this.hooksServer?.preUpdateFn || null;
+            this.hooksServer.preUpdateFn = async function( userDoc, opts={}, userId ){
+                if( _origPreUpdate ){
+                    await _origPreUpdate( userDoc, opts, userId );
+                }
+                // check update permission
+                if( !await AccountsCore.isAllowed( 'pwix.accounts_manager.feat.update', userId, { instance: self.name(), id: userDoc._id })){
+                    throw new Error( 'Not authorized' );
+                }
+                // refuse to disable login of the current user
+                if( userDoc._id === userId && !userDoc.loginAllowed ){
+                    logger.warn( 'preUpdateFn() cowardly refusing to disallow current user login' );
+                    userDoc.loginAllowed = true;
+                }
+            };
+
+            const _origPostUpdate = this.hooksServer?.postUpdateFn || null;
+            this.hooksServer.postUpdateFn = async function( userDoc, opts={}, userId ){
+                if( _origPostUpdate ){
+                    await _origPostUpdate( userDoc, opts, userId );
+                }
+                // force logout of all clients when a login is disabled
+                if( !userDoc.loginAllowed ){
+                    await self._disconnectAll( userDoc._id );
+                }
+                // be a good EventEmitter
+                AccountsManager.s.eventEmitter.emit( 'update', { amInstance: self.name(), item: userDoc, userId: userId });
+            };
         }
     }
 
@@ -91,7 +158,12 @@ export class amAccount extends AccountsCore.Account {
         this.collection().attachSchema( new SimpleSchema( schema ), { replace: true });
         this.collection().attachBehaviour( 'timestampable' );
 
-        // get and maintain the accounts list in the client side
+        // setup common hooks for 'users' collection
+        if( this.name() === AccountsCore.Options._defaults.name ){
+            this._initUsersHooks();
+        }
+
+        // get and maintain the accounts list on the client side
         if( Meteor.isClient && this.opts().listFeedNow() !== false ){
             const self = this;
             Meteor.defer(() => { self.feedList(); });

@@ -37,6 +37,7 @@
     - Introduce editAdminNotes ReactiveVar (todo #3)
     - Delegating onCreateUser() to AccountsCore means removing onCreateUser() from AccountsManager
     - Remove methods, only relying on AccountsCore for server accesses
+    - Remove last server function, relying on AccountsCore too
 
 ### 2.2.0
 

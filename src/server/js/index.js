@@ -6,7 +6,6 @@ import '../../common/js/index.js';
 
 import './check_npms.js';
 import './event_emitter.js';
-import './functions.js';
 import './publish.js';
 import './transforms.js';
 import './users_accounts.js';

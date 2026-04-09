@@ -342,20 +342,23 @@ This function is available on client-side only.
 
 On server side, `AccountsManager.s.eventEmitter` is an event emitter, and emits:
 
-- `create`, when a new account is about to be created, only on the `users` collection, with an object as argument containing:
+- `insert`, when a new account has been created, on any collection, with an object as argument containing:
 
-    - `acInstance`: the instance name
-    - `item`: the account to be created.
+    - `amInstance`: the instance name
+    - `item`: the created user document
+    - `userId`: the responsible user identifier.
 
 - `update`, after an item has been updated, on any collection, with an object as argument containing:
 
-    - `acInstance`: the instance name
-    - `item`: the updated item.
+    - `amInstance`: the instance name
+    - `item`: the updated user document
+    - `userId`: the responsible user identifier.
 
 - `delete`, after an item has been deleted, on any collection, with an object as argument containing:
 
-    - `acInstance`: the instance name
-    - `id`: the identifier of the deleted item.
+    - `amInstance`: the instance name
+    - `id`: the identifier of the deleted user
+    - `userId`: the responsible user identifier.
 
 ### Blaze components
 
