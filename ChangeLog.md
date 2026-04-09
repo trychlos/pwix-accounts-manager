@@ -30,7 +30,7 @@
     - Both email adress and username must be identifiers in both email address and username namespaces
     - fix lastConnection update
     - Rename pwix:accounts-hub dependency to pwix:accounts-core, upgrading it to 2.0.0-rc.0
-    - Remove 'serverTabularExtend' amAccount parameter obsoleted by AccountCore.acAccount.transform
+    - Remove 'serverTabularExtend' amAccount parameter obsoleted by AccountCore.Account.transform
     - Replace 'addtionalTabs, 'tabsUpdate', 'tabsBefore', 'tabs', 'haveIdent' and 'haveRoles' amAccount parameters by 'editTabsFn'
     - Remove unused AccountsManager.s.getBy() function (and redondant regarding AccountsCore.s.byQuery())
     - Exported AccountsManager.amAccount class is renamed to AccountsManager.Account

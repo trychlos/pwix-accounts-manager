@@ -19,7 +19,6 @@ import { amOptions } from './am-options.class.js';
 
 import { amFielddef } from '../helpers/am-fielddef.js';
 import { amTabular } from '../helpers/am-tabular.js';
-import { amTransforms } from '../helpers/am-transforms.js';
 
 const logger = Logger.get();
 
@@ -51,16 +50,18 @@ export class amAccount extends AccountsCore.Account {
     // @locus Server
     // @summary Initialize the transformation functions for new publications from this package
     _initPublishTransformation(){
-        // publication transformations
-        const transforms = this.transformsPublish( AccountsManager.C.pub.tabular.name );
-        transforms.push( AccountsCore.Transforms.addDyn );
-        transforms.push( AccountsCore.Transforms.addPreferredLabel );
-        transforms.push( AccountsCore.Transforms.addUndefined );
-        transforms.push( AccountsCore.Transforms.cleanupUserDocument );
-        // if we have Roles package, then update our two publication transformations arrays we know about
-        if( this.haveRoles()){
-            this.transformsPublish( AccountsCore.C.pub.listAll.name ).push( amTransforms.transformRoles );
-            this.transformsPublish( AccountsManager.C.pub.tabular.name ).push( amTransforms.transformRoles );
+        if( Meteor.isServer ){
+            // publication transformations
+            const transforms = this.transformsPublish( AccountsManager.C.pub.tabular.name );
+            transforms.push( AccountsCore.Transforms.addDyn );
+            transforms.push( AccountsCore.Transforms.addPreferredLabel );
+            transforms.push( AccountsCore.Transforms.addUndefined );
+            transforms.push( AccountsCore.Transforms.cleanupUserDocument );
+            // if we have Roles package, then update our two publication transformations arrays we know about
+            if( this.haveRoles()){
+                this.transformsPublish( AccountsCore.C.pub.listAll.name ).push( AccountsManager.Transforms.transformRoles );
+                this.transformsPublish( AccountsManager.C.pub.tabular.name ).push( AccountsManager.Transforms.transformRoles );
+            }
         }
     }
 

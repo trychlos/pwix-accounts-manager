@@ -1,5 +1,5 @@
 /*
- * pwix:accounts-manager/src/common/classes/am-transforms.js
+ * pwix:accounts-manager/src/server/js/transforms.js
  *
  * Transformation functions.
  */
@@ -8,7 +8,7 @@ import { Logger } from 'meteor/pwix:logger';
 
 const logger = Logger.get();
 
-export const amTransforms = {
+AccountsManager.Transforms = {
 
     // add global and scoped roles to every user
     // used in publications only

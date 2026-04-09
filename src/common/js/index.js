@@ -8,7 +8,6 @@ import { amOptions } from '../classes/am-options.class';
 import { amChecks } from '../helpers/am-checks';
 import { amFielddef } from '../helpers/am-fielddef.js';
 import { amTabular } from '../helpers/am-tabular';
-import { amTransforms } from '../helpers/am-transforms';
 
 import './global.js';
 import './constants.js';
@@ -23,4 +22,3 @@ AccountsManager.Checks = amChecks;
 AccountsManager.Fielddef = amFielddef;
 AccountsManager.Options = amOptions;
 AccountsManager.Tabular = amTabular;
-AccountsManager.Transforms = amTransforms;
