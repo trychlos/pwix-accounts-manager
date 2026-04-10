@@ -33,7 +33,7 @@ Template.AccountNewButton.onCreated( function(){
         if( dataContext.name ){
             const acInstance = AccountsCore.getInstance( dataContext.name );
             if( acInstance && acInstance instanceof AccountsManager.Account ){
-                AccountsCore.isAllowed( 'pwix.accounts_manager.feat.create', Meteor.userId(), { instance: acInstance })
+                AccountsCore.isAllowed( 'pwix.accounts_core.feat.create', Meteor.userId(), { instance: acInstance })
                     .then(( res ) => {
                         self.AM.canCreate.set( res );
                     });

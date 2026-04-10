@@ -57,7 +57,7 @@ export const amTabular = {
                     return pwixI18n.label( I18N, 'delete.confirmation_title', await _tabular_identifier( acInstance, it ));
                 },
                 async editButtonEnabled( it ){
-                    return await AccountsCore.isAllowed( 'pwix.accounts_manager.feat.update', Meteor.userId(), { instance: acInstance, id: it._id });
+                    return await AccountsCore.isAllowed( 'pwix.accounts_core.feat.update', Meteor.userId(), { instance: acInstance, id: it._id });
                 },
                 async editButtonTitle( it ){
                     return pwixI18n.label( I18N, 'buttons.edit_title', await _tabular_identifier( acInstance, it ));

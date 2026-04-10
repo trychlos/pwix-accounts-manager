@@ -50,8 +50,9 @@ export class amAccount extends AccountsCore.Account {
     // @locus Server
     // @summary delete all login tokens
     //  this doesn't really logout clients, but at least prevent them to reconnect
+    //  this is particularly useless as this is called after the whole account has just been deleted
     // @param {String} userId the user identifier to be logged-out
-    async _disconnnectAll( userId ){
+    async _disconnectAll( userId ){
         const res = await this.collection().updateAsync({ _id: userId }, { $set: { 'services.resume.loginTokens': [] }});
         logger.log( '_disconnnectAll() forced user logout', userId, 'res', res );
     }
@@ -81,44 +82,42 @@ export class amAccount extends AccountsCore.Account {
         if( Meteor.isServer ){
             const self = this;
 
-            const _origPostDelete = this.hooksServer?.postDeleteFn || null;
-            this.hooksServer.postDeleteFn = async function( userDoc, opts={}, userId ){
+            const _origPostDelete = this.opts().hooksServer_postDeleteFn();
+            this.opts().hooksServer_postDeleteFn( async function( userDoc, userId ){
                 if( _origPostDelete ){
-                    await _origPostDelete( userDoc, opts, userId );
+                    await _origPostDelete( userDoc, userId );
                 }
                 // force logout of all clients when an account is deleted
-                await self._disconnectAll( userDoc._id );
+                //  this is just a placeholder function as we do not know how to disconnect all clients from server-side (Meteor only permits that from client side)
+                //  and there is no sense to remove loginTokens from a just-deleted document
+                await self._disconnectAll( userDoc._id || userDoc );
                 // be a good EventEmitter
                 AccountsManager.s.eventEmitter.emit( 'delete', { amInstance: self.name(), item: userDoc, userId: userId });
-            };
+            });
 
-            const _origPostInsert = this.hooksServer?.postInsertFn || null;
-            this.hooksServer.postInsertFn = async function( userDoc, opts={}, userId ){
-                if( _origPostInsert ){
-                    await _origPostInsert( userDoc, opts, userId );
+            const _origPostCreate = this.opts().hooksServer_postCreateFn();
+            this.opts().hooksServer_postCreateFn( async function( userDoc, userId ){
+                if( _origPostCreate ){
+                    await _origPostCreate( userDoc, userId );
                 }
                 // be a good EventEmitter
-                AccountsManager.s.eventEmitter.emit( 'insert', { amInstance: self.name(), item: userDoc, userId: userId });
-            };
+                AccountsManager.s.eventEmitter.emit( 'create', { amInstance: self.name(), item: userDoc, userId: userId });
+            });
 
-            const _origPreUpdate = this.hooksServer?.preUpdateFn || null;
-            this.hooksServer.preUpdateFn = async function( userDoc, opts={}, userId ){
+            const _origPreUpdate = this.opts().hooksServer_preUpdateFn();
+            this.opts().hooksServer_preUpdateFn( async function( userDoc, opts={}, userId ){
                 if( _origPreUpdate ){
                     await _origPreUpdate( userDoc, opts, userId );
-                }
-                // check update permission
-                if( !await AccountsCore.isAllowed( 'pwix.accounts_manager.feat.update', userId, { instance: self.name(), id: userDoc._id })){
-                    throw new Error( 'Not authorized' );
                 }
                 // refuse to disable login of the current user
                 if( userDoc._id === userId && !userDoc.loginAllowed ){
                     logger.warn( 'preUpdateFn() cowardly refusing to disallow current user login' );
                     userDoc.loginAllowed = true;
                 }
-            };
+            });
 
-            const _origPostUpdate = this.hooksServer?.postUpdateFn || null;
-            this.hooksServer.postUpdateFn = async function( userDoc, opts={}, userId ){
+            const _origPostUpdate = this.opts().hooksServer_postUpdateFn();
+            this.opts().hooksServer_postUpdateFn( async function( userDoc, opts={}, userId ){
                 if( _origPostUpdate ){
                     await _origPostUpdate( userDoc, opts, userId );
                 }
@@ -128,7 +127,7 @@ export class amAccount extends AccountsCore.Account {
                 }
                 // be a good EventEmitter
                 AccountsManager.s.eventEmitter.emit( 'update', { amInstance: self.name(), item: userDoc, userId: userId });
-            };
+            });
         }
     }
 

@@ -342,7 +342,7 @@ This function is available on client-side only.
 
 On server side, `AccountsManager.s.eventEmitter` is an event emitter, and emits:
 
-- `insert`, when a new account has been created, on any collection, with an object as argument containing:
+- `create`, when a new account has been created, on any collection, with an object as argument containing:
 
     - `amInstance`: the instance name
     - `item`: the created user document
@@ -440,18 +440,7 @@ This package extends `AccountsCore.isAllowed()` function with following permissi
     - instance: the `amAccount` instance
     - id: the account identifier
 
-- `pwix.accounts_manager.feat.create`: create a new account, with additional arguments as an object with following keys:
-    - instance: the `amAccount` instance
-
-- `pwix.accounts_manager.feat.delete`: remove the identified account, with additional arguments as an object with following keys:
-    - instance: the `amAccount` instance
-    - id: the account identifier
-
-- `pwix.accounts_manager.feat.update`: update the user account, with additional arguments as an object with following keys:
-    - instance: the `amAccount` instance
-    - id: the account identifier
-
-Note that reading accounts for a server task is not subject to permissions as this is nonetheless required for authentication needs. The above permissions talk about external requests or user-requested tasks.
+Note that reading an account from a server task is not subject to permissions as this is nonetheless required for authentication needs. The above permissions talk about external requests or user-requested tasks.
 
 ## Configuration
 

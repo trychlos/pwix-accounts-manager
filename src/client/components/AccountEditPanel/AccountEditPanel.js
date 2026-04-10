@@ -83,7 +83,6 @@ Template.AccountEditPanel.onCreated( function(){
         if( self.AM.isNew.get()){
             clone.loginAllowed = true;
         }
-        logger.debug( 'setting item', clone );
         self.AM.item.set( clone );
     });
 
@@ -95,7 +94,6 @@ Template.AccountEditPanel.onCreated( function(){
             self.AM.prevUserId = Meteor.userId();
             if( self.AM.isNew.get()){
                 if( !self.AM.prevTargetId ){
-                    logger.debug( 'set permission' );
                     self.AM.editAdminNotes.set( true );
                     self.AM.defaultTabs.set( null );
                     self.AM.prevTargetId = 'SET';
@@ -299,78 +297,50 @@ Template.AccountEditPanel.events({
         const self = this;
         let item = instance.AM.item.get();
         //logger.debug( event, 'item', item );
-        // we cannot call here AccountCore.acAccount.preferredLabel() as this requires an id which we have only on update, not on creation - so compute something not too far of that
+        // we cannot call here AccountCore.Account.preferredLabel() as this requires an id which we have only on update, not on creation - so compute something not too far of that
         //  must have at least one of these
         const label = ( item.emails && item.emails[0]?.address ) || item.username || ( item.usernames && item.usernames[0]?.username ) || item._id || pwixI18n.label( I18N, 'edit.new_label' );
-        // when creating a new account, we let the user create several by reusing the same modal
-        const updateRoles = async function( user ){
+        // update roles from the UI
+        const _updateRoles = async function( user ){
             if( instance.AM.amInstance.get().haveRoles()){
                 const roles = Package['pwix:roles'].Roles.EditPanel.roles();
-                return await Package['pwix:roles'].Roles.setUserRoles( user, roles );
+                const res = await Package['pwix:roles'].Roles.setUserRoles( user, roles );
+                //logger.debug( 'setUserRoles()', roles, 'res', res );
+                return res;
             }
             return true;
         };
+        // when creating a new account, we may let the user create several by reusing the same modal
+        const amInstance = instance.AM.amInstance.get();
         if( instance.AM.isNew.get()){
-            const closeAfterNew = instance.AM.amInstance.get().editCloseAfterNew();
-            if( instance.AM.amInstance.get().name() === AccountsCore.Options._defaults.name ){
-                AccountsUI.Features.createUser({
-                    username: item.username,
-                    password: item.password,
-                    email: item.emails[0].address
-                }, {
-                    name: ACCOUNTS_UI_SIGNUP_PANEL,
-                    successFn(){
-                        AccountsCore.byEmailAddress( instance.AM.amInstance.get(), item.emails[0].address ).then( async ( user ) => {
-                            if( user ){
-                                item._id = user._id;
-                                instance.$( '.am-account-ident-panel .ac-signup' ).trigger( 'ac-clear-panel' );
-                                instance.$( '.am-account-roles-panel' ).trigger( 'clear-panel' );
-                                instance.$( '.NotesEdit' ).trigger( 'clear-panel' );
-                                instance.AM.$tabbed.trigger( 'tabbed-do-activate', { tabbedId: instance.AM.tabbedId, index: 0 });
-                                const res = await updateRoles( item );
-                            } else {
-                                logger.warn( 'unable to retrieve the user account', label );
-                            }
-                        });
-                        if( closeAfterNew ){
-                            Modal.topmost().close();
-                        }
-                    }
-                });
-            } else {
-                const fn = instance.AM.amInstance.get().clientNewFn();
-                if( fn ){
-                    fn( item, instance.AM.amInstance.get().clientNewArgs()).then(( res ) => {
-                        if( res ){
-                            Tolert.success( pwixI18n.label( I18N, 'edit.new_success', label ));
-                        } else {
-                            Tolert.error( pwixI18n.label( I18N, 'edit.new_error', label ));
-                        }
-                        if( closeAfterNew ){
-                            Modal.topmost().close();
-                        }
-                    });
+            const closeAfterNew = amInstance.opts().editCloseAfterNew();
+            AccountsCore.createAccount( amInstance, item, Meteor.userId()).then(( res ) => {
+                //logger.debug( 'res', res );
+                if( res._id ){
+                    item._id = res._id;
+                    _updateRoles( item );
+                    Tolert.success( pwixI18n.label( I18N, 'edit.new_success', label ));
                 } else {
-                    logger.warn( 'refusing to call AccountsUI.Features.createUser() on amInstance', instance.AM.amInstance.get());
+                    logger.warning( res );
+                    Tolert.error( pwixI18n.label( I18N, 'edit.new_error', label ));
                 }
-            }
-
-        // on update, then... update and close
+                if( closeAfterNew ){
+                    Modal.topmost().close();
+                } else {
+                    instance.$( '.am-account-ident-panel .ac-signup' ).trigger( 'ac-clear-panel' );
+                    instance.$( '.am-account-roles-panel' ).trigger( 'clear-panel' );
+                    instance.$( '.NotesEdit' ).trigger( 'clear-panel' );
+                    instance.AM.$tabbed.trigger( 'tabbed-do-activate', { tabbedId: instance.AM.tabbedId, index: 0 });
+                }
+            });
         } else {
-            const fn = null; //instance.AM.amInstance.get().clientUpdateFn();
-            let promise;
-            if( fn ){
-                promise = fn( item, instance.AM.amInstance.get().clientUpdateArgs());
-            } else {
-                promise = Meteor.callAsync( 'pwix.AccountsCore.m.updateAccount', self.name, item, self.item );
-            }
-            promise.then( async ( res ) => {
-                if( res ){
-                    res = await updateRoles( item );
-                }
-                if( res ){
+            AccountsCore.updateAccount( amInstance, item, Meteor.userId()).then(( res ) => {
+                //logger.debug( 'res', res );
+                if( res.count ){
+                    _updateRoles( item );
                     Tolert.success( pwixI18n.label( I18N, 'edit.edit_success', label ));
                 } else {
+                    logger.warning( res );
                     Tolert.error( pwixI18n.label( I18N, 'edit.edit_error', label ));
                 }
                 Modal.topmost().close();
