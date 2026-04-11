@@ -95,12 +95,6 @@ This is a very thin extend of `AccountsCore.Account` class, and it actually even
 
         Note that this will run a `Meteor.subscribe()` function from inside a `Tracker.autorun()` computation code and is so subject to the usual limitations and caveats of Meteor computations.
 
-    - `scopesFn`
-
-        An application-provided async function which is expected to return all existing (roles) scopes. Prototype is `async scopesFn( instance<amAccount> )`/
-
-        Defaults to only manage scopes that are already used in the `Roles` package.
-
 - `fieldSet(): <Field.Set>`
 
     This method returns the current `Field.Set` attached to the instance. This lets the caller reset, extend or update the collection fields set. It is the responsability of the caller to extend the previous collection schema to the new one after he/she has updated the fields set as this is not automatic.

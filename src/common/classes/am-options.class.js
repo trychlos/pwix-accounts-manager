@@ -100,14 +100,4 @@ export class amOptions extends AccountsCore.Options {
         logger.verbose({ verbosity: AccountsManager.configure().verbosity, against: AccountsManager.C.Verbose.FUNCTIONS }, 'amOptions.listFeedNow()', arguments );
         return this.base_gsBoolFn( 'listFeedNow', value, { default: amOptions._defaults.listFeedNow });
     }
-
-    /**
-     * Getter/Setter
-     * @param {Function} value a function which returns the list of scopes
-     * @returns {Function}
-     */
-    scopesFn( value ){
-        logger.verbose({ verbosity: AccountsManager.configure().verbosity, against: AccountsManager.C.Verbose.FUNCTIONS }, 'amOptions.scopesFn()', arguments );
-        return this.base_gsFn( 'scopesFn', value, { default: amOptions._defaults.scopesFn });
-    }
 }
