@@ -2,9 +2,9 @@
 
 ## ChangeLog
 
-### 2.3.0-rc
+### 2.3.0
 
-    Release date: 
+    Release date: 2026- 4-13
 
     - Update to new AccountsCore.getInstance() reactive function, thus bumping minor candidate version number
     - Remove pwix.accounts_manager.fn.getBy permission (as it must always be true)
@@ -137,4 +137,4 @@
 
 ---
 P. Wieser
-- Last updated on 2025, Jul. 8th
+- Last updated on 2026, Apr. 13rd
