@@ -6,7 +6,7 @@
 
     Release date: 
 
-    - 
+    - Minor typo improvement and commented-out debug line
 
 ### 2.3.0
 

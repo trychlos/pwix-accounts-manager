@@ -21,6 +21,7 @@ const logger = Logger.get();
 // Doesn't do anything while not ready
 
 Accounts.onLogin(( data ) => {
+    //logger.debug( 'data', data );
     check( data, Match.ObjectIncluding({ user: Match.ObjectIncluding({ _id: Match.NonEmptyString })}));
     if( AccountsCore.ready()){
         AccountsCore.s.updateByQuery( 'users', { _id: data.user._id }, { loginLastConnection: new Date() }).then(( res ) => {

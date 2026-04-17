@@ -32,5 +32,5 @@ AccountsManager.ready = function( b ){
 }
 
 Tracker.autorun(() => {
-    logger.verbose({ verbosity: AccountsManager.configure().verbosity, against: AccountsManager.C.Verbose.READY }, 'ready', AccountsManager.ready());
+    logger.verbose({ verbosity: AccountsManager.configure().verbosity, against: AccountsManager.C.Verbose.READY }, 'AccountsManager.ready()', AccountsManager.ready());
 });
