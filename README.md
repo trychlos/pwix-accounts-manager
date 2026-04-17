@@ -87,7 +87,7 @@ This is a very thin extend of `AccountsCore.Account` class, and it actually even
 
         Whether the checkboxes rendered in the tabular display are active, i.e. accept a click to switch their state, defaulting to `false`.
 
-        Rationale: even if it would be very more easy to directly click on the tabular display to toggle a checkbox, some administrators may find this way too much easy, if not error prone, and prefer to have to pass through a distinct page/modal/display unit to securize a bit this update. The chosen default privileges the security over the esayness.
+        Rationale: even if it would be very more easy to directly click on the tabular display to toggle a checkbox, some administrators may find this way too much easy, if not error prone, and prefer to have to pass through a distinct page/modal/display unit to securize a bit this update. The chosen default privileges the security over the easyness.
 
     - `listFeedNow`
 

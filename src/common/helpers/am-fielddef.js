@@ -206,7 +206,7 @@ export const amFielddef = {
                 dt_templateContext( rowData ){
                     return {
                         item: rowData,
-                        readonly: true,
+                        readonly: !acInstance.opts().listActiveCheckboxes(),
                         enabled: true
                     }
                 },

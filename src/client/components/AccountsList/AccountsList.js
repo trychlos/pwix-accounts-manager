@@ -81,9 +81,19 @@ Template.AccountsList.events({
         logger.debug( event, data );
     },
 
-    // edit the settings for this table
-    'tabular-settings-event .AccountsList'( event, instance, data ){
-        logger.debug( event, data );
+    // this event is expected to be only triggered when checkboxes are active on the tabular list
+    async 'tabular-click-event .AccountsList'( event, instance, { item, field, checked }){
+        const amInstance = instance.AM.amInstance.get();
+        if( amInstance && amInstance.opts().listActiveCheckboxes()){
+            item[field.name()] = checked;
+            const res = await AccountsCore.updateAccount( amInstance, item, Meteor.userId());
+            const lab = await amInstance.preferredLabel( item );
+            if( res.count ){
+                Tolert.success( pwixI18n.label( I18N, 'edit.edit_success', lab.label ));
+            } else {
+                Tolert.error( pwixI18n.label( I18N, 'edit.edit_error', lab.label ));
+            }
+        }
     },
 
     // delete an account
@@ -135,5 +145,10 @@ Template.AccountsList.events({
                 });
         }
         return false;
+    },
+
+    // edit the settings for this table
+    'tabular-settings-event .AccountsList'( event, instance, data ){
+        logger.debug( event, data );
     }
 });

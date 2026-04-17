@@ -93,6 +93,16 @@ export class amOptions extends AccountsCore.Options {
 
     /**
      * Getter/Setter
+     * @param {Boolean|Function} value whether the checkboxes on the AccountsList are active (can be modified online)
+     * @returns {Boolean}
+     */
+    listActiveCheckboxes( value ){
+        logger.verbose({ verbosity: AccountsManager.configure().verbosity, against: AccountsManager.C.Verbose.FUNCTIONS }, 'amOptions.listActiveCheckboxes()', arguments );
+        return this.base_gsBoolFn( 'listActiveCheckboxes', value, { default: amOptions._defaults.listActiveCheckboxes });
+    }
+
+    /**
+     * Getter/Setter
      * @param {Boolean|Function} value whether the class should immediately subscribe to the `all` publication to feed its internal list
      * @returns {Boolean}
      */

@@ -10,13 +10,13 @@
 
 |   Id | Date       | Description and comment(s) |
 | ---: | :---       | :---                       |
-|    6 | 2024- 7-18 | honor tabularActiveCheckboxes |
 |    8 | 2024- 8 -2 | honor email label |
 |    9 | 2025- 7- 4 | have preferred email address |
 |   10 | 2025- 7- 4 | be able to have several usernames |
 |   11 | 2025- 7- 4 | have preferred username |
 |   12 | 2026- 2-19 | honor am-email-more event to show other email addresses |
-|   13 |  |  |
+|   13 | 2026- 4-17 | on option, send a verification email when creating a new account |
+|   14 |  |  |
 
 ---
 ## Done
@@ -33,6 +33,8 @@
 |      | 2024-11-16 | is actually an amAccount option |
 |    5 | 2024- 7- 2 | should have an accounts-conf configuration package just to handle accounts configurations parameters which are at application level and shared between packages |
 |      | 2024- 7-12 | done |
+|    6 | 2024- 7-18 | honor tabularActiveCheckboxes |
+|      |            | done |
 |    7 | 2024- 8- 2 | honor hideDisabled |
 |      | 2026- 4- 2 | parameter is cancelled |
 
