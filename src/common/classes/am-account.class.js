@@ -65,6 +65,7 @@ export class amAccount extends AccountsCore.Account {
             const transforms = this.transformsPublish( AccountsManager.C.pub.tabular.name );
             transforms.push( AccountsCore.Transforms.addDyn );
             transforms.push( AccountsCore.Transforms.addPreferredLabel );
+            transforms.push( AccountsCore.Transforms.addAuthServices );
             transforms.push( AccountsCore.Transforms.addUndefined );
             transforms.push( AccountsCore.Transforms.cleanupUserDocument );
             // if we have Roles package, then update our two publication transformations arrays we know about
@@ -256,7 +257,7 @@ export class amAccount extends AccountsCore.Account {
         // define the Tabular.Table
         const tabular = amTabular._initTabular( this, name, args );
         AccountsManager.Account.tabulars[name] = { instance: this, args, tabular };
-        logger.debug( 'registering', name );
+        logger.debug( 'setupTabular() registering', name );
         return true;
     }
 }

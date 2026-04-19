@@ -57,6 +57,10 @@ This is a very thin extend of `AccountsCore.Account` class, and it actually even
 
         When `false`, the 'new account' dialog is cleared after successful creation, and can be reused to define other new accounts.
 
+    - `editIdentTopTemplate`
+
+        The template name, or a function which returns such a string, to be inserted above the top padder of the ident panel, defaulting to none.
+
     - `editTabsFn`
 
         A function which, when set, will receive a list of tab objects to be displayed on edition panel, and must return a list of tab objects.
@@ -372,10 +376,7 @@ When run from [`AccountsList`](#accountslist), it is run in a modal to edit the 
 It expects following data context:
 
 - `name`: the amAccount instance name
-- `item`: the account's object to be edited, or null
-- `tabs`: an optional array of tabs provided by the application
-- `tabsBefore`: an optional array of tabs provided by the application
-- `tabsUpdates`: an optional updates object
+- `item`: the account's object to be edited, or null.
 
 
 #### `AccountNewButton`

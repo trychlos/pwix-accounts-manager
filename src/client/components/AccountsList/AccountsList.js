@@ -68,7 +68,7 @@ Template.AccountsList.helpers({
     // the Tabular.Table instance
    tabularName(){
         const table = Package['aldeed:tabular'].default.tablesByName[this.name];
-        // tableName='UserAccountsList'
+        // tableName='UsersAccountsList'
         // table is a Table instance
         //logger.debug( 'tableName', name, 'aldeed table', table );
         return table;

@@ -111,6 +111,7 @@ export const amChecks = {
                 index = 0;
             }
             item.emails[index].address = value;
+            data.item.set( item );
         }
         // let AccountsCore check for syntax validity but not existance
         const result = await AccountsCore.Checks.checkEmailAddress( data.amInstance, value, { testExists: false });
@@ -158,6 +159,7 @@ export const amChecks = {
                 index = 0;
             }
             item.emails[index].label = value;
+            data.item.set( item );
         }
         return null;
     },
@@ -174,6 +176,7 @@ export const amChecks = {
                 index = 0;
             }
             item.emails[index].preferred = Boolean( value );
+            data.item.set( item );
         }
         // count preferred emails
         let count = 0;
@@ -202,6 +205,7 @@ export const amChecks = {
                 index = 0;
             }
             item.emails[index].verified = Boolean( value );
+            data.item.set( item );
         }
         return null;
     },
@@ -214,6 +218,7 @@ export const amChecks = {
         const item = data.item.get();
         if( opts.update !== false ){
             item.loginAllowed = value;
+            data.item.set( item );
         }
         if( Meteor.userId() === item._id && !value ){
             return new TM.TypedMessage({
@@ -230,6 +235,7 @@ export const amChecks = {
         const item = data.item.get();
         if( opts.update !== false ){
             item.username = value;
+            data.item.set( item );
         }
         // let AccountsCore check for validity and existance
         const result = await AccountsCore.Checks.checkUsername( data.amInstance, value, { testExists: false });

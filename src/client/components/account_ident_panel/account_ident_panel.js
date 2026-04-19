@@ -48,7 +48,17 @@ Template.account_ident_panel.onCreated( function(){
             }
         },
         // the Form.Checker instance for this panel
-        checker: new ReactiveVar( null )
+        checker: new ReactiveVar( null ),
+
+        // the template to be inserted above the top padder
+        topTemplate( dc ){
+            const amInstance = dc.amInstance.get();
+            if( amInstance ){
+                const template = amInstance.opts().editIdentTopTemplate();
+                return template;
+            }
+            return null;
+        }
     };
 
     // setup the fields depending of the accounts configuration
@@ -113,6 +123,12 @@ Template.account_ident_panel.helpers({
         return this.amInstance ? this.amInstance.get().opts().haveEmailAddress() !== AccountsCore.C.Identifier.NONE : false;
     },
 
+    // whether we want insert a template above the top padder
+    havePadderTopRow(){
+        const template = Template.instance().AM.topTemplate( this );
+        return Boolean( template );
+    },
+
     // whether we want a username
     haveUsername(){
         return this.amInstance ? this.amInstance.get().opts().haveUsername() !== AccountsCore.C.Identifier.NONE : false;
@@ -146,7 +162,18 @@ Template.account_ident_panel.helpers({
             withExternalMessager: true,
             checker: Template.instance().AM.checker
         };
-    }
+    },
+
+    // data for the toprow template
+    toprowData(){
+        return this;
+    },
+
+    // name of the toprow template
+    toprowTemplate(){
+        const template = Template.instance().AM.topTemplate( this );
+        return template;
+    },
 });
 
 Template.account_ident_panel.events({

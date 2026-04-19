@@ -18,6 +18,7 @@ export class amOptions extends AccountsCore.Options {
 
     static _defaults = {
         editCloseAfterNew: true,
+        editIdentTopTemplate: null,
         editTabsFn: null,
         listActiveCheckboxes: false,
         listFeedNow: true,
@@ -59,6 +60,16 @@ export class amOptions extends AccountsCore.Options {
     editCloseAfterNew( value ){
         logger.verbose({ verbosity: AccountsManager.configure().verbosity, against: AccountsManager.C.Verbose.FUNCTIONS }, 'amOptions.editCloseAfterNew()', arguments );
         return this.base_gsBoolFn( 'editCloseAfterNew', value, { default: amOptions._defaults.editCloseAfterNew });
+    }
+
+    /**
+     * Getter/Setter
+     * @param {String|Function} value the name of the top template to be inserted
+     * @returns {String}
+     */
+    editIdentTopTemplate( value ){
+        logger.verbose({ verbosity: AccountsManager.configure().verbosity, against: AccountsManager.C.Verbose.FUNCTIONS }, 'amOptions.editIdentTopTemplate()', arguments );
+        return this.base_gsStringFn( 'editIdentTopTemplate', value, { default: amOptions._defaults.editIdentTopTemplate });
     }
 
     /**

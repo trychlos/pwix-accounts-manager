@@ -2,11 +2,12 @@
 
 ## ChangeLog
 
-### 2.3.1-rc.0
+### 2.4.0-rc.0
 
     Release date: 
 
     - Minor typo improvement and commented-out debug line
+    - Let the application insert a template above the ident top row padder
 
 ### 2.3.0
 
