@@ -70,9 +70,15 @@ AccountsManager.i18n = {
                 line_valid: 'Indicateur de validité de la ligne',
                 login_allowed_label: 'Connexion autorisée :',
                 remove_title: 'Supprimer cette adresse de messagerie',
+                reset_error: 'Il m\'est malheureusement impossible d\'envoyer le lien pour le moment. Merci de réessayer ultérieurement',
+                reset_success: 'Le lien a été envoyé à "%s" avec succès',
+                reset_title: 'Envoi un lien à \'%s\'  pour permettre à l\'utilisateur de réinitialiser son mot de passe',
                 username_label: 'Nom d\'utilisateur :',
                 username_ph: 'Un nom d\'utilisateur',
-                verified_label: 'Adresse email vérifiée :'
+                verified_label: 'Adresse email vérifiée :',
+                verify_error: 'Il m\'est malheureusement impossible d\'envoyer le lien pour le moment. Merci de réessayer ultérieurement',
+                verify_success: 'Le lien a été envoyé à "%s" avec succès',
+                verify_title: 'Envoi un lien à \'%s\' pour permettre à l\'utilisateur de vérifier son adresse de messagerie'
             },
             tabs: {
                 ident_title: 'Identité',

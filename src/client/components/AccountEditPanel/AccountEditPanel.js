@@ -20,6 +20,7 @@ import { Forms } from 'meteor/pwix:forms';
 import { Logger } from 'meteor/pwix:logger';
 import { Modal } from 'meteor/pwix:modal';
 import { pwixI18n } from 'meteor/pwix:i18n';
+import { ReactiveDict } from 'meteor/reactive-dict';
 import { ReactiveVar } from 'meteor/reactive-var';
 import { Tolert } from 'meteor/pwix:tolert';
 
@@ -49,6 +50,8 @@ Template.AccountEditPanel.onCreated( function(){
         isModal: new ReactiveVar( false ),
         // whether the current user is allowed to edit admin notes
         editAdminNotes: new ReactiveVar( false ),
+        // the build buildStatus
+        buildStatus: new ReactiveDict(),
         // tabs list
         defaultTabs: new ReactiveVar( null ),
         tabsList: new ReactiveVar( null ),
@@ -61,53 +64,44 @@ Template.AccountEditPanel.onCreated( function(){
     };
 
     // get the amAccount instance from its name
+    // setup the item to be edited
     self.autorun(() => {
-        const name = Template.currentData().name;
-        if( name ){
-            const amInstance = AccountsCore.getInstance( name );
+        const dc = Template.currentData();
+        if( dc.name ){
+            const amInstance = AccountsCore.getInstance( dc.name );
             check( amInstance, AccountsManager.Account );
             self.AM.amInstance.set( amInstance );
         }
-    });
-
-    // keep the initial 'new' state
-    self.autorun(() => {
-        self.AM.isNew.set( _.isNil( Template.currentData().item ));
-    });
-
-    // setup the item to be edited
-    self.autorun(() => {
-        const clone = _.cloneDeep( Template.currentData().item || {} );
+        self.AM.isNew.set( _.isNil( dc.item ));
+        const clone = _.cloneDeep( dc.item || {} );
         // this will anyway be set by the AccountsCore automatisms at user creation
         //  but this let the UI show what will be created
         if( self.AM.isNew.get()){
             clone.loginAllowed = true;
         }
         self.AM.item.set( clone );
+        self.AM.buildStatus.set( 'dc', true );
     });
 
     // whether the current user can see/edit admin notes for the account
     // recompute the default tabs list when we get the permission
-    // set guard against asking for permissions which this is useless so that we do not rebuild tabs on every update
     self.autorun(() => {
-        if( !self.AM.prevUserId || self.AM.prevUserId !== Meteor.userId()){
-            self.AM.prevUserId = Meteor.userId();
-            if( self.AM.isNew.get()){
-                if( !self.AM.prevTargetId ){
-                    self.AM.editAdminNotes.set( true );
-                    self.AM.defaultTabs.set( null );
-                    self.AM.prevTargetId = 'SET';
-                }
-            } else if( self.AM.prevTargetId !== self.AM.item.get()._id ){
-                AccountsCore.isAllowed( 'pwix.accounts_manager.data.adminNotes', Meteor.userId(), {
-                    id: self.AM.item.get()._id,
-                    instance: self.AM.amInstance.get()
-                }).then(( res ) => {
-                    self.AM.editAdminNotes.set( res );
-                    self.AM.defaultTabs.set( null );
-                    self.AM.prevTargetId = self.AM.item.get()._id;
-                });
-            }
+        // if we are great enough to create an account, we can suppose that we are allowed to all
+        if( self.AM.isNew.get()){
+            self.AM.editAdminNotes.set( true );
+            self.AM.defaultTabs.set( null );
+            self.AM.buildStatus.set( 'permissions', true );
+
+        // else have to ask
+        } else {
+            AccountsCore.isAllowed( 'pwix.accounts_manager.data.adminNotes', Meteor.userId(), {
+                id: self.AM.item.get()._id,
+                instance: self.AM.amInstance.get()
+            }).then(( res ) => {
+                self.AM.editAdminNotes.set( res );
+                self.AM.defaultTabs.set( null );
+                self.AM.buildStatus.set( 'permissions', true );
+            });
         }
     });
 
@@ -116,7 +110,7 @@ Template.AccountEditPanel.onCreated( function(){
     self.autorun(() => {
         const amInstance = self.AM.amInstance.get();
         let defaultTabs = self.AM.defaultTabs.get();
-        if( amInstance && !defaultTabs ){
+       if( amInstance && !defaultTabs && self.AM.buildStatus.get( 'dc' ) && self.AM.buildStatus.get( 'permissions' )){
             defaultTabs = [];
             defaultTabs.push({
                 name: 'account_ident_tab',
@@ -161,6 +155,7 @@ Template.AccountEditPanel.onCreated( function(){
             }
             self.AM.defaultTabs.set( defaultTabs );
             self.AM.tabsList.set( null );
+            self.AM.buildStatus.set( 'defaultTabs', true );
         }
     });
 
@@ -168,7 +163,7 @@ Template.AccountEditPanel.onCreated( function(){
     self.autorun(() => {
         const amInstance = self.AM.amInstance.get();
         let tabsList = self.AM.tabsList.get();
-        if( amInstance && !tabsList ){
+        if( amInstance && !tabsList && self.AM.buildStatus.get( 'defaultTabs' )){
             const fn = amInstance.opts().editTabsFn();
             if( fn ){
                 fn( self.AM.defaultTabs.get()).then(( tabs ) => { self.AM.tabsList.set( tabs ); });
@@ -220,7 +215,7 @@ Template.AccountEditPanel.onRendered( function(){
     self.autorun(() => {
         const checker = self.AM.checker.get();
         if( checker ){
-            //logger.debug( 'checker', checker, checker.iSeq(), checker.validity(), checker.status());
+            //logger.debug( 'checker', checker, checker.iSeq(), checker.validity(), checker.buildStatus());
         }
     });
 });
@@ -248,36 +243,39 @@ Template.AccountEditPanel.helpers({
     // parms for TabbedTemplate
     //  add the default datacontext to tabs which have not a 'paneData' key
     parmsTabbed(){
-        const paneData = {
-            item: Template.instance().AM.item,
-            isNew: Template.instance().AM.isNew.get(),
-            checker: Template.instance().AM.checker,
-            amInstance: Template.instance().AM.amInstance
-        };
         const tabs = Template.instance().AM.tabsList.get();
-        for( const tab of tabs ){
-            if( !tab.paneData ){
-                tab.paneData = paneData;
+        if( tabs ){
+            const paneData = {
+                item: Template.instance().AM.item,
+                isNew: Template.instance().AM.isNew.get(),
+                checker: Template.instance().AM.checker,
+                amInstance: Template.instance().AM.amInstance
+            };
+            for( const tab of tabs ){
+                if( !tab.paneData ){
+                    tab.paneData = paneData;
+                }
             }
-        }
-        /*
-        if( this.tabsBefore ){
-            if( _.isArray( this.tabsBefore ) && this.tabsBefore.length ){
-                this.tabsBefore.forEach(( tab ) => {
-                    tab.paneData = _.merge( {}, tab.paneData, paneData );
-                    tabs.push( tab );
-                });
-            } else {
-                logger.warn( 'expect tabsBefore be an array, got', this.tabsBefore );
+            /*
+            if( this.tabsBefore ){
+                if( _.isArray( this.tabsBefore ) && this.tabsBefore.length ){
+                    this.tabsBefore.forEach(( tab ) => {
+                        tab.paneData = _.merge( {}, tab.paneData, paneData );
+                        tabs.push( tab );
+                    });
+                } else {
+                    logger.warn( 'expect tabsBefore be an array, got', this.tabsBefore );
+                }
             }
+                */
+            //logger.debug( 'parmsTabbed', tabs, this );
+            return {
+                name: ACCOUNT_EDIT_TABBED,
+                tabs: tabs,
+                activateTab: paneData.isNew ? 0 : undefined
+            };
         }
-            */
-        //logger.debug( 'parmsTabbed', tabs, this );
-        return {
-            name: ACCOUNT_EDIT_TABBED,
-            tabs: tabs,
-            activateTab: paneData.isNew ? 0 : undefined
-        };
+        return {};
     }
 });
 

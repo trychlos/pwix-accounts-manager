@@ -64,7 +64,7 @@ export const amFielddef = {
                     name: 'emails',
                     type: Array,
                     optional: true,
-                    dt_visible: false
+                    tabular: false
                 },
                 {
                     name: 'emails.$',
@@ -148,6 +148,12 @@ export const amFielddef = {
                     tabular: false
                 },
                 {
+                    name: 'usernames.$._id',
+                    type: String,
+                    dt_data: false,
+                    dt_visible: false
+                },
+                {
                     name: 'usernames.$.username',
                     type: String,
                     optional: true,
@@ -174,24 +180,22 @@ export const amFielddef = {
                 type: Object,
                 optional: true,
                 blackbox: true,
-                tabular: false
+                dt_visible: false
             },
             {
                 name:  'services',
                 type: Object,
                 optional: true,
                 blackbox: true,
-                tabular: false
+                dt_visible: false
             }
         );
         // let DYN sub-object arrives until the client
         columns.push(
             {
                 name: 'DYN',
-                type: Object,
-                blackbox: true,
-                optional: true,
-                dt_visible: false
+                schema: false,
+                dt_hidden: true
             }
         );
         // AccountsManager specifics

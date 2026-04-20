@@ -17,6 +17,7 @@ import { AccountsCore } from 'meteor/pwix:accounts-core';
 import { Forms } from 'meteor/pwix:forms';
 import { Logger } from 'meteor/pwix:logger';
 import { pwixI18n } from 'meteor/pwix:i18n';
+import { Tolert } from 'meteor/pwix:tolert';
 import { Tracker } from 'meteor/tracker';
 
 import './account_email_row.html';
@@ -149,12 +150,48 @@ Template.account_email_row.helpers({
         return {
             statusRv: Template.instance().AM.checker.get()?.iCheckableStatusRv() || null
         };
+    },
+
+    resetEnabled( it ){
+        return '';
+    },
+
+    resetTitle( it ){
+        return pwixI18n.label( I18N, 'panel.reset_title', it.address );
+    },
+
+    verifyEnabled( it ){
+        return it.verified == true ? 'disabled' : '';
+    },
+
+    verifyTitle( it ){
+        return pwixI18n.label( I18N, 'panel.verify_title', it.address );
     }
 });
 
 Template.account_email_row.events({
     'click .am-account-email-row .js-minus'( event, instance ){
         instance.AM.removeById( this.it._id );
+    },
+
+    'click .am-account-email-row .js-reset'( event, instance ){
+        Meteor.callAsync( 'pwix.AccountsCore.m.sendResetPasswordEmail', this.item.get()._id, this. it.address, undefined, { acName: this.amInstance.get().name() }).then(( res ) => {
+            if( res ){
+                Tolert.success( pwixI18n.label( I18N, 'panel.reset_success', res.email ));
+            } else {
+                Tolert.error( pwixI18n.label( I18N, 'panel.reset_error' ));
+            }
+        });
+    },
+
+    'click .am-account-email-row .js-verify'( event, instance ){
+        Meteor.callAsync( 'pwix.AccountsCore.m.sendVerificationEmail', this.item.get()._id, this. it.address, undefined, { acName: this.amInstance.get().name() }).then(( res ) => {
+            if( res ){
+                Tolert.success( pwixI18n.label( I18N, 'panel.verify_success', res.email ));
+            } else {
+                Tolert.error( pwixI18n.label( I18N, 'panel.verify_error' ));
+            }
+        });
     },
 });
 

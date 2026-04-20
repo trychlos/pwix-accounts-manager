@@ -13,8 +13,6 @@ import { pwixI18n } from 'meteor/pwix:i18n';
 import { Tabular } from 'meteor/pwix:tabular';
 import { bootstrap } from 'meteor/pwix:ui-bootstrap5';
 
-import { amFielddef } from './am-fielddef.js';
-
 const logger = Logger.get();
 
 _tabular_identifier = async function( acInstance, it ){
@@ -23,21 +21,20 @@ _tabular_identifier = async function( acInstance, it ){
 }
 
 export const amTabular = {
-    _initTabular( acInstance, name, args ){
+    _initTabular( acInstance, name, opts ){
         check( acInstance, AccountsManager.Account );
         check( name, Match.NonEmptyString );
-        check( args, Object );
+        check( opts, Object );
         // define the Tabular.Table
-        const fielddef = args.fieldDef || amFielddef.defaultColumns( acInstance );
-        const fieldSet = new Field.Set( fielddef );
+        const fieldSet = acInstance.fieldSet();
         const columns = fieldSet.toTabular();
+        const indexMap = Tabular.indexMap( columns );
         //logger.debug( 'tabular columns', columns );
-        //logger.debug( 'fieldSet.tabularIndexByName emails.$.address', fieldSet.tabularIndexByName( 'emails.$.address', { columns: columns, only_visible: true } ));
         const tabular = new Tabular.Table({
             name: name,
             collection: acInstance.collection(),
             columns: columns,
-            pub: args.pub || AccountsManager.C.pub.tabular.name,
+            pub: opts.pub || AccountsManager.C.pub.tabular.name,
             //selector( userId ){
             //    return AccountsCore.isAllowed( 'pwix.accounts_core.feat.list', userId, { instance: acInstance });
             //},
@@ -64,10 +61,7 @@ export const amTabular = {
                 },
                 async infoButtonTitle( it ){
                     return pwixI18n.label( I18N, 'buttons.info_title', await _tabular_identifier( acInstance, it ));
-                },
-                withSettingsItems: [
-                    Tabular.C.Items.COLUMN_SELECTION
-                ]
+                }
             },
             /*
             drawCallback: function( settings ){
@@ -85,7 +79,7 @@ export const amTabular = {
                 console.debug( 'here', arguments );
             },
             */
-            order: [[ fieldSet.tabularIndexByName( 'emails.$.address', { columns: columns }), 'asc' ]],
+            order: [[ indexMap['emails.$.address'], 'asc' ]],
             destroy: true
         });
         return tabular;

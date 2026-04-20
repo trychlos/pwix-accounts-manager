@@ -9,9 +9,19 @@
         </td>
         <td>{{> FormsStatusIndicator (parmsCheckStatus) }}</td>
         <td>
-        <button class="btn btn-sm btn-outline-primary js-minus" title="{{ minusTitle this.it }}" {{ minusEnabled this.it }} >
-            <span class="fa-solid fa-fw fa-minus"></span>
-        </button>
+            <button class="btn btn-sm btn-outline-primary js-verify" title="{{ verifyTitle this.it }}" {{ verifyEnabled this.it }} >
+                <span class="fa-solid fa-fw fa-envelope-circle-check"></span>
+            </button>
+        </td>
+        <td>
+            <button class="btn btn-sm btn-outline-primary js-reset" title="{{ resetTitle this.it }}" {{ resetEnabled this.it }} >
+                <span class="fa-solid fa-fw fa-envelope-open-text"></span>
+            </button>
+        </td>
+        <td>
+            <button class="btn btn-sm btn-outline-primary js-minus" title="{{ minusTitle this.it }}" {{ minusEnabled this.it }} >
+                <span class="fa-solid fa-fw fa-minus"></span>
+            </button>
         </td>
     </tr>
 

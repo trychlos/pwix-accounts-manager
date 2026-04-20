@@ -276,8 +276,6 @@ This is a very thin extend of `AccountsCore.Account` class, and it actually even
 
     This method initialize a named tabular display. `args` is an object with following keys:
 
-    - `fieldDef`: an optional list of fields definitions to replace the default tabular fields set (which is itself the default fields set for the collection)
-
     - `pub`: an optional publication name, defaulting to 'pwix.AccountsManager.p.tabularLast'
 
 ##### `Options`

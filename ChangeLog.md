@@ -8,6 +8,7 @@
 
     - Minor typo improvement and commented-out debug line
     - Let the application insert a template above the ident top row padder
+    - Let the manager send reset password and email verification links
 
 ### 2.3.0
 

@@ -44,6 +44,7 @@ const _id2index = function( array, id ){
 }
 
 export const amChecks = {
+
     // check that an identity is OK
     async ident_cross_check( data, opts ){
         _assert_data_itemrv( 'amChecks.email_address()', data );

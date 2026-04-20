@@ -70,9 +70,15 @@ AccountsManager.i18n = {
                 line_valid: 'Whether this line is valid',
                 login_allowed_label: 'Is connection allowed :',
                 remove_title: 'Remove this "%s" email address',
+                reset_error: 'I am unfortunately unable to send the link at the moment. Please retry later',
+                reset_success: 'The link has been successfully sent to "%s"',
+                reset_title: 'Send a link to \'%s\' to let the user reset his/her password',
                 username_label: 'Username :',
                 username_ph: 'John42',
-                verified_label: 'Is email verified :'
+                verified_label: 'Is email verified :',
+                verify_error: 'I am unfortunately unable to send the link at the moment. Please retry later',
+                verify_success: 'The link has been successfully sent to "%s"',
+                verify_title: 'Send a link to \'%s\' to let the user mark his/her email address verified'
             },
             tabs: {
                 ident_title: 'Identity',

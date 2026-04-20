@@ -15,7 +15,9 @@ import { Meteor } from "meteor/meteor";
 import { Modal } from 'meteor/pwix:modal';
 import { pwixI18n } from 'meteor/pwix:i18n';
 import { ReactiveVar } from 'meteor/reactive-var';
+import { Tabular } from 'meteor/pwix:tabular';
 import { Tolert } from 'meteor/pwix:tolert';
+import { Tracker } from 'meteor/tracker';
 
 import '../AccountEditPanel/AccountEditPanel.js';
 
@@ -30,7 +32,7 @@ Template.AccountsList.onCreated( function(){
         // the amAccount instance
         amInstance: new ReactiveVar( false ),
         // whether the user is allowed to see this list
-        allowed: new ReactiveVar( false ),
+        allowed: new ReactiveVar( false )
     };
 
     // get and check the amAccount instance
@@ -66,11 +68,11 @@ Template.AccountsList.helpers({
     },
 
     // the Tabular.Table instance
-   tabularName(){
+   tabularInstance(){
         const table = Package['aldeed:tabular'].default.tablesByName[this.name];
-        // tableName='UsersAccountsList'
-        // table is a Table instance
-        //logger.debug( 'tableName', name, 'aldeed table', table );
+        //logger.debug( 'this.name', this.name, 'aldeed table', table );
+        // this.name is the tabular name, here 'AccountsList' or maybe 'UsersAccountsList' or anything chosen by the caller
+        // table is a Tabular.Table instance
         return table;
     }
 });
@@ -145,10 +147,5 @@ Template.AccountsList.events({
                 });
         }
         return false;
-    },
-
-    // edit the settings for this table
-    'tabular-settings-event .AccountsList'( event, instance, data ){
-        logger.debug( event, data );
     }
 });

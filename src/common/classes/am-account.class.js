@@ -243,20 +243,21 @@ export class amAccount extends AccountsCore.Account {
     /**
      * @setup Setup a tabular display
      * @param {String} name the name of the tabular display
-     * @param {Object} args
+     * @param {Object} opts an optional options object with following keys:
+     *  - pub: the publication to be used, defaulting to 'pwix.AccountsManager.p.tabularLast'
      * @returns {Boolean} true if successful
      */
-    setupTabular( name, args ){
+    setupTabular( name, opts={} ){
         logger.verbose({ verbosity: AccountsManager.configure().verbosity, against: AccountsManager.C.Verbose.FUNCTIONS }, 'amAccount.setupTabular()', arguments );
         check( name, Match.NonEmptyString );
-        check( args, Object );
+        check( opts, Object );
         if( AccountsManager.Account.tabulars[name] ){
             logger.error( 'setupTabular() tabular is already defined', name );
             return false;
         }
         // define the Tabular.Table
-        const tabular = amTabular._initTabular( this, name, args );
-        AccountsManager.Account.tabulars[name] = { instance: this, args, tabular };
+        const tabular = amTabular._initTabular( this, name, opts );
+        AccountsManager.Account.tabulars[name] = { instance: this, opts, tabular };
         logger.debug( 'setupTabular() registering', name );
         return true;
     }

@@ -16,7 +16,8 @@
 |   11 | 2025- 7- 4 | have preferred username |
 |   12 | 2026- 2-19 | honor am-email-more event to show other email addresses |
 |   13 | 2026- 4-17 | on option, send a verification email when creating a new account |
-|   14 |  |  |
+|   14 | 2026- 4-22 | instanciation options should be relative to core accounts management - edit panel and list should be other options and set separately |
+|   15 |  |  |
 
 ---
 ## Done
