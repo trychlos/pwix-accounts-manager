@@ -2,9 +2,9 @@
 
 ## ChangeLog
 
-### 2.4.0-rc.0
+### 2.4.0
 
-    Release date: 
+    Release date: 2026- 4-23
 
     - Minor typo improvement and commented-out debug line
     - Let the application insert a template above the ident top row padder
@@ -145,4 +145,4 @@
 
 ---
 P. Wieser
-- Last updated on 2026, Apr. 13rd
+- Last updated on 2026, Apr. 23rd
