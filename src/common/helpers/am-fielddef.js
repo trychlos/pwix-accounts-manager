@@ -252,8 +252,7 @@ export const amFielddef = {
                         }
                         let html = '';
                         const roles = rowData.DYN.roles;
-                        //logger.debug( 'rowData', rowData );
-                        //logger.debug( 'roles', roles );
+                        //logger.debug( 'rowData', rowData, 'roles', roles );
                         if(( roles?.global.direct || [] ).length ){
                             html += '<div class="role-level global ui-ellipsized" title="'+pwixI18n.label( I18N, 'list.role_global_tooltip', rowData.DYN.preferredLabel.label )+'">';
                             html += '<div class="title">'+pwixI18n.label( I18N, 'list.role_global',  )+'</div>';

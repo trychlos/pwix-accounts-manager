@@ -29,7 +29,6 @@ export const amTabular = {
         const fieldSet = acInstance.fieldSet();
         const columns = fieldSet.toTabular();
         const indexMap = Tabular.indexMap( columns );
-        //logger.debug( 'tabular columns', columns );
         const tabular = new Tabular.Table({
             name: name,
             collection: acInstance.collection(),

@@ -6,7 +6,7 @@
 
     Release date: 
 
-    - 
+    - Remove empty declaration from stylesheet
 
 ### 2.4.0
 
