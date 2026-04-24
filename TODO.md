@@ -16,8 +16,8 @@
 |   11 | 2025- 7- 4 | have preferred username |
 |   12 | 2026- 2-19 | honor am-email-more event to show other email addresses |
 |   13 | 2026- 4-17 | on option, send a verification email when creating a new account |
-|   14 | 2026- 4-22 | instanciation options should be relative to core accounts management - edit panel and list should be other options and set separately |
-|   15 |  |  |
+|   15 | 2026- 4-24 | editCloseAfterNew, editIdentTopTemplate, editTabsFn, listActiveCheckboxes, listFeedNow are deprecated since v2.5 - have to remove them someday |
+|   16 |  |  |
 
 ---
 ## Done
@@ -38,6 +38,8 @@
 |      |            | done |
 |    7 | 2024- 8- 2 | honor hideDisabled |
 |      | 2026- 4- 2 | parameter is cancelled |
+|   14 | 2026- 4-22 | instanciation options should be relative to core accounts management - edit panel and list should be other options and set separately |
+|      | 2026- 4-24 | done, introducing editOptions and tabularOptions |
 
 ---
 P. Wieser

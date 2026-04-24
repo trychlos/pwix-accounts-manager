@@ -31,16 +31,24 @@ Template.AccountsList.onCreated( function(){
     self.AM = {
         // the amAccount instance
         amInstance: new ReactiveVar( false ),
+        // the tabular options
+        options: new ReactiveVar( null ),
         // whether the user is allowed to see this list
         allowed: new ReactiveVar( false )
     };
 
     // get and check the amAccount instance
     self.autorun(() => {
-        const amInstance = AccountsManager.Account.byTabularName( Template.currentData().name );
+        const o = AccountsManager.Account.byTabularName( Template.currentData().name );
+        const amInstance = o?.instance;
         if( amInstance ){
             check( amInstance, AccountsManager.Account );
             self.AM.amInstance.set( amInstance );
+        }
+        const options = o?.options;
+        if( options ){
+            check( options, AccountsManager.TabularOptions );
+            self.AM.options.set( options );
         }
     });
 
@@ -69,10 +77,9 @@ Template.AccountsList.helpers({
 
     // the Tabular.Table instance
    tabularInstance(){
-        const table = Package['aldeed:tabular'].default.tablesByName[this.name];
-        //logger.debug( 'this.name', this.name, 'aldeed table', table );
+        const table = Tabular.byName( this.name );
         // this.name is the tabular name, here 'AccountsList' or maybe 'UsersAccountsList' or anything chosen by the caller
-        // table is a Tabular.Table instance
+        // table is the Tabular.Table instance
         return table;
     }
 });
@@ -86,7 +93,8 @@ Template.AccountsList.events({
     // this event is expected to be only triggered when checkboxes are active on the tabular list
     async 'tabular-click-event .AccountsList'( event, instance, { item, field, checked }){
         const amInstance = instance.AM.amInstance.get();
-        if( amInstance && amInstance.opts().listActiveCheckboxes()){
+        const options = instance.AM.options.get();
+        if( amInstance && options && options.activeCheckboxes()){
             item[field.name()] = checked;
             const res = await AccountsCore.updateAccount( amInstance, item, Meteor.userId());
             const lab = await amInstance.preferredLabel( item );

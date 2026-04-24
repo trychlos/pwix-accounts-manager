@@ -4,6 +4,8 @@
 
 import { amAccount } from '../classes/am-account.class';
 import { amOptions } from '../classes/am-options.class';
+import { EditOptions } from '../classes/edit-options.class';
+import { TabularOptions } from '../classes/tabular-options.class';
 
 import { amChecks } from '../helpers/am-checks';
 import { amFielddef } from '../helpers/am-fielddef.js';
@@ -19,6 +21,8 @@ import './ready.js';
 
 AccountsManager.Account = amAccount;
 AccountsManager.Checks = amChecks;
+AccountsManager.EditOptions = EditOptions;
 AccountsManager.Fielddef = amFielddef;
 AccountsManager.Options = amOptions;
 AccountsManager.Tabular = amTabular;
+AccountsManager.TabularOptions = TabularOptions;

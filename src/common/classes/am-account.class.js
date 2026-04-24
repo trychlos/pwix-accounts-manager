@@ -16,6 +16,8 @@ import SimpleSchema from 'meteor/aldeed:simple-schema';
 import { Tracker } from 'meteor/tracker';
 
 import { amOptions } from './am-options.class.js';
+import { EditOptions } from './edit-options.class.js';
+import { TabularOptions } from './tabular-options.class.js';
 
 import { amFielddef } from '../helpers/am-fielddef.js';
 import { amTabular } from '../helpers/am-tabular.js';
@@ -27,16 +29,18 @@ export class amAccount extends AccountsCore.Account {
     // static data
 
     // tabular names registry
+    //  indexed by tabular name
+    //  values are objects { instance<amAccount>, options<TabularOptions>, tabular<Tabular.Table> }
     static tabulars = {};
 
     // static methods
 
     /**
      * @param {String} name a tabular name
-     * @returns {amAccount} the corresponding amAccount instance
+     * @returns {Object} the registered object for this tabular name
      */
     static byTabularName( name ){
-        return AccountsManager.Account.tabulars[name]?.instance;
+        return AccountsManager.Account.tabulars[name];
     }
 
     // private data
@@ -44,6 +48,9 @@ export class amAccount extends AccountsCore.Account {
     // runtime
     #fieldset = null;
     #usersList = new ReactiveVar( [] );
+
+    // editor arguments
+    #editOptions = null;
 
     // private methods
 
@@ -143,9 +150,10 @@ export class amAccount extends AccountsCore.Account {
         check( args, Match.OneOf( null, undefined, Object ));
         super( ...arguments );
         //logger.debug( 'amAccount() instanciating \''+this.name()+'\'', args );
-        logger.debug( 'amAccount() instanciating \''+this.name()+'\'' );
+        //logger.debug( 'amAccount() instanciating \''+this.name()+'\'' );
 
         this._setOpts( new amOptions( args ));
+        this.#editOptions = new EditOptions();
 
         // update the publish transformations
         this._initPublishTransformation();
@@ -164,12 +172,21 @@ export class amAccount extends AccountsCore.Account {
         }
 
         // get and maintain the accounts list on the client side
-        if( Meteor.isClient && this.opts().listFeedNow() !== false ){
+        if( Meteor.isClient && this.opts().feedNow() !== false ){
             const self = this;
             Meteor.defer(() => { self.feedList(); });
         }
 
         return this;
+    }
+
+    /**
+     * Getter
+     * @returns {Object} the edition options
+     */
+    editOptions(){
+        logger.verbose({ verbosity: AccountsManager.configure().verbosity, against: AccountsManager.C.Verbose.FUNCTIONS }, 'amAccount.editOptions()', arguments );
+        return this.#editOptions;
     }
 
     /**
@@ -241,24 +258,64 @@ export class amAccount extends AccountsCore.Account {
     }
 
     /**
-     * @setup Setup a tabular display
+     * @summary Configure the edition dialog
+     * @param {Object} args an optional options object with following keys:
+     *  - closeAfterNew
+     *  - identTopTemplate
+     *  - tabsFn
+     * @returns {Boolean} true if successful
+     */
+    setupEditor( args={} ){
+        logger.verbose({ verbosity: AccountsManager.configure().verbosity, against: AccountsManager.C.Verbose.FUNCTIONS }, 'amAccount.setupEditor()', arguments );
+        check( args, Object );
+        this.#editOptions.base_set( args );
+    }
+
+    /**
+     * @summary Setup a tabular display
      * @param {String} name the name of the tabular display
-     * @param {Object} opts an optional options object with following keys:
+     * @param {Object} args an optional arguments object with following keys:
+     *  - activeCheckboxes: whether checkboxes must be active in the tabular display
      *  - pub: the publication to be used, defaulting to 'pwix.AccountsManager.p.tabularLast'
      * @returns {Boolean} true if successful
      */
-    setupTabular( name, opts={} ){
+    setupTabular( name, args={} ){
         logger.verbose({ verbosity: AccountsManager.configure().verbosity, against: AccountsManager.C.Verbose.FUNCTIONS }, 'amAccount.setupTabular()', arguments );
         check( name, Match.NonEmptyString );
-        check( opts, Object );
+        check( args, Object );
         if( AccountsManager.Account.tabulars[name] ){
             logger.error( 'setupTabular() tabular is already defined', name );
             return false;
         }
         // define the Tabular.Table
-        const tabular = amTabular._initTabular( this, name, opts );
-        AccountsManager.Account.tabulars[name] = { instance: this, opts, tabular };
-        logger.debug( 'setupTabular() registering', name );
+        const options = new TabularOptions( args );
+        const tabular = amTabular._initTabular( this, name, options );
+        AccountsManager.Account.tabulars[name] = { instance: this, options, tabular };
         return true;
+    }
+
+    /**
+     * @param {String} tabularName the name of the tabular display
+     * @returns {TabularOptions} the tabular options
+     * 
+     * NB: if not tabular name is specified, we return the first found tabular options, which may not be what the caller wants
+     *  But this needed to be able to provide a context when extending the field set...
+     */
+    tabularOptions( tabularName ){
+        logger.verbose({ verbosity: AccountsManager.configure().verbosity, against: AccountsManager.C.Verbose.FUNCTIONS }, 'amAccount.tabularOptions()', arguments );
+        let options = null;
+        if( tabularName ){
+            const o = amAccount.byTabularName( tabularName );
+            options = o?.options;
+        }
+        if( !options ){
+            for( const o of Object.values( amAccount.tabulars )){
+                if( o.instance.name() === this.name()){
+                    options = o.options;
+                    break;
+                }
+            }
+        }
+        return options;
     }
 }

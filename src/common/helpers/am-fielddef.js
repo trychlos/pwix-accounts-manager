@@ -210,7 +210,7 @@ export const amFielddef = {
                 dt_templateContext( rowData ){
                     return {
                         item: rowData,
-                        readonly: !acInstance.opts().listActiveCheckboxes(),
+                        readonly: !acInstance.tabularOptions().activeCheckboxes(),
                         enabled: true
                     }
                 },

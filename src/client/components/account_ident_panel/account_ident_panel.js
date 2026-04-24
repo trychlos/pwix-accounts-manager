@@ -54,7 +54,7 @@ Template.account_ident_panel.onCreated( function(){
         topTemplate( dc ){
             const amInstance = dc.amInstance.get();
             if( amInstance ){
-                const template = amInstance.opts().editIdentTopTemplate();
+                const template = amInstance.editOptions().identTopTemplate();
                 return template;
             }
             return null;

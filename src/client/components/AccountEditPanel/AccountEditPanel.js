@@ -164,7 +164,7 @@ Template.AccountEditPanel.onCreated( function(){
         const amInstance = self.AM.amInstance.get();
         let tabsList = self.AM.tabsList.get();
         if( amInstance && !tabsList && self.AM.buildStatus.get( 'defaultTabs' )){
-            const fn = amInstance.opts().editTabsFn();
+            const fn = amInstance.editOptions().tabsFn();
             if( fn ){
                 fn( self.AM.defaultTabs.get()).then(( tabs ) => { self.AM.tabsList.set( tabs ); });
             } else {
@@ -311,7 +311,7 @@ Template.AccountEditPanel.events({
         // when creating a new account, we may let the user create several by reusing the same modal
         const amInstance = instance.AM.amInstance.get();
         if( instance.AM.isNew.get()){
-            const closeAfterNew = amInstance.opts().editCloseAfterNew();
+            const closeAfterNew = amInstance.editOptions().closeAfterNew();
             AccountsCore.createAccount( amInstance, item, Meteor.userId()).then(( res ) => {
                 //logger.debug( 'res', res );
                 if( res._id ){

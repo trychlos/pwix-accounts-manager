@@ -21,10 +21,10 @@ _tabular_identifier = async function( acInstance, it ){
 }
 
 export const amTabular = {
-    _initTabular( acInstance, name, opts ){
+    _initTabular( acInstance, name, options ){
         check( acInstance, AccountsManager.Account );
         check( name, Match.NonEmptyString );
-        check( opts, Object );
+        check( options, AccountsManager.TabularOptions );
         // define the Tabular.Table
         const fieldSet = acInstance.fieldSet();
         const columns = fieldSet.toTabular();
@@ -33,7 +33,7 @@ export const amTabular = {
             name: name,
             collection: acInstance.collection(),
             columns: columns,
-            pub: opts.pub || AccountsManager.C.pub.tabular.name,
+            pub: options.pub(),
             //selector( userId ){
             //    return AccountsCore.isAllowed( 'pwix.accounts_core.feat.list', userId, { instance: acInstance });
             //},

@@ -7,6 +7,7 @@
     Release date: 
 
     - Remove empty declaration from stylesheet
+    - Review instanciation vs. configuration parameters, introducing setupEditor() method (todo #14)
 
 ### 2.4.0
 

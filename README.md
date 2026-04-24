@@ -57,9 +57,13 @@ This is a very thin extend of `AccountsCore.Account` class, and it actually even
 
         When `false`, the 'new account' dialog is cleared after successful creation, and can be reused to define other new accounts.
 
+        Starting with v2.5, this instanciation argument is deprecated in favor of the same argument of setupEditor() method.
+
     - `editIdentTopTemplate`
 
         The template name, or a function which returns such a string, to be inserted above the top padder of the ident panel, defaulting to none.
+
+        Starting with v2.5, this instanciation argument is deprecated in favor of the same argument of setupEditor() method.
 
     - `editTabsFn`
 
@@ -87,13 +91,17 @@ This is a very thin extend of `AccountsCore.Account` class, and it actually even
         - a tab for admin notes
         - a tab for user notes.
 
+        Starting with v2.5, this instanciation argument is deprecated in favor of the same argument of setupEditor() method.
+
     - `listActiveCheckboxes`
 
         Whether the checkboxes rendered in the tabular display are active, i.e. accept a click to switch their state, defaulting to `false`.
 
         Rationale: even if it would be very more easy to directly click on the tabular display to toggle a checkbox, some administrators may find this way too much easy, if not error prone, and prefer to have to pass through a distinct page/modal/display unit to securize a bit this update. The chosen default privileges the security over the easyness.
 
-    - `listFeedNow`
+        Starting with v2.5, this instanciation argument is deprecated in favor of the same argument of setupTabular() method.
+
+    - `feedNow`
 
         Whether the class should subscribe to the `all` publication to feed its internal list as soon as it is instanciated, defaulting to `true`.
 
@@ -272,9 +280,55 @@ This is a very thin extend of `AccountsCore.Account` class, and it actually even
     ]
 ```
 
+- `setupEditor( args<Object> )`
+
+    This method provides arguments for the editor dialog. `args` is an object with following keys:
+
+    - `closeAfterNew`
+
+        Whether the 'new account' dialog should be closed after having successfully created a new account, defaulting to `true`.
+
+        When `false`, the 'new account' dialog is cleared after successful creation, and can be reused to define other new accounts.
+
+    - `identTopTemplate`
+
+        The template name, or a function which returns such a string, to be inserted above the top padder of the ident panel, defaulting to none.
+
+    - `tabsFn`
+
+        A function which, when set, will receive a list of tab objects to be displayed on edition panel, and must return a list of tab objects.
+
+        Prototype of the function is `async fn( tabs<Array> ): tabs<Array>`, where each array item is an object with following keys:
+
+        - `name`: an optional name for the tab, defaulting to the template name
+
+        - `navLabel`: a localized string to display on the navigation bar
+
+        - `paneTemplate`: the name of the template to be displayed
+
+        - `paneData`: the data context to be provided to the template, as an object or a function, defaulting to the default data context:
+
+            - `item`: a ReactiveVar which holds the account object to edit (may be empty, but not null)
+            - `isNew`: true|false
+            - `checker`: a ReactiveVar which holds the parent Forms.Checker
+            - `amInstance`: a ReactiveVar which holds the amAccount instance
+
+        Default it to have:
+
+        - an identity tab to let the user enter email addresses and usernames
+        - a roles tab if the application has roles
+        - a tab for admin notes
+        - a tab for user notes.
+
 - `setupTabular( name<String>, args<Object> )`
 
     This method initialize a named tabular display. `args` is an object with following keys:
+
+    - `activeCheckboxes`
+
+        Whether the checkboxes rendered in the tabular display are active, i.e. accept a click to switch their state, defaulting to `false`.
+
+        Rationale: even if it would be very more easy to directly click on the tabular display to toggle a checkbox, some administrators may find this way too much easy, if not error prone, and prefer to have to pass through a distinct page/modal/display unit to securize a bit this update. The chosen default privileges the security over the easyness.
 
     - `pub`: an optional publication name, defaulting to 'pwix.AccountsManager.p.tabularLast'
 
