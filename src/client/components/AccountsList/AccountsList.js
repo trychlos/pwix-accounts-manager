@@ -39,16 +39,21 @@ Template.AccountsList.onCreated( function(){
 
     // get and check the amAccount instance
     self.autorun(() => {
-        const o = AccountsManager.Account.byTabularName( Template.currentData().name );
-        const amInstance = o?.instance;
-        if( amInstance ){
-            check( amInstance, AccountsManager.Account );
-            self.AM.amInstance.set( amInstance );
-        }
-        const options = o?.options;
-        if( options ){
-            check( options, AccountsManager.TabularOptions );
-            self.AM.options.set( options );
+        const tabularName = Template.currentData().name;
+        const o = AccountsManager.Account.byTabularName( tabularName );
+        if( o ){
+            const amInstance = o?.instance;
+            if( amInstance ){
+                check( amInstance, AccountsManager.Account );
+                self.AM.amInstance.set( amInstance );
+            }
+            const options = o?.options;
+            if( options ){
+                check( options, AccountsManager.TabularOptions );
+                self.AM.options.set( options );
+            }
+        } else {
+            logger.warning( `tabularName='${tabularName}' is not a registered Tabular.Table instance. Is it possible you have missed 'setupTabular() ?` );
         }
     });
 

@@ -8,6 +8,7 @@
 
     - Remove empty declaration from stylesheet
     - Review instanciation vs. configuration parameters, introducing setupEditor() method (todo #14)
+    - Have a warning when tabular name doesn't have been registered
 
 ### 2.4.0
 
