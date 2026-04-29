@@ -15,7 +15,7 @@ AccountsManager.Transforms = {
     // see options.source for the calling publication
     async transformRoles( acInstance, itemDoc, options, userId ){
         if( Package['pwix:roles'] ){
-            const roles = await Package['pwix:roles'].Roles.allRolesForUser( itemDoc, userId );
+            const roles = await Package['pwix:roles'].Roles.getUserRoles( itemDoc, userId );
             itemDoc.DYN.roles = roles;
         }
         return itemDoc;
