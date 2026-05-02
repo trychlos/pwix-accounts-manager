@@ -2,9 +2,9 @@
 
 ## ChangeLog
 
-### 2.4.1-rc.0
+### 2.4.1
 
-    Release date: 
+    Release date: 2026- 5- 2
 
     - Remove empty declaration from stylesheet
     - Review instanciation vs. configuration parameters, introducing setupEditor() method (todo #14)
@@ -154,4 +154,4 @@
 
 ---
 P. Wieser
-- Last updated on 2026, Apr. 23rd
+- Last updated on 2026, May. 2nd
