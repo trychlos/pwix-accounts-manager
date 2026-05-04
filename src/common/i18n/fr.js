@@ -41,6 +41,7 @@ AccountsManager.i18n = {
             },
             list: {
                 admin_notes_th: 'Notes de l\'administrateur',
+                email_address_more: 'Les addresses de messagerie',
                 email_address_th: 'Addresse(s) email',
                 email_label_th: 'Intitulé',
                 email_verified_th: 'Vérifiéee',

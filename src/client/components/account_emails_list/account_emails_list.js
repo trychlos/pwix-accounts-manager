@@ -8,6 +8,7 @@
  * - item: a ReactiveVar which holds the account object to edit (may be empty, but not null)
  * - checker: a ReactiveVar which holds the parent Checker
  * - amInstance: a ReactiveVar which holds the amAccount instance
+ * - updatable: whether the component wants update the item, defaulting to true
  */
 
 import _ from 'lodash';
@@ -30,7 +31,8 @@ Template.account_emails_list.onCreated( function(){
 
     // keep the count of email addresses up to date
     self.autorun(() => {
-        const item = Template.currentData().item.get();
+        const dc = Template.currentData();
+        const item = dc.item.get();
         self.AM.emailsCount.set(( item.emails || [] ).length );
     });
 
@@ -61,7 +63,12 @@ Template.account_emails_list.helpers({
     },
 
     plusEnabled(){
-        return '';
+        return this.updatable === false ? 'disabled' : '';
+    },
+
+    // because this component is used as an editor and also as a visualisator, only have buttons on editor
+    updatable(){
+        return this.updatable !== false;
     }
 });
 

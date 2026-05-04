@@ -20,6 +20,7 @@ import { Tolert } from 'meteor/pwix:tolert';
 import { Tracker } from 'meteor/tracker';
 
 import '../AccountEditPanel/AccountEditPanel.js';
+import '../am_email_addresses_panel/am_email_addresses_panel.js';
 
 import './AccountsList.html';
 
@@ -91,8 +92,16 @@ Template.AccountsList.helpers({
 
 Template.AccountsList.events({
     // want display more the first email address, data.item is the user document
-    'am-email-more'( event, instance, data ){
-        logger.debug( event, data );
+    //  event is triggered from dt_email_more component
+    'am-email-more .AccountsList'( event, instance, { item }){
+        Modal.run({
+            item,
+            amInstance: instance.AM.amInstance,
+            mdBody: 'am_email_addresses_panel',
+            mdButtons: [ Modal.C.Button.CLOSE ],
+            mdClasses: this.mdClasses || 'modal-md',
+            mdTitle: this.mdTitle || pwixI18n.label( I18N, 'list.email_address_more' )
+        });
     },
 
     // this event is expected to be only triggered when checkboxes are active on the tabular list

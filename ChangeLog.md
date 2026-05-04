@@ -6,7 +6,7 @@
 
     Release date: 
 
-    - 
+    - Honor am-email-more event and shows a read-only panel with all email addresses (todo #12)
 
 ### 2.4.1
 

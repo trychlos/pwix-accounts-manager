@@ -7,13 +7,15 @@
                     <th class="ui-w100">{{ i18n key="list.email_address_th" }}</th>
                     <th>{{ i18n key="list.email_verified_th" }}</th>
                     <th></th>
-                    <th></th>
-                    <th></th>
-                    <th>
-                        <button class="btn btn-sm btn-outline-primary js-plus" title="{{ i18n key="panel.add_title" }}" {{ plusEnabled }}>
-                            <span class="fa-solid fa-fw fa-plus"></span>
-                        </button>
-                    </th>
+                    {{#if updatable }}
+                        <th></th>
+                        <th></th>
+                        <th>
+                            <button class="btn btn-sm btn-outline-primary js-plus" title="{{ i18n key="panel.add_title" }}" {{ plusEnabled }}>
+                                <span class="fa-solid fa-fw fa-plus"></span>
+                            </button>
+                        </th>
+                    {{/if}}
                 </tr>
             </thead>
             <tbody>

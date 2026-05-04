@@ -9,6 +9,7 @@
  * - it: the emails row to be managed here
  * - emailsCount: a ReactiveVar which counts the email addresses
  * - amInstance: a ReactiveVar which holds the amAccount instance
+ * - updatable: whether the component wants update the item, defaulting to true
  */
 
 import _ from 'lodash';
@@ -90,9 +91,10 @@ Template.account_email_row.onRendered( function(){
     // initialize the Checker for this panel as soon as we get the parent Checker
     let running = false;
     self.autorun(( comp ) => {
-        const amInstance = Template.currentData().amInstance.get();
-        const parentChecker = Template.currentData().checker.get();
+        const dc = Template.currentData();
+        const parentChecker = dc.checker.get();
         let checker = self.AM.checker.get();
+        const amInstance = dc.amInstance.get();
         if( amInstance && parentChecker && !checker && !running ){
             running = true;
             Tracker.nonreactive(() => {
@@ -152,12 +154,22 @@ Template.account_email_row.helpers({
         };
     },
 
+    // do not enable checkboxes
+    readonly(){
+        return this.updatable === false ? 'readonly' : '';
+    },
+
     resetEnabled( it ){
         return '';
     },
 
     resetTitle( it ){
         return pwixI18n.label( I18N, 'panel.reset_title', it.address );
+    },
+
+    // because this component is used as an editor and also as a visualisator, only have buttons on editor
+    updatable(){
+        return this.updatable !== false;
     },
 
     verifyEnabled( it ){
@@ -184,6 +196,14 @@ Template.account_email_row.events({
         });
     },
 
+    // checkboxes do not support 'readonly' attribute
+    'click .am-account-email-row .js-verified'( event, instance ){
+        if( this.updatable === false ){
+            return false;
+        }
+    },
+
+    // checkboxes do not support 'readonly' attribute
     'click .am-account-email-row .js-verify'( event, instance ){
         Meteor.callAsync( 'pwix.AccountsCore.m.sendVerificationEmail', this.item.get()._id, this. it.address, undefined, { acName: this.amInstance.get().name() }).then(( res ) => {
             if( res ){
@@ -192,7 +212,7 @@ Template.account_email_row.events({
                 Tolert.error( pwixI18n.label( I18N, 'panel.verify_error' ));
             }
         });
-    },
+    }
 });
 
 Template.account_email_row.onDestroyed( function(){

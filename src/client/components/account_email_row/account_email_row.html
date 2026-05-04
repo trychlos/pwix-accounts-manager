@@ -1,28 +1,30 @@
 <template name="account_email_row">
 
     <tr class="am-account-email-row" data-item-id="{{ this.it._id }}">
-        <td><input class="form-control js-email" type="email" placeholder="{{ i18n key="panel.email_ph" }}" /></td>
+        <td><input class="form-control js-email" type="email" placeholder="{{ i18n key="panel.email_ph" }}" {{ readonly }} /></td>
         <td>
             <div class="ui-w100">
                 <input class="form-check-input js-verified" type="checkbox" />
             </div>
         </td>
         <td>{{> FormsStatusIndicator (parmsCheckStatus) }}</td>
-        <td>
-            <button class="btn btn-sm btn-outline-primary js-verify" title="{{ verifyTitle this.it }}" {{ verifyEnabled this.it }} >
-                <span class="fa-solid fa-fw fa-envelope-circle-check"></span>
-            </button>
-        </td>
-        <td>
-            <button class="btn btn-sm btn-outline-primary js-reset" title="{{ resetTitle this.it }}" {{ resetEnabled this.it }} >
-                <span class="fa-solid fa-fw fa-envelope-open-text"></span>
-            </button>
-        </td>
-        <td>
-            <button class="btn btn-sm btn-outline-primary js-minus" title="{{ minusTitle this.it }}" {{ minusEnabled this.it }} >
-                <span class="fa-solid fa-fw fa-minus"></span>
-            </button>
-        </td>
+        {{#if updatable }}
+            <td>
+                <button class="btn btn-sm btn-outline-primary js-verify" title="{{ verifyTitle this.it }}" {{ verifyEnabled this.it }} >
+                    <span class="fa-solid fa-fw fa-envelope-circle-check"></span>
+                </button>
+            </td>
+            <td>
+                <button class="btn btn-sm btn-outline-primary js-reset" title="{{ resetTitle this.it }}" {{ resetEnabled this.it }} >
+                    <span class="fa-solid fa-fw fa-envelope-open-text"></span>
+                </button>
+            </td>
+            <td>
+                <button class="btn btn-sm btn-outline-primary js-minus" title="{{ minusTitle this.it }}" {{ minusEnabled this.it }} >
+                    <span class="fa-solid fa-fw fa-minus"></span>
+                </button>
+            </td>
+        {{/if}}
     </tr>
 
 </template>
