@@ -2,9 +2,9 @@
 
 ## ChangeLog
 
-### 2.4.2-rc.0
+### 2.4.2
 
-    Release date: 
+    Release date: 2026- 5-10
 
     - Honor am-email-more event and shows a read-only panel with all email addresses (todo #12)
 
@@ -160,4 +160,4 @@
 
 ---
 P. Wieser
-- Last updated on 2026, May. 2nd
+- Last updated on 2026, May. 10th
