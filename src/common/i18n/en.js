@@ -47,7 +47,7 @@ AccountsManager.i18n = {
                 email_verified_th: 'Is verified',
                 last_connection_th: 'Last connection',
                 login_allowed_th: 'Is connection allowed',
-                more_title: 'Display more email addresses...',
+                more_title: 'Display more email addresses attached to this account...',
                 not_allowed: '<p>You are unfortunately not allowed to list the accounts.</p>'
                     +'<p>You can contact your application administrator to ask for the needed habilitation.</p>',
                 role_global: 'Global',

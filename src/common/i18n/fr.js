@@ -47,7 +47,7 @@ AccountsManager.i18n = {
                 email_verified_th: 'Vérifiéee',
                 last_connection_th: 'Dernière connexion',
                 login_allowed_th: 'Connexion autorisée',
-                more_title: 'Afficher davantage d\'adresses email...',
+                more_title: 'Afficher davantage d\'adresses email attachées à ce compte...',
                 not_allowed: '<p>Vous n\'êtes malheureusement pas autorisé à consulter la liste des comptes.</p>'
                     +'<p>Vous pouvez vous rapprocher de votre administrateur pour demander les habilitations nécessaires.<p>',
                 role_global: 'Global',

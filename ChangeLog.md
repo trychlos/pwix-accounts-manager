@@ -6,7 +6,7 @@
 
     Release date: 
 
-    - 
+    - Improve the 'more emails' button label
 
 ### 2.4.2
 
