@@ -294,11 +294,15 @@ This is a very thin extend of `AccountsCore.Account` class, and it actually even
 
         The template name, or a function which returns such a string, to be inserted above the top padder of the ident panel, defaulting to none.
 
+    - `tabsArg`
+
+        An optional argument which will be passed to below `tabsFn()` function, after tabs.
+
     - `tabsFn`
 
         A function which, when set, will receive a list of tab objects to be displayed on edition panel, and must return a list of tab objects.
 
-        Prototype of the function is `async fn( tabs<Array> ): tabs<Array>`, where each array item is an object with following keys:
+        Prototype of the function is `async fn( instanceName<String, tabs<Array>, tabsArg<Any> ): tabs<Array>`, where each array item is an object with following keys:
 
         - `name`: an optional name for the tab, defaulting to the template name
 

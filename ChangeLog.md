@@ -8,6 +8,7 @@
 
     - Improve the 'more emails' button label
     - Move runAccountsSelection() client function to pwix:accounts-core, thus bumping minor candidate version number
+    - Let the tabsFn() editor function have an argument
 
 ### 2.4.2
 

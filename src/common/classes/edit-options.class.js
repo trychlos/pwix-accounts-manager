@@ -20,6 +20,7 @@ export class EditOptions extends Options.Base {
         closeAfterNew: true,
         identTopTemplate: null,
         tabsFn: null,
+        tabsArg: null,
         withGlobalRoles: true,
         withScopedRoles: true
     };
@@ -70,6 +71,16 @@ export class EditOptions extends Options.Base {
     identTopTemplate( value ){
         logger.verbose({ verbosity: AccountsManager.configure().verbosity, against: AccountsManager.C.Verbose.FUNCTIONS }, 'EditOptions.identTopTemplate()', arguments );
         return this.base_gsStringFn( 'identTopTemplate', value, { default: EditOptions._defaults.identTopTemplate });
+    }
+
+    /**
+     * Getter/Setter
+     * @param {Any} value anything to be passed as an argument to tabsFn()
+     * @returns {Any}
+     */
+    tabsArg( value ){
+        logger.verbose({ verbosity: AccountsManager.configure().verbosity, against: AccountsManager.C.Verbose.FUNCTIONS }, 'EditOptions.tabsArg()', arguments );
+        return this.base_gsAnyFn( 'tabsArg', value, { default: EditOptions._defaults.tabsArg });
     }
 
     /**

@@ -165,8 +165,9 @@ Template.AccountEditPanel.onCreated( function(){
         let tabsList = self.AM.tabsList.get();
         if( amInstance && !tabsList && self.AM.buildStatus.get( 'defaultTabs' )){
             const fn = amInstance.editOptions().tabsFn();
+            const arg = amInstance.editOptions().tabsArg();
             if( fn ){
-                fn( self.AM.defaultTabs.get()).then(( tabs ) => { self.AM.tabsList.set( tabs ); });
+                fn( amInstance.name(), self.AM.defaultTabs.get(), arg ).then(( tabs ) => { self.AM.tabsList.set( tabs ); });
             } else {
                 self.AM.tabsList.set( self.AM.defaultTabs.get());
             }
@@ -245,6 +246,7 @@ Template.AccountEditPanel.helpers({
     parmsTabbed(){
         const tabs = Template.instance().AM.tabsList.get();
         if( tabs ){
+            // default data context, which can be extended for each tab
             const paneData = {
                 item: Template.instance().AM.item,
                 isNew: Template.instance().AM.isNew.get(),
@@ -252,23 +254,8 @@ Template.AccountEditPanel.helpers({
                 amInstance: Template.instance().AM.amInstance
             };
             for( const tab of tabs ){
-                if( !tab.paneData ){
-                    tab.paneData = paneData;
-                }
+                tab.paneData = _.merge( {}, paneData, tab.paneData || {});
             }
-            /*
-            if( this.tabsBefore ){
-                if( _.isArray( this.tabsBefore ) && this.tabsBefore.length ){
-                    this.tabsBefore.forEach(( tab ) => {
-                        tab.paneData = _.merge( {}, tab.paneData, paneData );
-                        tabs.push( tab );
-                    });
-                } else {
-                    logger.warn( 'expect tabsBefore be an array, got', this.tabsBefore );
-                }
-            }
-                */
-            //logger.debug( 'parmsTabbed', tabs, this );
             return {
                 name: ACCOUNT_EDIT_TABBED,
                 tabs: tabs,
