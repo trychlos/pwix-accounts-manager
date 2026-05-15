@@ -35,10 +35,6 @@ AccountsManager.i18n = {
                 new_label: '(new)',
                 new_success: 'The identity "%s" has been successfully created',
             },
-            dialogs: {
-                accounts_select_dialog_title: 'Select one or more user accounts',
-                accounts_select_ph: 'Select the desired accounts'
-            },
             list: {
                 admin_notes_th: 'Admin Notes',
                 email_address_more: 'The email addresses',

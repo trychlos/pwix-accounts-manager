@@ -35,10 +35,6 @@ AccountsManager.i18n = {
                 new_label: '(nouveau)',
                 new_success: 'Le compte "%s" a été créé avec succès'
             },
-            dialogs: {
-                accounts_select_dialog_title: 'Choisissez un ou plusieurs comptes utilisateur',
-                accounts_select_ph: 'Selectionnez les comptes souhaités'
-            },
             list: {
                 admin_notes_th: 'Notes de l\'administrateur',
                 email_address_more: 'Les addresses de messagerie',
