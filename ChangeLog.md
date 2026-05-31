@@ -2,9 +2,9 @@
 
 ## ChangeLog
 
-### 2.5.1-rc.0
+### 2.5.1
 
-    Release date: 
+    Release date: 2026- 5-31
 
     - Improve the 'more emails' button label
     - Move runAccountsSelection() client function to pwix:accounts-core, thus bumping minor candidate version number
@@ -168,4 +168,4 @@
 
 ---
 P. Wieser
-- Last updated on 2026, May. 10th
+- Last updated on 2026, May. 31st
